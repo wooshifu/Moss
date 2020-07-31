@@ -1,0 +1,10 @@
+if (ARCH STREQUAL arm)
+    set(MossArch arm)
+elseif (ARCH STREQUAL arm64)
+    set(MossArch arm64)
+else ()
+    message("unexpected ARCH ${ARCH}, using default value \"arm\"")
+    set(MossArch arm)
+endif ()
+
+message(STATUS "MossArch is ${MossArch}")
