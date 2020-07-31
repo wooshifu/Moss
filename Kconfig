@@ -1,0 +1,3 @@
+config KERNEL_ENABLE_GUI
+    bool "enable GUI"
+    default y

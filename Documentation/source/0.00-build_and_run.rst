@@ -1,0 +1,17 @@
+==================================================================
+How to **Build and Run** the kernel
+==================================================================
+
+.. role:: bash(code)
+    :language: bash
+
+- for Linux and Mac
+    1. :bash:`mkdir build`
+    2. :bash:`cd build`
+    3. :bash:`cmake -DCMAKE_TOOLCHAIN_FILE=${DIR_OF_THIS_PROJECT}/CMake/Toolchain/ToolchainClang.cmake ..`
+    4. :bash:`make`
+
+    and it's done
+
+- for windows
+    please use `wsl <https://docs.microsoft.com/en-us/windows/wsl/about>`_

@@ -1,0 +1,13 @@
+if (OPTION_DISABLE_CLANG_TIDY)
+    message(STATUS "clang-tidy checks disabled")
+else ()
+    find_program(OUT_path_to_clang_tidy NAMES clang-tidy)
+    if (NOT OUT_path_to_clang_tidy)
+        message(FATAL_ERROR "could not find the program clang-tidy")
+    endif ()
+
+    message(STATUS "clang-tidy checks enabled, location: ${OUT_path_to_clang_tidy}")
+    set(CLANG_TIDY_FIX_DIR ${CMAKE_BINARY_DIR}/fix)
+    file(MAKE_DIRECTORY ${CLANG_TIDY_FIX_DIR})
+    set(CMAKE_CXX_CLANG_TIDY "${OUT_path_to_clang_tidy};--system-headers;--export-fixes=${CLANG_TIDY_FIX_DIR}/clang_tidy_fix.yml" CACHE INTERNAL "clang-tidy")
+endif ()

@@ -1,0 +1,33 @@
+function(list_subdirs OUT_result IN_current_dir)
+    file(GLOB children RELATIVE ${IN_current_dir} ${IN_current_dir}/*)
+    set(temp_dirlist "")
+    foreach (child ${children})
+        if (IS_DIRECTORY ${IN_current_dir}/${child})
+            list(APPEND temp_dirlist ${child})
+        endif ()
+    endforeach ()
+    set(${OUT_result} ${temp_dirlist} PARENT_SCOPE)
+endfunction()
+
+function(setup_board OUT_board)
+    list_subdirs(supported_boards ${MOSS_SOURCE_CODE_DIR}/Board)
+    foreach (supported_board ${supported_boards})
+        message(STATUS "detected supported board list: ${supported_board}")
+    endforeach ()
+
+    # check variable CONFIG_BOARD is defined via cmake command line as parameter, use it if it's defined
+    if (DEFINED ${OUT_board})
+        message(STATUS "DEFINED BOARD: ${OUT_board}")
+    else ()
+        message(FATAL_ERROR "board not specified, please add -D${OUT_board}={the_board} to cmake command line parameter")
+    endif ()
+
+    list(FIND supported_boards ${${OUT_board}} index)
+    if (NOT index EQUAL -1)
+        message(STATUS "finally, found board \"${${OUT_board}}\"")
+    else ()
+        message(FATAL_ERROR "not supported board: ${${OUT_board}}. this is all the supported boards: ${supported_boards}. check the config BOARD_USING_* of KConfig")
+    endif ()
+
+    set(${OUT_board} ${${OUT_board}} PARENT_SCOPE)
+endfunction()
