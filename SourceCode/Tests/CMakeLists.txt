@@ -19,6 +19,8 @@ add_library(ObjArchUnitTests
         ${ArchDir}/boot.S)
 target_compile_definitions(ObjArchUnitTests PRIVATE "-DENV_KERNEL_UNIT_TESTS")
 target_include_kernel_header_files(ObjArchUnitTests)
+target_include_libc_header_files(ObjArchUnitTests)
+target_include_raspberry_pi3_header_files(ObjArchUnitTests)
 
 
 set(KernelUnitTestsElf KernelUnitTests.elf)

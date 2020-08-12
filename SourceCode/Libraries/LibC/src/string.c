@@ -1,7 +1,7 @@
 #include "log.h"
 #include "string.h"
 
-void memclean(uint8_t *mem_start, const uint8_t *mem_end) {
+void memzero(uint8_t *mem_start, const uint8_t *mem_end) {
   log_d("mem start is: %p, mem end is: %p", mem_start, mem_end);
   if (mem_start > mem_end) {
     log_e("mem start: %p greater than mem end: %p, mem not cleaned", mem_start, mem_end);
@@ -31,7 +31,10 @@ size_t strlen(const char *str) {
   return len;
 }
 
-int strcmp(const char *left, const char *right) { return 0; }
+int strcmp(const char *left, const char *right) {
+  // todo: not implemented
+  return 0;
+}
 
 char *strchr(const char *str, int character) {
   if (str == NULL) {

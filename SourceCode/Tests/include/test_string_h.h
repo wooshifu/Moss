@@ -4,7 +4,7 @@
 
 void should_mem_clean_works() {
   int32_t array[5] = {0x12345678, 0x9abcdef1, 0x23456789, 0xabcdef12, 0x3456789a};
-  memclean((uint8_t *)array, (const uint8_t *)(array + 5));
+  memzero((uint8_t *)array, (const uint8_t *)(array + 5));
   for (size_t index = 0; index < sizeof(int32_t) * 5; ++index) {
     ASSERT_EQ_UINT8(*((uint8_t *)(array) + index), 0);
   }

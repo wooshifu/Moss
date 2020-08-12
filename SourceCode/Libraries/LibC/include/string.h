@@ -3,7 +3,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-void memclean(uint8_t *mem_start, const uint8_t *mem_end);
+void memzero(uint8_t *mem_start, const uint8_t *mem_end);
 
 void *memset(void *destination, int character, size_t count);
 
