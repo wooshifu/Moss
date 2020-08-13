@@ -25,14 +25,14 @@ uint32_t __test_failed_asserts = 0;
   } while (0)
 
 #if 0
-#define __on_assert_func_success_(type, failed_expression, actual, expected, format_specifier)                      \
+#define __on_assert_func_success_(type, failed_expression, actual, expected, format_specifier)                         \
   do {                                                                                                                 \
     ++__test_success_asserts;                                                                                          \
     log_d("expected: %s, actual: %" format_specifier " == %" format_specifier, failed_expression, (type)(actual),      \
           (type)(expected));                                                                                           \
   } while (0)
 
-#define __on_assert_func_failed_(type, failed_expression, actual, expected, format_specifier)                       \
+#define __on_assert_func_failed_(type, failed_expression, actual, expected, format_specifier)                          \
   do {                                                                                                                 \
     ++__test_failed_asserts;                                                                                           \
     log_e("expected: %s, actual: %" format_specifier " == %" format_specifier, failed_expression, (type)(actual),      \
