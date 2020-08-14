@@ -11,7 +11,7 @@ target_include_tests_header_files(${PROJECT_NAME})
 target_include_raspberry_pi3_header_files(${PROJECT_NAME})
 
 
-set(ArchDir ${Moss_SOURCE_DIR}/SourceCode/Arch/${MossArch})
+set(ArchDir ${Moss_SOURCE_DIR}/SourceCode/Arch/${MossArch}/src)
 aux_source_directory(${ArchDir} ArchSrc)
 add_library(ObjArchUnitTests
         OBJECT
