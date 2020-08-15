@@ -1,7 +1,7 @@
+#include "el.h"
 #include "log.h"
 #include "logo.h"
 #include "uart.h"
-#include "utils.h"
 
 void kernel_main(void) {
   init_uart();

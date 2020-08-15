@@ -6,7 +6,7 @@ add_library(${PROJECT_NAME}
         OBJECT
         ${ObjArchSrc}
         ${ObjArch_SOURCE_DIR}/src/boot.S
-        ${ObjArch_SOURCE_DIR}/src/utils.S)
+        ${ObjArch_SOURCE_DIR}/src/el.S)
 target_include_kernel_header_files(${PROJECT_NAME})
 target_include_libc_header_files(${PROJECT_NAME})
 target_include_raspberry_pi3_header_files(${PROJECT_NAME})
