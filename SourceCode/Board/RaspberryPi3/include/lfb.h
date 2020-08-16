@@ -1,4 +1,4 @@
 #pragma once
 
-void lfb_init();
+void init_lfb();
 void lfb_showpicture();

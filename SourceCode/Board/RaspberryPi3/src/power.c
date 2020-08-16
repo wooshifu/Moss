@@ -13,7 +13,6 @@
  * Shutdown the board
  */
 void power_off() {
-  log_d("start to power off");
   unsigned long r;
 
   // power off devices one by one
@@ -51,20 +50,16 @@ void power_off() {
   *PM_RSTS = PM_WDOG_MAGIC | r;
   *PM_WDOG = PM_WDOG_MAGIC | 10;
   *PM_RSTC = PM_WDOG_MAGIC | PM_RSTC_FULLRST;
-  log_d("powered off");
 }
 
 /**
  * Reboot
  */
 void reset() {
-  log_d("reseting");
-  unsigned int r;
   // trigger a restart by instructing the GPU to boot from partition 0
-  r = *PM_RSTS;
+  unsigned int r = *PM_RSTS;
   r &= ~0xfffffaaa;
   *PM_RSTS = PM_WDOG_MAGIC | r; // boot from partition 0
   *PM_WDOG = PM_WDOG_MAGIC | 10;
   *PM_RSTC = PM_WDOG_MAGIC | PM_RSTC_FULLRST;
-  log_d("resetted");
 }

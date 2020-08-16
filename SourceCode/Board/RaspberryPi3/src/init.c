@@ -1,15 +1,13 @@
 #include "lfb.h"
-#include "log.h"
 #include "random.h"
 #include "uart0.h"
 
 int init_board() {
-  uart0_init();
+  init_uart0();
 
-  rand_init();
-  log_i("random: %u", rand(0, 100));
+  init_random_generator();
 
-  lfb_init();
+  init_lfb();
   // display a pixmap
   lfb_showpicture();
   return 0;

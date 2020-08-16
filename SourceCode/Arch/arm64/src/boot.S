@@ -18,12 +18,12 @@ _init_core0:
     bl   print_mem_stack
     bl   bss_clean
 
-    b   _goto_kernel_main
+    b    _goto_kernel_main
     b    _hang_core // should never come here
 
 _goto_kernel_main:
 #ifndef ENV_KERNEL_UNIT_TESTS
-    bl kernel_main
+    bl   kernel_main
 #else
-    bl kernel_main_tests
+    bl   kernel_main_tests
 #endif

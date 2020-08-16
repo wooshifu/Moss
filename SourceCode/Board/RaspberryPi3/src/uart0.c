@@ -2,21 +2,21 @@
 #include "mailbox.h"
 
 /* PL011 UART registers */
-#define UART0_DR ((volatile unsigned int *)(MMIO_BASE + 0x00201000))
-#define UART0_FR ((volatile unsigned int *)(MMIO_BASE + 0x00201018))
-#define UART0_IBRD ((volatile unsigned int *)(MMIO_BASE + 0x00201024))
-#define UART0_FBRD ((volatile unsigned int *)(MMIO_BASE + 0x00201028))
-#define UART0_LCRH ((volatile unsigned int *)(MMIO_BASE + 0x0020102C))
-#define UART0_CR ((volatile unsigned int *)(MMIO_BASE + 0x00201030))
-#define UART0_IMSC ((volatile unsigned int *)(MMIO_BASE + 0x00201038))
-#define UART0_ICR ((volatile unsigned int *)(MMIO_BASE + 0x00201044))
+#define UART0_DATA_REGISTER ((volatile unsigned int *)(MMIO_BASE + 0x00201000))
+#define UART0_FLAG_REGISTER ((volatile unsigned int *)(MMIO_BASE + 0x00201018))
+#define UART0_INTEGER_BAUD_RATE_DIVISOR ((volatile unsigned int *)(MMIO_BASE + 0x00201024))
+#define UART0_FRACTIONAL_BAUD_RATE_DIVISOR ((volatile unsigned int *)(MMIO_BASE + 0x00201028))
+#define UART0_LINE_CONTROL_REGISTER ((volatile unsigned int *)(MMIO_BASE + 0x0020102C))
+#define UART0_CONTROL_REGISTER ((volatile unsigned int *)(MMIO_BASE + 0x00201030))
+#define UART0_INTERRUPT_MASK_SET_CLEAR_REGISTER ((volatile unsigned int *)(MMIO_BASE + 0x00201038))
+#define UART0_INTERRUPT_CLEAR_REGISTER ((volatile unsigned int *)(MMIO_BASE + 0x00201044))
 
 /**
  * Set baud rate and characteristics (115200 8N1) and map to GPIO
  */
-void uart0_init() {
+void init_uart0() {
   /* initialize UART */
-  *UART0_CR = 0; // turn off UART0
+  *UART0_CONTROL_REGISTER = 0; // turn off UART0
 
   /* set up clock for consistent divisor values */
   mailbox[0] = 9 * 4;
@@ -45,24 +45,24 @@ void uart0_init() {
   while (r--) {
     asm volatile("nop");
   }
-  *GPPUDCLK0 = 0;     // flush GPIO setup
-  *UART0_ICR = 0x7FF; // clear interrupts
-  *UART0_IBRD = 2;    // 115200 baud
-  *UART0_FBRD = 0xB;
-  *UART0_LCRH = 0b11 << 5; // 8n1
-  *UART0_CR = 0x301;       // enable Tx, Rx, FIFO
+  *GPPUDCLK0 = 0;                          // flush GPIO setup
+  *UART0_INTERRUPT_CLEAR_REGISTER = 0x7FF; // clear interrupts
+  *UART0_INTEGER_BAUD_RATE_DIVISOR = 2;    // 115200 baud
+  *UART0_FRACTIONAL_BAUD_RATE_DIVISOR = 0xB;
+  *UART0_LINE_CONTROL_REGISTER = 0b11 << 5; // 8n1
+  *UART0_CONTROL_REGISTER = 0x301;          // enable Tx, Rx, FIFO
 }
 
 /**
  * Send a character
  */
-void uart0_send(unsigned int c) {
+void uart0_send(unsigned int character) {
   /* wait until we can send */
   do {
     asm volatile("nop");
-  } while (*UART0_FR & 0x20);
+  } while (*UART0_FLAG_REGISTER & 0x20);
   /* write the character to the buffer */
-  *UART0_DR = c;
+  *UART0_DATA_REGISTER = character;
 }
 
 /**
@@ -72,9 +72,9 @@ char uart0_getc() {
   /* wait until something is in the buffer */
   do {
     asm volatile("nop");
-  } while (*UART0_FR & 0x10);
+  } while (*UART0_FLAG_REGISTER & 0x10);
   /* read it and return */
-  char r = (char)(*UART0_DR);
+  char r = (char)(*UART0_DATA_REGISTER);
   /* convert carrige return to newline */
   return r == '\r' ? '\n' : r;
 }
@@ -82,27 +82,18 @@ char uart0_getc() {
 /**
  * Display a string
  */
-void uart0_puts(char *s) {
-  while (*s) {
+void uart0_puts(char *string) {
+  while (*string) {
     /* convert newline to carrige return + newline */
-    if (*s == '\n') {
+    if (*string == '\n') {
       uart0_send('\r');
     }
-    uart0_send(*s++);
+    uart0_send(*string++);
   }
 }
 
 /**
- * Display a binary value in hexadecimal
+ * hal put_char implementation
+ * @param character the character
  */
-void uart_hex(unsigned int d) {
-  for (int c = 28; c >= 0; c -= 4) {
-    // get highest tetrad
-    unsigned int n = (d >> c) & 0xF;
-    // 0-9 => '0'-'9', 10-15 => 'A'-'F'
-    n += n > 9 ? 0x37 : 0x30;
-    uart0_send(n);
-  }
-}
-
 void put_char(char character) { uart0_send(character); }

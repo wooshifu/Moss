@@ -8,7 +8,7 @@ unsigned char *lfb;                       /* raw frame buffer address */
 /**
  * Set screen resolution to 1024x768
  */
-void lfb_init() {
+void init_lfb() {
   mailbox[0] = 35 * 4;
   mailbox[1] = MAILBOX_REQUEST;
 
