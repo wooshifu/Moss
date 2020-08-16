@@ -18,7 +18,7 @@ _init_core0:
     bl   print_mem_stack
     bl   bss_clean
 
-    bl   _goto_kernel_main
+    b   _goto_kernel_main
     b    _hang_core // should never come here
 
 _goto_kernel_main:
