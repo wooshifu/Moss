@@ -12,17 +12,6 @@ target_include_raspberry_pi3_header_files(${PROJECT_NAME})
 
 
 set(ArchDir ${Moss_SOURCE_DIR}/SourceCode/Arch/${MossArch}/src)
-aux_source_directory(${ArchDir} ArchSrc)
-add_library(ObjArchUnitTests
-        OBJECT
-        ${ArchSrc}
-        ${ArchDir}/boot.S)
-target_compile_definitions(ObjArchUnitTests PRIVATE "-DENV_KERNEL_UNIT_TESTS")
-target_include_kernel_header_files(ObjArchUnitTests)
-target_include_libc_header_files(ObjArchUnitTests)
-target_include_raspberry_pi3_header_files(ObjArchUnitTests)
-
-
 set(KernelUnitTestsElf KernelUnitTests.elf)
 add_executable(${KernelUnitTestsElf}
         $<TARGET_OBJECTS:ObjArchUnitTests>

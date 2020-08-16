@@ -1,11 +1,11 @@
 project(ObjArch C ASM)
 
-
+find_asm_source_files(ASM_SOURCE_FILES ${ObjArch_SOURCE_DIR}/src)
 aux_source_directory(${ObjArch_SOURCE_DIR}/src ObjArchSrc)
 add_library(${PROJECT_NAME}
         OBJECT
         ${ObjArchSrc}
-        ${ObjArch_SOURCE_DIR}/src/boot.S)
+        ${ASM_SOURCE_FILES})
 target_include_kernel_header_files(${PROJECT_NAME})
 target_include_libc_header_files(${PROJECT_NAME})
 target_include_raspberry_pi3_header_files(${PROJECT_NAME})

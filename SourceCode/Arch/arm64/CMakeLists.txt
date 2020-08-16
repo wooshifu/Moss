@@ -1,15 +1,26 @@
 project(ObjArch C ASM)
 
 
+find_asm_source_files(ASM_SOURCE_FILES ${ObjArch_SOURCE_DIR}/src)
 aux_source_directory(${ObjArch_SOURCE_DIR}/src ObjArchSrc)
 add_library(${PROJECT_NAME}
         OBJECT
         ${ObjArchSrc}
-        ${ObjArch_SOURCE_DIR}/src/boot.S
-        ${ObjArch_SOURCE_DIR}/src/el.S)
+        ${ASM_SOURCE_FILES})
 target_include_kernel_header_files(${PROJECT_NAME})
 target_include_libc_header_files(${PROJECT_NAME})
 target_include_raspberry_pi3_header_files(${PROJECT_NAME})
+
+# library for unit tests
+add_library(ObjArchUnitTests
+        OBJECT
+        ${ObjArchSrc}
+        ${ASM_SOURCE_FILES})
+target_compile_definitions(ObjArchUnitTests PRIVATE "-DENV_KERNEL_UNIT_TESTS")
+target_include_kernel_header_files(ObjArchUnitTests)
+target_include_libc_header_files(ObjArchUnitTests)
+target_include_raspberry_pi3_header_files(ObjArchUnitTests)
+# library for unit tests
 
 
 add_executable(${KernelName}
@@ -30,3 +41,4 @@ add_custom_target(RunQemuRaspi3
         COMMAND qemu-system-aarch64 -M raspi3 -kernel Kernel.elf -nographic -serial mon:stdio
         WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 add_dependencies(RunQemuRaspi3 ${KernelName})
+

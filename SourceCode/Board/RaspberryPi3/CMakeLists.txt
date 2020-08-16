@@ -1,10 +1,11 @@
 project(ObjBoardRaspberryPi3 C ASM)
 
+find_asm_source_files(ASM_SOURCE_FILES ${ObjBoardRaspberryPi3_SOURCE_DIR}/src)
 aux_source_directory(${ObjBoardRaspberryPi3_SOURCE_DIR}/src ObjBoardRaspberryPi3Src)
-
 add_library(${PROJECT_NAME}
         OBJECT
-        ${ObjBoardRaspberryPi3Src})
+        ${ObjBoardRaspberryPi3Src}
+        ${ASM_SOURCE_FILES})
 
 target_include_libc_header_files(${PROJECT_NAME})
 target_include_raspberry_pi3_header_files(${PROJECT_NAME})
