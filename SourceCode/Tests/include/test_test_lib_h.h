@@ -2,7 +2,7 @@
 
 #include "lib/test_lib.h"
 
-void should_test_lib_test_eq_works() {
+TEST(should_test_lib_test_eq_works) {
   int x = 1;
   int y = 1;
   ASSERT_EQ_INT(x, y);

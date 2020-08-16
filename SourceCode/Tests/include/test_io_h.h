@@ -2,7 +2,7 @@
 
 #include "io.h"
 
-void should_io_write_and_read_works() {
+TEST(should_io_write_and_read_works) {
   uint8_t x = 0;
   uint16_t y = 0;
   uint32_t z = 0;

@@ -2,7 +2,7 @@
 
 #include "string.h"
 
-void should_mem_clean_works() {
+TEST(should_mem_clean_works) {
   int32_t array[5] = {0x12345678, 0x9abcdef1, 0x23456789, 0xabcdef12, 0x3456789a};
   memzero((uint8_t *)array, (const uint8_t *)(array + 5));
   for (size_t index = 0; index < sizeof(int32_t) * 5; ++index) {
@@ -10,7 +10,7 @@ void should_mem_clean_works() {
   }
 }
 
-void should_memset_set_memory() {
+TEST(should_memset_set_memory) {
   int32_t array[] = {1, 2, 3};
   size_t count = sizeof(array) / sizeof(array[0]);
   int32_t *destination = memset(array, 0, count);
@@ -20,7 +20,7 @@ void should_memset_set_memory() {
   }
 }
 
-void should_strlen_return_correct_len() {
+TEST(should_strlen_return_correct_len) {
   const char *n = NULL;
   ASSERT_EQ_SIZE_T(strlen(n), 0);
   const char *a = "HelloWorld";
@@ -35,7 +35,7 @@ void should_strlen_return_correct_len() {
   ASSERT_EQ_SIZE_T(strlen(e), 10);
 }
 
-void should_strchr_works() {
+TEST(should_strchr_works) {
   const char *msg = "ABCDabcd";
   char *A = strchr(msg, 'A');
   ASSERT_EQ_CHAR(*A, 'A');
@@ -49,7 +49,7 @@ void should_strchr_works() {
   ASSERT_EQ_POINTER(non, NULL);
 }
 
-void should_strrchr_works() {
+TEST(should_strrchr_works) {
   const char *msg = "ABCDabcd";
   char *A = strrchr(msg, 'A');
   ASSERT_EQ_CHAR(*A, 'A');

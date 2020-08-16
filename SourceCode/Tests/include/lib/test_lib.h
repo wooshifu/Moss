@@ -148,3 +148,11 @@ void assert_eq_int(int actual, int expected) { ASSERT_EQ_INT(actual, expected); 
 void assert_eq_pointer(const void* actual, const void* expected) { ASSERT_EQ_POINTER(actual, expected); }
 void assert_eq_size_t(size_t actual, size_t expected) { ASSERT_EQ_SIZE_T(actual, expected); }
 */
+
+#ifndef __TEST_NAME_CONCAT
+#define __TEST_NAME_CONCAT(a, b) a##b
+#endif
+
+#ifndef TEST
+#define TEST(test_func_name) void __TEST_NAME_CONCAT(, test_func_name)()
+#endif
