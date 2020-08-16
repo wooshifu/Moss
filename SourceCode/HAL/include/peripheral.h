@@ -6,4 +6,4 @@
  * put character
  * @param character the character
  */
-extern void put_char(char character);
+void put_char(char character);
