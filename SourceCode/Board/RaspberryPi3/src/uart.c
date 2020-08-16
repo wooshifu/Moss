@@ -1,3 +1,4 @@
+#if 0
 #include "io.h"
 #include "raspi3.h"
 #include "stdint.h"
@@ -47,14 +48,14 @@ static void do_uart_put_char(uint8_t character) {
   io_writel(character, (void *)(PERIPHERAL_BASE + UART0_OFFSET + UART_DR_OFFSET));
 }
 
-void uart_put_char(uint8_t ch) {
-  if (ch == '\r') {
+void uart_put_char(uint8_t character) {
+  if (character == '\r') {
     do_uart_put_char('\n');
   }
-  if (ch == '\n') {
+  if (character == '\n') {
     do_uart_put_char('\r');
   }
-  do_uart_put_char(ch);
+  do_uart_put_char(character);
 }
 
 uint8_t do_uart_get_char(void) {
@@ -64,3 +65,5 @@ uint8_t do_uart_get_char(void) {
 
   return ((uint8_t)(io_readl((void *)(PERIPHERAL_BASE + UART0_OFFSET + UART_DR_OFFSET)) & 0xff));
 }
+
+#endif

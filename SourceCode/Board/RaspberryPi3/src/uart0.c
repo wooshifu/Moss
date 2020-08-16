@@ -108,3 +108,7 @@ void uart_hex(unsigned int d) {
     uart0_send(n);
   }
 }
+
+void put_char(char character) {
+  uart0_send(character);
+}

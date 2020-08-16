@@ -1,3 +1,4 @@
+#if 0
 #pragma once
 
 #include <stdint.h>
@@ -25,4 +26,6 @@
 #define UART_TDR_OFFSET 0x8C
 
 void init_uart(void);
-void uart_put_char(uint8_t ch);
+void uart_put_char(uint8_t character);
+
+#endif

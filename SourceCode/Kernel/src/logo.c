@@ -1,5 +1,5 @@
 #include "logo.h"
-#include "uart.h"
+#include "peripheral.h"
 
 const char *__moss_logo = "      ___           ___           ___           ___     \n"
                           "     /__/\\         /  /\\         /  /\\         /  /\\    \n"
@@ -16,6 +16,6 @@ const char *__moss_logo = "      ___           ___           ___           ___  
 
 void print_moss_logo() {
   while (*__moss_logo) {
-    uart_put_char(*__moss_logo++);
+    put_char(*__moss_logo++);
   }
 }

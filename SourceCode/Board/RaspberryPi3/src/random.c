@@ -1,5 +1,4 @@
 #include "gpio.h"
-#include "log.h"
 #include "random.h"
 
 #define RANDOM_GEN_CTRL ((volatile unsigned int *)(MMIO_BASE + 0x00104000))

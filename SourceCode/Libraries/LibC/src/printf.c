@@ -853,7 +853,7 @@ static int _vsnprintf(out_fct_type out, char *buffer, const size_t maxlen, const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void _putchar(char character) { uart_put_char(character); }
+void _putchar(char character) { put_char(character); }
 
 int printf_(const char *format, ...) {
   va_list va;
