@@ -18,7 +18,7 @@ set(MOSS_SOURCE_CODE_DIR ${Moss_SOURCE_DIR}/SourceCode)
 include(${Moss_SOURCE_DIR}/CMake/ArchDetector.cmake)
 include(${Moss_SOURCE_DIR}/CMake/VarsDump.cmake)
 include(${Moss_SOURCE_DIR}/CMake/HeaderFiles.cmake)
-include(${Moss_SOURCE_DIR}/CMake/utils.cmake)
+include(${Moss_SOURCE_DIR}/CMake/Utils.cmake)
 
 
 if (MossArch STREQUAL arm)
