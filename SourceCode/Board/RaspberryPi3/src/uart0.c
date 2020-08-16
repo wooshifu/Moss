@@ -15,8 +15,6 @@
  * Set baud rate and characteristics (115200 8N1) and map to GPIO
  */
 void uart0_init() {
-  register unsigned int r;
-
   /* initialize UART */
   *UART0_CR = 0; // turn off UART0
 
@@ -33,7 +31,7 @@ void uart0_init() {
   mailbox_call(MAILBOX_CH_PROPERTY);
 
   /* map UART0 to GPIO pins */
-  r = *GPFSEL1;
+  unsigned int r = *GPFSEL1;
   r &= ~((7 << 12) | (7 << 15)); // gpio14, gpio15
   r |= (4 << 12) | (4 << 15);    // alt0
   *GPFSEL1 = r;
@@ -47,7 +45,7 @@ void uart0_init() {
   while (r--) {
     asm volatile("nop");
   }
-  *GPPUDCLK0 = 0; // flush GPIO setup
+  *GPPUDCLK0 = 0;     // flush GPIO setup
   *UART0_ICR = 0x7FF; // clear interrupts
   *UART0_IBRD = 2;    // 115200 baud
   *UART0_FBRD = 0xB;
@@ -71,13 +69,12 @@ void uart0_send(unsigned int c) {
  * Receive a character
  */
 char uart0_getc() {
-  char r;
   /* wait until something is in the buffer */
   do {
     asm volatile("nop");
   } while (*UART0_FR & 0x10);
   /* read it and return */
-  r = (char)(*UART0_DR);
+  char r = (char)(*UART0_DR);
   /* convert carrige return to newline */
   return r == '\r' ? '\n' : r;
 }
@@ -90,7 +87,7 @@ void uart0_puts(char *s) {
     /* convert newline to carrige return + newline */
     if (*s == '\n') {
       uart0_send('\r');
-}
+    }
     uart0_send(*s++);
   }
 }
@@ -99,16 +96,13 @@ void uart0_puts(char *s) {
  * Display a binary value in hexadecimal
  */
 void uart_hex(unsigned int d) {
-  unsigned int n;
   for (int c = 28; c >= 0; c -= 4) {
     // get highest tetrad
-    n = (d >> c) & 0xF;
+    unsigned int n = (d >> c) & 0xF;
     // 0-9 => '0'-'9', 10-15 => 'A'-'F'
     n += n > 9 ? 0x37 : 0x30;
     uart0_send(n);
   }
 }
 
-void put_char(char character) {
-  uart0_send(character);
-}
+void put_char(char character) { uart0_send(character); }
