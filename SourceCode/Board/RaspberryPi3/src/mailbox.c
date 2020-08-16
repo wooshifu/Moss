@@ -44,7 +44,7 @@ void mailbox_get_serial_number() { // get the board's unique serial number with 
   mailbox[1] = MAILBOX_REQUEST;    // this is a request message
 
   mailbox[2] = MAILBOX_TAG_GET_SERIAL; // get serial number command
-  mailbox[3] = 8;                     // buffer size
+  mailbox[3] = 8;                      // buffer size
   mailbox[4] = 8;
   mailbox[5] = 0; // clear output buffer
   mailbox[6] = 0;
