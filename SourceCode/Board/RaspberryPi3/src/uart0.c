@@ -1,4 +1,5 @@
 #include "gpio.h"
+#include "log.h"
 #include "mailbox.h"
 
 /* PL011 UART registers */
@@ -22,18 +23,22 @@ void init_uart0() {
   mailbox[0] = 9 * 4;
   mailbox[1] = MAILBOX_REQUEST;
   mailbox[2] = MAILBOX_TAG_SET_CLOCK_RATE; // set clock rate
-  mailbox[3] = 12;
-  mailbox[4] = 8;
-  mailbox[5] = 2;       // UART clock
-  mailbox[6] = 4000000; // 4Mhz
-  mailbox[7] = 0;       // clear turbo
+  mailbox[3] = 12;                         // value buffer size in bytes
+  mailbox[4] = 8;                          // request code
+  mailbox[5] = 2;                          // UART clock, clock id
+  mailbox[6] = 4000000;                    // 4Mhz, rate (in Hz)
+  mailbox[7] = 0;                          // clear turbo, setting turbo
   mailbox[8] = MAILBOX_TAG_LAST;
-  mailbox_call(MAILBOX_CH_PROPERTY);
+  int result = mailbox_call(MAILBOX_CH_PROPERTY);
+  if (result == 0) {
+    log_e("could not set mailbox, error code: %d", result);
+    return;
+  }
 
   /* map UART0 to GPIO pins */
   unsigned int r = *GPFSEL1;
-  r &= ~((7 << 12) | (7 << 15)); // gpio14, gpio15
-  r |= (4 << 12) | (4 << 15);    // alt0
+  r &= ~((7 << 12) | (7 << 15)); // gpio14, gpio15, [17:15]:FSEL15, [14:12]:FSEL14
+  r |= (4 << 12) | (4 << 15);    // alt0, 0b100 = GPIO Pin takes alternate function 0
   *GPFSEL1 = r;
   *GPPUD = 0; // enable pins 14 and 15
   r = 150;
@@ -45,12 +50,12 @@ void init_uart0() {
   while (r--) {
     asm volatile("nop");
   }
-  *GPPUDCLK0 = 0;                          // flush GPIO setup
-  *UART0_INTERRUPT_CLEAR_REGISTER = 0x7FF; // clear interrupts
-  *UART0_INTEGER_BAUD_RATE_DIVISOR = 2;    // 115200 baud
-  *UART0_FRACTIONAL_BAUD_RATE_DIVISOR = 0xB;
-  *UART0_LINE_CONTROL_REGISTER = 0b11 << 5; // 8n1
-  *UART0_CONTROL_REGISTER = 0x301;          // enable Tx, Rx, FIFO
+  *GPPUDCLK0 = 0;                            // flush GPIO setup
+  *UART0_INTERRUPT_CLEAR_REGISTER = 0x7FF;   // clear interrupts
+  *UART0_INTEGER_BAUD_RATE_DIVISOR = 2;      // 115200 baud, 4000000/(16*115200)
+  *UART0_FRACTIONAL_BAUD_RATE_DIVISOR = 0xB; // BAUDDIV = (FUARTCLK/(16 * Baud rate))
+  *UART0_LINE_CONTROL_REGISTER = 0b11 << 5;  // 8n1, b11 = 8 bits
+  *UART0_CONTROL_REGISTER = 0x301;           // enable Tx, Rx, FIFO
 }
 
 /**
@@ -75,7 +80,7 @@ char uart0_getc() {
   } while (*UART0_FLAG_REGISTER & 0x10);
   /* read it and return */
   char r = (char)(*UART0_DATA_REGISTER);
-  /* convert carrige return to newline */
+  /* convert carriage return to newline */
   return r == '\r' ? '\n' : r;
 }
 
@@ -84,7 +89,7 @@ char uart0_getc() {
  */
 void uart0_puts(char *string) {
   while (*string) {
-    /* convert newline to carrige return + newline */
+    /* convert newline to carriage return + newline */
     if (*string == '\n') {
       uart0_send('\r');
     }
