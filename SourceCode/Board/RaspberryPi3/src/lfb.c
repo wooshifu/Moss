@@ -1,3 +1,4 @@
+#if 0
 #include "homer.h"
 #include "log.h"
 #include "mailbox.h"
@@ -55,7 +56,7 @@ void init_lfb() {
 
   // this might not return exactly what we asked for, could be
   // the closest supported resolution instead
-  if (mailbox_call(MAILBOX_CH_PROPERTY) && mailbox[20] == 32 && mailbox[28] != 0) {
+  if (mailbox_call(MAILBOX_CHANNEL_PROPERTY_ARM_TO_VIDEO_CORE) && mailbox[20] == 32 && mailbox[28] != 0) {
     mailbox[28] &= 0x3FFFFFFF; // convert GPU address to ARM address
     width = mailbox[5];        // get actual physical width
     height = mailbox[6];       // get actual physical height
@@ -88,3 +89,5 @@ void lfb_showpicture() {
     ptr += pitch - homer_width * 4;
   }
 }
+
+#endif

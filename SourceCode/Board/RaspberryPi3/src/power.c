@@ -1,3 +1,4 @@
+#if 0
 #include "delays.h"
 #include "gpio.h"
 #include "log.h"
@@ -25,7 +26,7 @@ void power_off() {
     mailbox[5] = (unsigned int)r; // device id
     mailbox[6] = 0;               // bit 0: off, bit 1: no wait
     mailbox[7] = MAILBOX_TAG_LAST;
-    mailbox_call(MAILBOX_CH_PROPERTY);
+    mailbox_call(MAILBOX_CHANNEL_PROPERTY_ARM_TO_VIDEO_CORE);
   }
 
   // power off gpio pins (but not VCC pins)
@@ -63,3 +64,5 @@ void reset() {
   *PM_WDOG = PM_WDOG_MAGIC | 10;
   *PM_RSTC = PM_WDOG_MAGIC | PM_RSTC_FULLRST;
 }
+
+#endif
