@@ -29,7 +29,7 @@ void init_uart0() {
                                             .rate = 4000000,
                                             .skip_setting_turbo = 0,
 
-                                            .end = PROPERTY_TAG_END};
+                                            .end = MAILBOX_PROPERTY_TAG_END};
   mailbox_call(MAILBOX_CHANNEL_PROPERTY_TAGS_ARM_TO_VIDEO_CORE, &data);
   log_d("response code: %x, tag code: %x", data.code, data.tag_code);
   if (!is_valid_mailbox_response(data.code, data.tag_code)) {

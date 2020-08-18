@@ -118,7 +118,7 @@
  * 0xXX   | Value Buffer  |                    Padding                    |
  *        +---------------------------------------------------------------+
  */
-#define PROPERTY_TAG_END 0x00000000
+#define MAILBOX_PROPERTY_TAG_END 0x00000000
 
 #define MAILBOX_CLOCK_ID_RESERVED 0x000000000  // reserved
 #define MAILBOX_CLOCK_ID_EMMC 0x000000001      // EMMC
@@ -142,15 +142,28 @@ typedef struct mailbox_property_set_clock_rate_t {
   uint32_t size; // =sizeof(struct my_property_set_clock_rate_t);
   uint32_t code; // =MAILBOX_CODE_REQUEST ;
 
-  uint32_t tag;                // =PROPERTY_TAG_SET_CLOCK_RATE;
+  uint32_t tag;                // =MAILBOX_PROPERTY_TAG_SET_CLOCK_RATE;
   uint32_t buffer_size;        // =12;
   uint32_t tag_code;           // =MAILBOX_CODE_REQUEST;
   uint32_t clock_id;           // =CLOCK_ID_UART;
   uint32_t rate;               // =4000000;
   uint32_t skip_setting_turbo; // =0;
 
-  uint32_t end; // =PROPERTY_TAG_END
+  uint32_t end; // =MAILBOX_PROPERTY_TAG_END
 } __attribute__((aligned(16))) mailbox_property_set_clock_rate_t;
+// The buffer itself is 16-byte aligned as only the upper 28 bits of the address can be passed via the mailbox.
 
+/**
+ * send mailbox message to mailbox
+ * @param channel which channel to send
+ * @param data message data
+ */
 void mailbox_call(uint32_t channel, void *data);
+
+/**
+ * after mailbox_call, we should detect the response is successful or not
+ * @param code code
+ * @param tag_code tag code
+ * @return true on success, false on failure
+ */
 bool is_valid_mailbox_response(uint32_t code, uint32_t tag_code);
