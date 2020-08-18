@@ -1,5 +1,5 @@
-#include "el.h"
-#include "init.h"
+#include "hal/el.h"
+#include "hal/init.h"
 #include "log.h"
 #include "logo.h"
 

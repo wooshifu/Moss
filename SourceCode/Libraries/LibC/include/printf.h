@@ -34,7 +34,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 
-#include "peripheral.h"
+#include "hal/output.h"
 
 #ifdef __cplusplus
 extern "C" {
