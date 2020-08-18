@@ -60,6 +60,7 @@ void init_uart0() {
   *UART0_FRACTIONAL_BAUD_RATE_DIVISOR = 0xB; // BAUDDIV = (FUARTCLK/(16 * Baud rate))
   *UART0_LINE_CONTROL_REGISTER = 0b11 << 5;  // 8n1, b11 = 8 bits
   *UART0_CONTROL_REGISTER = 0x301;           // enable Tx, Rx, FIFO
+  log_d("uart0 successfully initialized");
 }
 
 /**
