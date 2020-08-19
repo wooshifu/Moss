@@ -1,4 +1,4 @@
-#include "hal/output.h"
+#include "hal/print.h"
 #include "logo.h"
 
 static const char *__moss_logo = "      ___           ___           ___           ___     \n"
