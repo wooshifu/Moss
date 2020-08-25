@@ -23,7 +23,7 @@ void init_uart0() {
                                             .code = MAILBOX_CODE_REQUEST,
 
                                             .tag = MAILBOX_PROPERTY_TAG_SET_CLOCK_RATE,
-                                            .buffer_size = 12, // 12 bytes
+                                            .buffer_size = 12, // 12 bytes, clock_id,rate,skip_setting_turbo
                                             .tag_code = MAILBOX_CODE_REQUEST,
                                             .clock_id = MAILBOX_CLOCK_ID_UART,
                                             .rate = 4000000,
