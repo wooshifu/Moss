@@ -14,4 +14,5 @@ void kernel_main(void) {
   }
 
   log_i("current el: %d", get_current_el());
+  log_d("kernel main done");
 }

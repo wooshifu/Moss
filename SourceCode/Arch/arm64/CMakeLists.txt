@@ -10,6 +10,7 @@ add_library(${PROJECT_NAME}
 target_include_kernel_header_files(${PROJECT_NAME})
 target_include_libc_header_files(${PROJECT_NAME})
 target_include_hal_header_files(${PROJECT_NAME})
+target_include_raspberry_pi3_header_files(${PROJECT_NAME})
 
 # library for unit tests
 add_library(ObjArchUnitTests
@@ -20,6 +21,7 @@ target_compile_definitions(ObjArchUnitTests PRIVATE "-DENV_KERNEL_UNIT_TESTS")
 target_include_kernel_header_files(ObjArchUnitTests)
 target_include_libc_header_files(ObjArchUnitTests)
 target_include_hal_header_files(ObjArchUnitTests)
+target_include_raspberry_pi3_header_files(ObjArchUnitTests)
 # library for unit tests
 
 
