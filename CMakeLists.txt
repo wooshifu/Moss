@@ -30,9 +30,12 @@ else ()
 endif ()
 
 set(IGNORE_SPECIFIC_WARNINGS "-Wno-unused-variable -Wno-unused-parameter")
+#set(COMMON_CMAKE_C_FLAGS "-mgeneral-regs-only -O0 -g -Wall -Wextra -Werror ${IGNORE_SPECIFIC_WARNINGS} -MD -fpic -ffreestanding -std=gnu11 -nostdlib -nostartfiles")
 set(COMMON_CMAKE_C_FLAGS "-O0 -g -Wall -Wextra -Werror ${IGNORE_SPECIFIC_WARNINGS} -MD -fpic -ffreestanding -std=gnu11 -nostdlib -nostartfiles")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_CMAKE_C_FLAGS}")
 set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS}")
+# define __CURRENT_FILE_NAME__, log function will use this macro to output the file name
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__CURRENT_FILE_NAME__='\"$(subst ${CMAKE_SOURCE_DIR}/,,$(abspath $<))\"'")
 
 message(STATUS "CMAKE_C_FLAGS is ${CMAKE_C_FLAGS}")
 message(STATUS "CMAKE_ASM_FLAGS is ${CMAKE_ASM_FLAGS}")

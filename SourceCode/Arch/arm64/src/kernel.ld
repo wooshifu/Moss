@@ -6,7 +6,6 @@ SECTIONS
     __text_start = .;
     .text :
     {
-        KEEP(*(.interrupt_vector_table))
         KEEP(*(.text.boot))
         *(.text)
     }

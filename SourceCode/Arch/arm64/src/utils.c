@@ -1,6 +1,7 @@
 #include "log.h"
 #include "string.h"
 
+#if 1
 extern uint8_t __text_start;
 extern uint8_t __text_end;
 extern uint8_t __rodata_start;
@@ -16,8 +17,12 @@ extern uint8_t __sys_stack;
 extern uint8_t __end_stack;
 extern uint8_t __PAGE_TABLE;
 extern uint8_t __HEAP_BEGIN;
+#endif
 
 void print_mem_stack() {
+#if 1
+int x = 0;
+log_d("x is %d", x);
   log_d("__text_start is %p", &__text_start);
   log_d("__text_end is %p", &__text_end);
   log_d("__rodata_start is %p", &__rodata_start);
@@ -33,6 +38,7 @@ void print_mem_stack() {
   log_d("__end_stack is %p", &__end_stack);
   log_d("__PAGE_TABLE is %p", &__PAGE_TABLE);
   log_d("__HEAP_BEGIN is %p", &__HEAP_BEGIN);
+#endif
 }
 
 void bss_clean() { memzero(&__bss_start, &__bss_end); }
