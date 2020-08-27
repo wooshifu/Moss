@@ -26,38 +26,14 @@ const char *__extract_file_name_from_path(const char *file_path) {
   } while (0)
 #endif
 
-void _log_v(const char *format, ...) {
-#if LOG_LEVEL <= LOG_LEVEL_VERBOSE
-  __do_log(format);
-#endif
-}
+void _log_v(const char *format, ...) { __do_log(format); }
 
-void _log_d(const char *format, ...) {
-#if LOG_LEVEL <= LOG_LEVEL_DEBUG
-  __do_log(format);
-#endif
-}
+void _log_d(const char *format, ...) { __do_log(format); }
 
-void _log_i(const char *format, ...) {
-#if LOG_LEVEL <= LOG_LEVEL_INFO
-  __do_log(format);
-#endif
-}
+void _log_i(const char *format, ...) { __do_log(format); }
 
-void _log_w(const char *format, ...) {
-#if LOG_LEVEL <= LOG_LEVEL_WARNING
-  __do_log(format);
-#endif
-}
+void _log_w(const char *format, ...) { __do_log(format); }
 
-void _log_e(const char *format, ...) {
-#if LOG_LEVEL <= LOG_LEVEL_ERROR
-  __do_log(format);
-#endif
-}
+void _log_e(const char *format, ...) { __do_log(format); }
 
-void _log_f(const char *format, ...) {
-#if LOG_LEVEL <= LOG_LEVEL_FATAL
-  __do_log(format);
-#endif
-}
+void _log_f(const char *format, ...) { __do_log(format); }

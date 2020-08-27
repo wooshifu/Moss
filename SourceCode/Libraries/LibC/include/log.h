@@ -67,41 +67,65 @@ const char *__extract_file_name_from_path(const char *file_path);
 /// log verbose
 void _log_v(const char *format, ...);
 
+#if LOG_LEVEL <= LOG_LEVEL_VERBOSE
 #define log_v(format, ...)                                                                                             \
   _log_v(LOG_OUTPUT_COLOR_BLUE "[VERBOSE %s:%d(%s)]: " format LOG_OUTPUT_COLOR_RESET "\n",                             \
          __extract_file_name_from_path(__FILE__), __LINE__, __func__, ##__VA_ARGS__)
+#else
+#define log_v(format, ...)
+#endif
 
 /// log debug
 void _log_d(const char *format, ...);
 
+#if LOG_LEVEL <= LOG_LEVEL_DEBUG
 #define log_d(format, ...)                                                                                             \
   _log_d(LOG_OUTPUT_COLOR_CYAN "[DEBUG %s:%d(%s)]: " format LOG_OUTPUT_COLOR_RESET "\n",                               \
          __extract_file_name_from_path(__FILE__), __LINE__, __func__, ##__VA_ARGS__)
+#else
+#define log_d(format, ...)
+#endif
 
 /// log info
 void _log_i(const char *format, ...);
 
+#if LOG_LEVEL <= LOG_LEVEL_INFO
 #define log_i(format, ...)                                                                                             \
   _log_i(LOG_OUTPUT_COLOR_WHITE "[INFO %s:%d(%s)]: " format LOG_OUTPUT_COLOR_RESET "\n",                               \
          __extract_file_name_from_path(__FILE__), __LINE__, __func__, ##__VA_ARGS__)
+#else
+#define log_i(format, ...)
+#endif
 
 /// log warning
 void _log_w(const char *format, ...);
 
+#if LOG_LEVEL <= LOG_LEVEL_WARNING
 #define log_w(format, ...)                                                                                             \
   _log_w(LOG_OUTPUT_COLOR_YELLOW "[WARN %s:%d(%s)]: " format LOG_OUTPUT_COLOR_RESET "\n",                              \
          __extract_file_name_from_path(__FILE__), __LINE__, __func__, ##__VA_ARGS__)
+#else
+#define log_w(format, ...)
+#endif
 
 /// log error
 void _log_e(const char *format, ...);
 
+#if LOG_LEVEL <= LOG_LEVEL_ERROR
 #define log_e(format, ...)                                                                                             \
   _log_e(LOG_OUTPUT_COLOR_RED "[ERROR] %s:%d(%s)]: " format LOG_OUTPUT_COLOR_RESET "\n",                               \
          __extract_file_name_from_path(__FILE__), __LINE__, __func__, ##__VA_ARGS__)
+#else
+#define log_e(format, ...)
+#endif
 
 /// log fatal
 void _log_f(const char *format, ...);
 
+#if LOG_LEVEL <= LOG_LEVEL_FATAL
 #define log_f(format, ...)                                                                                             \
   _log_f(LOG_OUTPUT_COLOR_MAGENTA "[FATAL] %s:%d(%s)]: " format LOG_OUTPUT_COLOR_RESET "\n",                           \
          __extract_file_name_from_path(__FILE__), __LINE__, __func__, ##__VA_ARGS__)
+#else
+#define log_f(format, ...)
+#endif
