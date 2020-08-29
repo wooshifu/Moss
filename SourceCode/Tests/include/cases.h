@@ -3,7 +3,7 @@
 #include "lib/test_lib.h"
 
 // --- TEST CASES BEGIN ---
-#include "test_io_h.h"
+#include "test_memory_h.h"
 #include "test_string_h.h"
 #include "test_test_lib_h.h"
 // --- TEST CASES END ---
