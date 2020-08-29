@@ -35,7 +35,7 @@ void init_uart0() {
   if (!is_valid_mailbox_response(data.code, data.tag_code)) {
     // NOTE: uart0 not initialized, could we log this message to uart0???
     log_f("failed to set clock uart rate, code: %u, tag_code: %u", data.code, data.tag_code);
-//    return;
+    return;
   }
   log_d("uart0(id:%u) clock rate initialized to rate:%u", data.clock_id, data.rate);
 

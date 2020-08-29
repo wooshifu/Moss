@@ -13,7 +13,7 @@
     mrs    x1, esr_el1
     mrs    x2, elr_el1
     bl     show_invalid_entry_message
-    // kernel_exit should we do this ???
+    // TODO: kernel_exit should we do this ???
     //b      err_hang
 .endm
 

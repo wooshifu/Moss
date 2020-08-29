@@ -6,5 +6,4 @@
  */
 int init_board();
 
-
 int init_cpu();

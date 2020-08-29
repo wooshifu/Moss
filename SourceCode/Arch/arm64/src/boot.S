@@ -3,7 +3,7 @@
 
 ///////////////////////////////////////////////////////////////////
 /**
- * get current cpu core
+ * macro, used to get current cpu core id
  */
 .macro __get_current_core
     mrs  x0, mpidr_el1 /* Multiprocessor Affinity Register */
@@ -33,7 +33,7 @@
 .globl _start
 _start:
     __get_current_core
-    cbz  x0, _init_core0 /* hang for all non-primary CPU */
+    cbz  x0, _init_core0 /* hang for all non-primary cpu core */
     b    _hang_core
 
 _hang_core:
@@ -45,6 +45,7 @@ _init_core0:
     ldr  x0, =0x80000
     mov  sp, x0
 
+    /* TODO: check where we are now in el3 ot not. In this case, we assume we are in el3, because qemu raspi3 boot into el3 */
     /* try drop from el3 to el1 secure */
     __print_current_el /* NOTE: before we can use bl instruction, sp must be set */
 
@@ -58,12 +59,17 @@ _init_core0:
     /*=============================================================*/
     /*      Initialize sctlr_el1                                   */
     /*=============================================================*/
-#define __SCTLR_RESERVED (3 << 28) | (3 << 22) | (1 << 20) | (1 << 11) /* Bits 29,28,23,22,20,11 should be 1 (res1 on documentation) */
-#define __SCTLR_EE_LITTLE_ENDIAN (0 << 25) /* Endianness of data accesses at EL1, 0->little-endian, 1->big-endian */
-#define __SCTLR_I_CACHE_DISABLED (0 << 12) /* Stage 1 instruction access Cacheability control, for accesses at EL0 and EL1. 0->disable I cache */
-#define __SCTLR_D_CACHE_DISABLED (0 << 2) /* Stage 1 Cacheability control, for data accesses. 0->disable D cache */
-#define __SCTLR_MMU_DISABLED (0 << 0) /* MMU enable for EL1&0 stage 1 address translation. 0->disable MMU */
-#define __SCTLR_VALUE (__SCTLR_RESERVED | __SCTLR_EE_LITTLE_ENDIAN | __SCTLR_I_CACHE_DISABLED | __SCTLR_D_CACHE_DISABLED | __SCTLR_MMU_DISABLED)
+    /* Bits 29,28,23,22,20,11 should be 1 (res1 on documentation) */
+    #define __SCTLR_RESERVED (3 << 28) | (3 << 22) | (1 << 20) | (1 << 11)
+    /* Endianness of data accesses at EL1, 0->little-endian, 1->big-endian */
+    #define __SCTLR_EE_LITTLE_ENDIAN (0 << 25)
+    /* Stage 1 instruction access Cacheability control, for accesses at EL0 and EL1. 0->disable I cache */
+    #define __SCTLR_I_CACHE_DISABLED (0 << 12)
+    /* Stage 1 Cacheability control, for data accesses. 0->disable D cache */
+    #define __SCTLR_D_CACHE_DISABLED (0 << 2)
+    /* MMU enable for EL1&0 stage 1 address translation. 0->disable MMU */
+    #define __SCTLR_MMU_DISABLED (0 << 0)
+    #define __SCTLR_VALUE (__SCTLR_RESERVED | __SCTLR_EE_LITTLE_ENDIAN | __SCTLR_I_CACHE_DISABLED | __SCTLR_D_CACHE_DISABLED | __SCTLR_MMU_DISABLED)
 
     mov x0, xzr /* clear x0 */
     ldr x0, =__SCTLR_VALUE
