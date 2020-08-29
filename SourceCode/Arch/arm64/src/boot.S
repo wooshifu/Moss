@@ -1,135 +1,129 @@
-#include "sysregs.h"
-
 .section ".text.boot"
+
+
+///////////////////////////////////////////////////////////////////
+/**
+ * get current cpu core
+ */
+.macro __get_current_core
+    mrs  x0, mpidr_el1 /* Multiprocessor Affinity Register */
+    and  x0, x0, #0xFFFF /* get processor id */
+.endm
+
+/**
+ * mocro, use to get current exception level
+ */
+.macro __get_current_el
+    mrs x0, CurrentEL
+    lsr x0, x0, #2
+.endm
+
+/**
+ * macro, used to print current exception level
+ */
+.macro __print_current_el
+    __get_current_el
+    mov  x1, x0
+    ldr  x0, =__message_current_el
+    bl   printf_
+.endm
+///////////////////////////////////////////////////////////////////
+
 
 .globl _start
 _start:
-    mrs  x0, mpidr_el1
-    and  x0, x0, #0xFFFF // check processor id
-    cbz  x0, _init_core0 // hang for all non-primary CPU
+    __get_current_core
+    cbz  x0, _init_core0 /* hang for all non-primary CPU */
     b    _hang_core
 
 _hang_core:
-    wfi
+    wfi /* wait for interrupt */
     b    _hang_core
 
-.macro _print_current_el
-    bl   get_current_el
-    mov  x1, x0
-    ldr  x0, =__message
-    bl   printf_
-.endm
-
 _init_core0:
-#if 0
+    /* TODO: (which value should sp be) */
     ldr  x0, =0x80000
     mov  sp, x0
 
-    _print_current_el
+    /* try drop from el3 to el1 secure */
+    __print_current_el /* NOTE: before we can use bl instruction, sp must be set */
 
-    // important!!!
-    mov x0, #3 << 20
-    msr cpacr_el1, x0           /* Enable FP/SIMD at EL1 */
+    /*=============================================================*/
+    /*      Enable FP/SIMD at EL1                                  */
+    /*=============================================================*/
+    /* IMPORTANT, el1 FP/SIMD should be enabled, because we will use fp somewhere */
+    mov x0, #(0b11 << 20) /* FPEN, bits [21:20] */
+    msr cpacr_el1, x0 /* Architectural Feature Access Control Register, Enable FP/SIMD at EL1 */
 
-	ldr	x0, =SCTLR_VALUE_MMU_DISABLED
-	msr	sctlr_el1, x0
+    /*=============================================================*/
+    /*      Initialize sctlr_el1                                   */
+    /*=============================================================*/
+#define __SCTLR_RESERVED (3 << 28) | (3 << 22) | (1 << 20) | (1 << 11) /* Bits 29,28,23,22,20,11 should be 1 (res1 on documentation) */
+#define __SCTLR_EE_LITTLE_ENDIAN (0 << 25) /* Endianness of data accesses at EL1, 0->little-endian, 1->big-endian */
+#define __SCTLR_I_CACHE_DISABLED (0 << 12) /* Stage 1 instruction access Cacheability control, for accesses at EL0 and EL1. 0->disable I cache */
+#define __SCTLR_D_CACHE_DISABLED (0 << 2) /* Stage 1 Cacheability control, for data accesses. 0->disable D cache */
+#define __SCTLR_MMU_DISABLED (0 << 0) /* MMU enable for EL1&0 stage 1 address translation. 0->disable MMU */
+#define __SCTLR_VALUE (__SCTLR_RESERVED | __SCTLR_EE_LITTLE_ENDIAN | __SCTLR_I_CACHE_DISABLED | __SCTLR_D_CACHE_DISABLED | __SCTLR_MMU_DISABLED)
 
-	ldr	x0, =HCR_VALUE
-	msr	hcr_el2, x0
+    mov x0, xzr /* clear x0 */
+    ldr x0, =__SCTLR_VALUE
+    msr sctlr_el1, x0 /* System Control Register (EL1) */
 
-	ldr	x0, =SCR_VALUE
-	msr	scr_el3, x0
+    mrs x1, sctlr_el1
+    ldr x0, =__message_sctlr_el1_value
+    bl printf_
 
-	ldr	x0, =SPSR_VALUE
-	msr	spsr_el3, x0
+    /*=============================================================*/
+    /*      Initialize scr_el3                                     */
+    /*=============================================================*/
+    mrs x0, scr_el3
+    orr x0, x0, #(1<<10)        /* Lower EL is 64bits */
+    msr scr_el3, x0 /* Secure Configuration Register */
 
-	adr	x0, _goto_kernel_main
-	msr	elr_el3, x0
+    /*=============================================================*/
+    /*      Initialize spsr_el3                                    */
+    /*=============================================================*/
+    mov x0, xzr
+    mov x0, #0b00101            /* AArch64 Exception level and selected Stack Pointer. 0b0101->EL1h */
+    orr x0, x0, #(1 << 8)       /* Enable SError and External Abort. */
+    orr x0, x0, #(1 << 7)       /* IRQ interrupt Process state mask. */
+    orr x0, x0, #(1 << 6)       /* FIQ interrupt Process state mask. */
+    msr spsr_el3, x0 /* Saved Program Status Register (EL3) */
 
-	eret
-#endif
+    /*=============================================================*/
+    /*      Initialize elr_el3                                     */
+    /*=============================================================*/
+    adr x0, _goto_kernel_main
+    msr elr_el3, x0 /* Exception Link Register (EL3) */
 
-#if 1
-drop_el1_secure:
-/* Try drop from el3 to el1 secure */
-
-/*=============================================================*/
-/*      Enable FP/SIMD at EL1                                  */
-/*=============================================================*/
-mov x0, #(0b11 << 20)
-msr cpacr_el1, x0           /* Enable FP/SIMD at EL1 */
-
-/*=============================================================*/
-/*      Initialize sctlr_el1                                   */
-/*=============================================================*/
-mov x0, xzr
-orr x0, x0, #(1 << 29)          /* Checking http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0500d/CIHDIEBD.html */
-orr x0, x0, #(1 << 28)          /* Bits 29,28,23,22,20,11 should be 1 (res1 on documentation) */
-orr x0, x0, #(1 << 23)
-orr x0, x0, #(1 << 22)
-orr x0, x0, #(1 << 20)
-orr x0, x0, #(1 << 11)
-msr sctlr_el1, x0
-
-/*=============================================================*/
-/*      Initialize scr_el3                                     */
-/*=============================================================*/
-mrs x0, scr_el3
-orr x0, x0, #(1<<10)        /* Lower EL is 64bits */
-msr scr_el3, x0
-
-/*=============================================================*/
-/*      Initialize spsr_el3                                    */
-/*=============================================================*/
-mov x0, xzr
-mov x0, #0b00101            /* EL1 */
-orr x0, x0, #(1 << 8)       /* Enable SError and External Abort. */
-orr x0, x0, #(1 << 7)       /* IRQ interrupt Process state mask. */
-orr x0, x0, #(1 << 6)       /* FIQ interrupt Process state mask. */
-msr spsr_el3, x0
-
-/*=============================================================*/
-/*      Initialize elr_el3                                     */
-/*=============================================================*/
-adr x0, _goto_kernel_main
-msr elr_el3, x0
-
-eret
-#endif
-
-
-
-    //b    _goto_kernel_main
-    //b    _hang_core // should never come here
-
-    // TODO: before we can use mmu, we should enter EL1, because TTBR1_EL1 is not available in EL2 and EL3
+    /* Returns from an exception. It restores the processor state based on SPSR_ELn and branches to ELR_ELn, where n is the current exception level */
+    eret
 
 _goto_kernel_main:
-    //ldr  x0, =__sys_stack
+    /* TODO: which value shoule sp be */
     ldr  x0, =0x80000
     mov  sp, x0
 
     bl   print_mem_stack
     bl   bss_clean
 
-    bl   get_current_el
-    mov  x1,x0
-    ldr  x0, =__message
-    bl   printf_
+    __print_current_el
 #ifndef ENV_KERNEL_UNIT_TESTS
     bl   kernel_main
 #else
     bl   kernel_main_tests
 #endif
-    mrs  x0, mpidr_el1
-    and  x0, x0, #0xFFFF // check processor id
+    __get_current_core
     mov  x1, x0
-    ldr  x0, =__core_hang_message
+    ldr  x0, =__message_core_hang
     bl   printf_
-    b    _hang_core // kernel_main should never come here
+    b    _hang_core /* kernel_main should never come here */
 
-__message:
-    .asciz "[DEBUG] current el: %d\n"
+__message_current_el:
+    .asciz "[DEBUG] current el is: %d\n"
 
-__core_hang_message:
-    .asciz "[DEBUG] core %d hanging \n"
+__message_core_hang:
+    .asciz "[DEBUG] core %d hung\n"
+
+__message_sctlr_el1_value:
+    .asciz "[DEBUG] sctlr_el1 is: 0x%x\n"
