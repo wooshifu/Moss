@@ -28,5 +28,6 @@ void disable_irq();
 // See BCM2836 ARM-local peripherals at
 // https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2836/QA7_rev3.4.pdf
 
-#define CORE0_INTERRUPT_SOURCES (LMMIO_BASE + 0x60)
+#define LPBASE 0x40000000
+#define CORE0_INTERRUPT_SOURCES (LPBASE + 0x60)
 #define LTIMER_INTERRUPT (1 << 11)

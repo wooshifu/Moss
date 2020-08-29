@@ -5,14 +5,15 @@
 #include "logo.h"
 extern uint8_t __text_start;
 
-uint64_t xx;
+uint64_t xx; // bss data test
 
 void kernel_main(void) {
   log_d(">>>>>>>>> entered kernel main <<<<<<<<<");
   init_board();
 
-  init_cpu();
   print_moss_logo();
+
+  init_cpu();
 
   for (int i = 0; i < 10; ++i) {
     log_d("test random: %d", generate_random(0, 100));
@@ -32,4 +33,5 @@ void kernel_main(void) {
   double z = x / y;
   log_d("5/3=%f", z);
   log_d("long long ago: %llx", ago);
+  while(1){};
 }
