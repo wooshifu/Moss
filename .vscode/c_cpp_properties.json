@@ -7,11 +7,12 @@
             ],
             "defines": [],
             "macFrameworkPath": [],
-            "compilerPath": "~/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-gcc",
+            "compilerPath": "/usr/local/bin/aarch64-none-elf-gcc",
             "cStandard": "gnu11",
             "cppStandard": "c++17",
-            "intelliSenseMode": "gcc-arm",
-            "compileCommands": "${workspaceFolder}/cmake-build-debug/compile_commands.json"
+            "intelliSenseMode": "gcc-arm64",
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+            "configurationProvider": "ms-vscode.cmake-tools"
         }
     ],
     "version": 4
