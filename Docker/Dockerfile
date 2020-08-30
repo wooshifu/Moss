@@ -17,13 +17,13 @@ RUN apt-get update \
     && rm -rf /var/cache/apt/archives \
     && mkdir /run/sshd \
     && yes password | passwd root \
-    && echo 'root password changed to "password"' \
+    && echo 'password of root has been changed to "password"' \
     && echo 'set completion-ignore-case On' >> ~/.inputrc
 
-ENV CC=/usr/bin/arm-none-eabi-gcc
-ENV CXX=/usr/bin/arm-none-eabi-g++
-ENV LD=/usr/bin/arm-none-eabi-ld
-ENV AS=/usr/bin/arm-none-eabi-as
-ENV AR=/usr/bin/arm-none-eabi-ar
+ENV CC=/usr/bin/aarch64-linux-gnu-gcc
+ENV CXX=/usr/bin/aarch64-linux-gnu-g++
+ENV LD=/usr/bin/aarch64-linux-gnu-ld
+ENV AS=/usr/bin/aarch64-linux-gnu-as
+ENV AR=/usr/bin/aarch64-linux-gnu-ar
 
 CMD ["/usr/sbin/sshd", "-D"]
