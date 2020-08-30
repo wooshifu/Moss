@@ -1,6 +1,6 @@
 #include "gpio.h"
 #include "log.h"
-#include "utils.h"
+#include "memory.h"
 
 //#define TIMER_CS        (MMIO_BASE+0x00003000)
 //#define TIMER_CLO       (MMIO_BASE+0x00003004)
@@ -44,21 +44,21 @@ unsigned int curVal = 0;
 #define TIMER_CS_M3 (1 << 3)
 
 void timer_init(void) {
-  curVal = get32(TIMER_CLO);
+  curVal = memory_read_32bits((const uint32_t *)TIMER_CLO);
   curVal += interval;
-  put32(TIMER_C1, curVal);
+  memory_write_32bits((uint32_t *)TIMER_C1, curVal);
 }
 
 void handle_timer_irq(void) {
   curVal += interval;
-  put32(TIMER_C1, curVal);
-  put32(TIMER_CS, TIMER_CS_M1);
+  memory_write_32bits((uint32_t *)TIMER_C1, curVal);
+  memory_write_32bits((uint32_t *)TIMER_CS, TIMER_CS_M1);
   log_i("Timer interrupt received\n\r");
 }
 
-void local_timer_init(void) { put32(LTIMER_CTRL, (interval | LTIMER_CTRL_VALUE)); }
+void local_timer_init(void) { memory_write_32bits((uint32_t *)LTIMER_CTRL, (interval | LTIMER_CTRL_VALUE)); }
 
 void handle_local_timer_irq(void) {
   log_d("Timer interrupt received");
-  put32(LTIMER_CLR, LTIMER_CLR_ACK);
+  memory_write_32bits((uint32_t *)LTIMER_CLR, LTIMER_CLR_ACK);
 }
