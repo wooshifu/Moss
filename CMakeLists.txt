@@ -48,7 +48,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(KernelName Kernel.elf)
 
-add_subdirectory(${Moss_SOURCE_DIR}/SourceCode)
+# make config.h to be available
+include_directories(${MOSS_SOURCE_CODE_DIR}/Config/include)
+add_subdirectory(${MOSS_SOURCE_CODE_DIR})
 
 dump_cmake_variables()
 

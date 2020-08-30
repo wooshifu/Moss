@@ -11,7 +11,7 @@ target_include_tests_header_files(${PROJECT_NAME})
 target_include_hal_header_files(${PROJECT_NAME})
 
 
-set(ArchDir ${Moss_SOURCE_DIR}/SourceCode/Arch/${MossArch}/src)
+set(ArchDir ${MOSS_SOURCE_CODE_DIR}/Arch/${MossArch}/src)
 set(KernelUnitTestsElf KernelUnitTests.elf)
 add_executable(${KernelUnitTestsElf}
         $<TARGET_OBJECTS:ObjArchUnitTests>
