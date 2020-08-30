@@ -5,7 +5,7 @@
 /**
  * macro, used to get current cpu core id
  */
-.macro __get_current_core
+.macro __macro_get_current_core
     mrs  x0, mpidr_el1 /* Multiprocessor Affinity Register */
     and  x0, x0, #0xFFFF /* get processor id */
 .endm
@@ -13,7 +13,7 @@
 /**
  * mocro, use to get current exception level
  */
-.macro __get_current_el
+.macro __macro_get_current_el
     mrs x0, CurrentEL
     lsr x0, x0, #2
 .endm
@@ -21,8 +21,8 @@
 /**
  * macro, used to print current exception level
  */
-.macro __print_current_el
-    __get_current_el
+.macro __macro_print_current_el
+    __macro_get_current_el
     mov  x1, x0
     ldr  x0, =__message_current_el
     bl   printf_
@@ -30,9 +30,10 @@
 ///////////////////////////////////////////////////////////////////
 
 
+///////////////////////////////////////////////////////////////////
 .globl _start
 _start:
-    __get_current_core
+    __macro_get_current_core
     cbz  x0, _init_core0 /* hang for all non-primary cpu core */
     b    _hang_core
 
@@ -47,7 +48,7 @@ _init_core0:
 
     /* TODO: check where we are now in el3 ot not. In this case, we assume we are in el3, because qemu raspi3 boot into el3 */
     /* try drop from el3 to el1 secure */
-    __print_current_el /* NOTE: before we can use bl instruction, sp must be set */
+    __macro_print_current_el /* NOTE: before we can use bl instruction, sp must be set */
 
     /*=============================================================*/
     /*      Enable FP/SIMD at EL1                                  */
@@ -113,23 +114,27 @@ _goto_kernel_main:
     bl   print_mem_stack
     bl   bss_clean
 
-    __print_current_el
+    __macro_print_current_el
 #ifndef ENV_KERNEL_UNIT_TESTS
     bl   kernel_main
 #else
     bl   kernel_main_tests
 #endif
-    __get_current_core
+    __macro_get_current_core
     mov  x1, x0
-    ldr  x0, =__message_core_hang
+    ldr  x0, =__message_core_hung
     bl   printf_
     b    _hang_core /* kernel_main should never come here */
+///////////////////////////////////////////////////////////////////
 
+
+///////////////////////////////////////////////////////////////////
 __message_current_el:
     .asciz "[DEBUG] current el is: %d\n"
 
-__message_core_hang:
+__message_core_hung:
     .asciz "[DEBUG] core %d hung\n"
 
 __message_sctlr_el1_value:
     .asciz "[DEBUG] sctlr_el1 is: 0x%x\n"
+///////////////////////////////////////////////////////////////////
