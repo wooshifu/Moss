@@ -1,4 +1,4 @@
-#include "entry.h"
+#include "exception.h"
 
 .macro exception_vector_entry label
 .align 7  // 2^7=0x80, all exception vectors should be located at offset 0x80 bytes one from another
