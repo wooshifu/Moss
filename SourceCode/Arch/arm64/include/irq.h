@@ -2,11 +2,9 @@
 
 #include "gpio.h"
 
-void irq_vector_init();
+void init_exception_vector_table();
 void enable_interrupt_controller();
-
 void enable_irq();
-
 void disable_irq();
 
 #define IRQ_BASIC_PENDING (MMIO_BASE + 0x0000B200)

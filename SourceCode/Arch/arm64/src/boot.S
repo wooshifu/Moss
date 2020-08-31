@@ -114,6 +114,11 @@ _goto_kernel_main:
     bl   print_mem_stack
     bl   bss_clean
 
+    /* read counter frequency */
+    mrs x1, cntfrq_el0
+    ldr x0, =__message_counter_frq_value
+    bl printf_
+
     __macro_print_current_el
 #ifndef ENV_KERNEL_UNIT_TESTS
     bl   kernel_main
@@ -137,4 +142,7 @@ __message_core_hung:
 
 __message_sctlr_el1_value:
     .asciz "[DEBUG] sctlr_el1 is: 0x%x\n"
+
+__message_counter_frq_value:
+    .asciz "[DEBUG] counter frq is: %d\n"
 ///////////////////////////////////////////////////////////////////
