@@ -3,6 +3,10 @@
 #include "hal/random.h"
 #include "log.h"
 #include "logo.h"
+
+#include "generic_timer.h"
+#include "irq.h"
+
 extern uint8_t __text_start;
 
 uint64_t xx; // bss data test
@@ -33,5 +37,20 @@ void kernel_main(void) {
   double z = x / y;
   log_d("5/3=%f", z);
   log_d("long long ago: %llx", ago);
-  while(1){};
+
+  uint64_t cntfrq = read_cntfrq();
+  log_d("counter frq: %llu", cntfrq);
+  write_cntv_tval(cntfrq);
+  uint32_t cntv_tval = read_cntv_tval();
+  log_d("cntv_tval is: %d", cntv_tval);
+
+  routing_core0cntv_to_core0irq();
+  enable_cntv();
+  enable_irq();
+  int count = 0;
+  while (1) {
+    count++;
+    if (count % 10000000==0)
+      log_d("main");
+  };
 }
