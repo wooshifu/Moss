@@ -19,10 +19,11 @@ void show_invalid_entry_message(int type, uint64_t esr, uint64_t address) {
 void enable_interrupt_controller() { memory_write_32bits((uint32_t *)ENABLE_IRQS_1, SYSTEM_TIMER_IRQ_1); }
 
 void handle_irq(void) {
-  // Each Core has its own pending local intrrupts register
+  // Each Core has its own pending local interrupts register
   unsigned int irq = memory_read_32bits((const uint32_t *)CORE0_INTERRUPT_SOURCES);
+  log_d("irq is: %d", irq);
   switch (irq) {
-  case (LTIMER_INTERRUPT):
+  case (LOCAL_TIMER_INTERRUPT):
     handle_local_timer_irq();
     break;
   default:

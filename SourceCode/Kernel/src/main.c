@@ -15,7 +15,7 @@ void kernel_main(void) {
 
   init_cpu();
 
-  for (int i = 0; i < 10; ++i) {
+  for (int i = 0; i < 1; ++i) {
     log_d("test random: %d", generate_random(0, 100));
   }
 
