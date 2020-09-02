@@ -1,19 +1,7 @@
-#include "gpio.h"
-#include "log.h"
-#include "memory.h"
-
-/// See BCM2836 ARM-local peripherals at
-/// https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2836/QA7_rev3.4.pdf
-#define LOCAL_PERIPHERALS_BASE 0x40000000
-#define LOCAL_TIMER_CONTROL (LOCAL_PERIPHERALS_BASE + 0x34)
-#define LOCAL_TIMER_CLEAR (LOCAL_PERIPHERALS_BASE + 0x38)
-#define LOCAL_INTERRUPT_ROUTING (LOCAL_PERIPHERALS_BASE + 0x24)
-#define LOCAL_TIMER_INTERRUPT_ROUTING_TO_CORE0_IRQ 0b000
-
-#define LOCAL_TIMER_CONTROL_ENABLED (1 << 28)
-#define LOCAL_TIMER_CONTROL_INTERRUPT_ENABLED (1 << 29)
-#define LOCAL_TIMER_CONTROL_VALUE (LOCAL_TIMER_CONTROL_ENABLED | LOCAL_TIMER_CONTROL_INTERRUPT_ENABLED)
-#define LOCAL_TIMER_CLEAR_ACK (1 << 31)
+#include "libc/log.h"
+#include "libc/memory.h"
+#include "raspi3/external_timer.h"
+#include "raspi3/mmio.h"
 
 /* 38.4MHz */
 const unsigned int interval = 38400000;

@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "mailbox.h"
+#include "raspi3/mailbox.h"
 
 void mailbox_call(uint32_t channel, void *data) {
   // wait until it's not full

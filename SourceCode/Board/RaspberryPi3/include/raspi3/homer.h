@@ -1,3 +1,5 @@
+#pragma once
+
 /*  GIMP header image file format (RGB)  */
 
 static unsigned int homer_width = 96;

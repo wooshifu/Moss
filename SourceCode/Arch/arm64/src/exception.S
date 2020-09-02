@@ -1,4 +1,4 @@
-#include "exception.h"
+#include "arch/exception.h"
 
 .macro exception_vector_entry label
 .align 7  // 2^7=0x80, all exception vectors should be located at offset 0x80 bytes one from another
@@ -140,3 +140,9 @@ el1_irq:
 .globl err_hang
 err_hang:
     b err_hang
+
+.globl init_exception_vector_table
+init_exception_vector_table:
+    adr    x0, exception_vectors_table        // load VBAR_EL1 with virtual
+    msr    vbar_el1, x0 /* Vector Base Address Register (EL1) */
+    ret

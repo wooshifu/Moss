@@ -1,5 +1,5 @@
-#include "log.h"
-#include "string.h"
+#include "libc/log.h"
+#include "libc/string.h"
 
 extern uint8_t __text_start;
 extern uint8_t __text_end;

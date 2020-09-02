@@ -1,15 +1,20 @@
+#include "arch/exception.h"
+#include "arch/generic_timer.h"
+#include "arch/irq.h"
 #include "config.h"
 #include "hal/init.h"
-#include "irq.h"
-#include "log.h"
-#include "timer.h"
+#include "libc/log.h"
 
-static void init_timer() {
+static void init_generic_timer() {
 #if defined(TARGET_QEMU) && TARGET_QEMU == 1
-//  local_timer_init();
-//  log_d("local_timer_init");
+  uint64_t cntfrq = read_cntfrq();
+  log_d("counter frq: %llu", cntfrq);
+  write_cntv_tval(cntfrq);
+  enable_cntv();
+  log_d("generic timer enabled");
+
 #elif defined(TARGET_RASPBERRY_PI3) && TARGET_RASPBERRY_PI3 == 1
-#warning "not implemented yet";
+#error "not implemented yet";
 #else
 #error "unsupported";
 #endif
@@ -18,9 +23,9 @@ static void init_timer() {
 int init_cpu() {
   init_exception_vector_table();
 
-  init_timer();
+  init_generic_timer();
 
-  enable_interrupt_controller();
+  //  enable_interrupt_controller();
   enable_irq();
   return 0;
 }

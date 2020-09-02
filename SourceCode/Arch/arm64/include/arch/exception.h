@@ -21,3 +21,7 @@
 #define IRQ_INVALID_EL0_32 13
 #define FIQ_INVALID_EL0_32 14
 #define ERROR_INVALID_EL0_32 15
+
+#ifndef __ASSEMBLER__ // hidden function declaration in asm source files
+void init_exception_vector_table();
+#endif

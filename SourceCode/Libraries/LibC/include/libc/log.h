@@ -1,7 +1,7 @@
 #pragma once
 
-#include "stdio.h"
-#include "string.h"
+#include "libc/stdio.h"
+#include "libc/string.h"
 
 #define LOG_LEVEL_VERBOSE 1
 #define LOG_LEVEL_DEBUG 2

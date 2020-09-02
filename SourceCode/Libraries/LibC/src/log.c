@@ -1,4 +1,4 @@
-#include "log.h"
+#include "libc/log.h"
 
 const char *__extract_file_name_from_path(const char *file_path) {
   char *file_name = strrchr(file_path, '/');

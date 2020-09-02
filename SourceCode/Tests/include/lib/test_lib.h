@@ -2,9 +2,9 @@
 
 #include <stddef.h>
 
-#include "log.h"
-#include "stdio.h"
-#include "string.h"
+#include "libc/log.h"
+#include "libc/stdio.h"
+#include "libc/string.h"
 
 uint32_t __test_all_asserts = 0;
 uint32_t __test_success_asserts = 0;

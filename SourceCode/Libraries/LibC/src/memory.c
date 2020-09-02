@@ -1,4 +1,4 @@
-#include "memory.h"
+#include "libc/memory.h"
 
 void memory_write_8bits(uint8_t *address, uint8_t value) { *address = value; }
 void memory_write_16bits(uint16_t *address, uint16_t value) { *address = value; }

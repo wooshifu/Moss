@@ -1,12 +1,6 @@
-#include "memory.h"
+#include "arch/generic_timer.h"
+
 #include <stdint.h>
-
-#define CORE0_TIMER_IRQCNTL 0x40000040
-#define CORE0_IRQ_SOURCE 0x40000060
-
-void routing_core0cntv_to_core0irq() { memory_write_32bits((uint32_t *)CORE0_TIMER_IRQCNTL, 0x08); }
-
-uint32_t read_core0timer_pending() { return memory_read_32bits((const uint32_t *)CORE0_IRQ_SOURCE); }
 
 void enable_cntv(void) {
   uint64_t cntv_ctl = 1;
@@ -21,7 +15,7 @@ void disable_cntv(void) {
 uint64_t read_cntvct(void) {
   uint64_t val = 0;
   asm volatile("mrs %0, cntvct_el0" : "=r"(val));
-  return (val);
+  return val;
 }
 
 uint32_t read_cntv_tval(void) {
