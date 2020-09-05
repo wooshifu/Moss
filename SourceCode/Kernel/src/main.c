@@ -20,7 +20,7 @@ void kernel_main(void) {
   int count = 0;
   while (1) {
     count++;
-    if (count % 10000000 == 0)
+    if (count % 1000000 == 0)
       log_d("main");
   };
   log_d(">>>>>>>>> exited kernel_main <<<<<<<<<");

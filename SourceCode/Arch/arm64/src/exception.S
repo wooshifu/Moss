@@ -16,6 +16,7 @@
     //b      err_hang
 .endm
 
+// todo: save not only generic registers
 // 将寄存器x0-x30存储到堆栈中
 .macro	kernel_entry
     sub	sp, sp, #S_FRAME_SIZE
@@ -37,6 +38,7 @@
     str	x30, [sp, #16 * 15]
 .endm
 
+// todo: restore not only generic registers
 // 复制回x0-x30寄存器的值来恢复处理器状态
 .macro	kernel_exit
     ldp	x0, x1, [sp, #16 * 0]

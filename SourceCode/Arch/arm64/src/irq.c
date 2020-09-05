@@ -18,28 +18,19 @@ void show_invalid_entry_message(int type, uint64_t esr, uint64_t address) {
   log_e("%s, ESR: %x, address: %x", entry_error_messages[type], esr, address);
 }
 
-uint64_t count = 0;
-
 void handle_irq(void) {
-  // Each Core has its own pending local interrupts register
-  //  unsigned int irq = memory_read_32bits((const uint32_t *)CORE0_INTERRUPT_SOURCES);
+  // each Core has its own pending local interrupts register
   unsigned int irq = read_core0_pending_interrupt();
-  //  log_d("irq is: %d", irq);
+  log_d("irq source is: %d", irq);
   switch (irq) {
   case (COREn_LOCAL_TIMER_INTERRUPT_SOURCE):
     handle_local_timer_irq();
     break;
   case COREn_CNTV_INTERRUPT_SOURCE:
-    //    disable_irq();
-    write_cntv_tval(0);
-    count++;
-    if (count % 100000 == 0) {
-      log_d("count: %llu", count);
-    }
-    //    enable_irq();
+    handle_generic_timer_irq();
     break;
   default:
-    log_e("Unknown pending irq: %x\r\n", irq);
+    log_e("Unknown pending irq: 0x%x", irq);
   }
 }
 

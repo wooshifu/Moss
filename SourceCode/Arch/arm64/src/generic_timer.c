@@ -1,4 +1,5 @@
 #include "arch/generic_timer.h"
+#include "libc/log.h"
 
 #include <stdint.h>
 
@@ -30,4 +31,9 @@ uint64_t read_cntfrq() {
   uint64_t val = 0;
   asm volatile("mrs %0, cntfrq_el0" : "=r"(val));
   return val;
+}
+
+void handle_generic_timer_irq() {
+  log_d("handle_generic_timer_irq");
+  write_cntv_tval(625000);
 }
