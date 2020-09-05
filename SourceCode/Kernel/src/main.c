@@ -22,7 +22,7 @@ void kernel_main(void) {
     log_d("test random: %d", generate_random(0, 100));
   }
 
-  log_i("current el: %d", get_current_el());
+  log_i("current el: %llu", get_current_el());
   long long ago = 0x1234567812345678;
   long long ago1 = 0x1234567812345678;
   log_d("kernel main done");

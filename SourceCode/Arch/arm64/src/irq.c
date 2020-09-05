@@ -1,9 +1,11 @@
 #include "arch/generic_timer.h"
 #include "arch/irq.h"
 #include "libc/log.h"
+#include "raspi3/external_timer.h"
+#include "raspi3/mmio.h"
 #include "raspi3/timer_controller.h"
 
-const char *entry_error_messages[] = {
+static const char *entry_error_messages[] = {
     "SYNC_INVALID_EL1t",   "IRQ_INVALID_EL1t",   "FIQ_INVALID_EL1t",   "ERROR_INVALID_EL1T",
 
     "SYNC_INVALID_EL1h",   "IRQ_INVALID_EL1h",   "FIQ_INVALID_EL1h",   "ERROR_INVALID_EL1h",
@@ -21,13 +23,13 @@ uint64_t count = 0;
 void handle_irq(void) {
   // Each Core has its own pending local interrupts register
   //  unsigned int irq = memory_read_32bits((const uint32_t *)CORE0_INTERRUPT_SOURCES);
-  unsigned int irq = read_core0timer_pending();
+  unsigned int irq = read_core0_pending_interrupt();
   //  log_d("irq is: %d", irq);
   switch (irq) {
-    //  case (LOCAL_TIMER_INTERRUPT):
-    //    handle_local_timer_irq();
-    //    break;
-  case 8:
+    //      case (LOCAL_TIMER_INTERRUPT):
+    //        handle_local_timer_irq();
+    //        break;
+  case COREn_CNTV_IRQ_INTERRUPT_ENABLED:
     //    disable_irq();
     write_cntv_tval(0);
     count++;
@@ -41,5 +43,5 @@ void handle_irq(void) {
   }
 }
 
-void enable_irq() { asm volatile("msr daifclr, 2"); }
-void disable_irq() { asm volatile("msr daifset, 2"); }
+void enable_irq() { asm volatile("msr daifclr, #2"); }
+void disable_irq() { asm volatile("msr daifset, #2"); }
