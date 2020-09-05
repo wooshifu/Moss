@@ -1,6 +1,6 @@
 #include "arch/exception.h"
 #include "arch/generic_timer.h"
-#include "arch/irq.h"
+#include "arch/interrupt_controller.h"
 #include "config.h"
 #include "hal/init.h"
 #include "libc/log.h"
@@ -25,7 +25,6 @@ int init_cpu() {
 
   init_generic_timer();
 
-  //  enable_interrupt_controller();
-  enable_irq();
+  enable_interrupt();
   return 0;
 }
