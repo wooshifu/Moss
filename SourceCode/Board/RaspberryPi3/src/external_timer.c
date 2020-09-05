@@ -3,7 +3,7 @@
 #include "raspi3/external_timer.h"
 #include "raspi3/mmio.h"
 
-/* 38.4MHz */
+/* reload value, should be max 28 bits(268435455). 38.4MHz */
 const unsigned int interval = 38400000;
 
 #if 0
@@ -34,12 +34,12 @@ void handle_timer_irq(void) {
 }
 #endif
 
-void local_timer_init(void) {
+void routing_local_timer_to_core0_irq(void) {
   memory_write_32bits((uint32_t *)LOCAL_INTERRUPT_ROUTING, LOCAL_TIMER_INTERRUPT_ROUTING_TO_CORE0_IRQ);
   memory_write_32bits((uint32_t *)LOCAL_TIMER_CONTROL, (interval | LOCAL_TIMER_CONTROL_VALUE));
 }
 
 void handle_local_timer_irq(void) {
-  log_d("Timer interrupt received");
+  log_d("local timer interrupt received");
   memory_write_32bits((uint32_t *)LOCAL_TIMER_CLEAR, LOCAL_TIMER_CLEAR_ACK);
 }

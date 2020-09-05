@@ -9,10 +9,9 @@ int init_board() {
 
   init_random_generator();
 
-  enable_interrupt_controller();
+//  routing_core0_cntv_to_core0_irq();
+  routing_local_timer_to_core0_irq();
 
-  routing_core0_cntv_to_core0_irq();
-  //  local_timer_init();
   //  init_lfb();
   //  // display a pixmap
   //  lfb_showpicture();

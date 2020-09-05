@@ -26,10 +26,10 @@ void handle_irq(void) {
   unsigned int irq = read_core0_pending_interrupt();
   //  log_d("irq is: %d", irq);
   switch (irq) {
-    //      case (LOCAL_TIMER_INTERRUPT):
-    //        handle_local_timer_irq();
-    //        break;
-  case COREn_CNTV_IRQ_INTERRUPT_ENABLED:
+  case (COREn_LOCAL_TIMER_INTERRUPT_SOURCE):
+    handle_local_timer_irq();
+    break;
+  case COREn_CNTV_INTERRUPT_SOURCE:
     //    disable_irq();
     write_cntv_tval(0);
     count++;
