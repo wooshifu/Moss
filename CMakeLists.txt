@@ -30,6 +30,7 @@ else ()
 endif ()
 
 set(IGNORE_SPECIFIC_WARNINGS "-Wno-unused-variable -Wno-unused-parameter")
+# todo: optimization level at Release mode
 set(COMMON_CMAKE_C_FLAGS "-O0 -g -Wall -Wextra -Werror ${IGNORE_SPECIFIC_WARNINGS} -MD -fpic -ffreestanding -std=gnu11 -nostdlib -nostartfiles")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_CMAKE_C_FLAGS}")
 set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS}")
