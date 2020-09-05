@@ -12,16 +12,6 @@
 .endm
 
 /**
- * macro, used to debug print, like printf("msg %d %d", 123, 456)
- */
-.macro __macro_debug_print2 message, parameter1, parameter2
-    ldr  x0, =\message
-    mov  x1, \parameter1
-    mov  x2, \parameter2
-    bl   printf_
-.endm
-
-/**
  * macro, used to get current cpu core id
  */
 .macro __macro_get_current_core
@@ -68,9 +58,6 @@ _init_core0:
     /* try drop from el3 to el1 secure */
     __macro_print_current_el /* NOTE: before we can use bl instruction, sp must be set */
 
-    mrs  x1, mpidr_el1 /* Multiprocessor Affinity Register */
-    __macro_debug_print1 __message_mpidr_el1_value, x1
-
     /*=============================================================*/
     /*      Enable FP/SIMD at EL1                                  */
     /*=============================================================*/
@@ -91,6 +78,7 @@ _init_core0:
     #define __SCTLR_D_CACHE_DISABLED (0 << 2)
     /* MMU enable for EL1&0 stage 1 address translation. 0->disable MMU */
     #define __SCTLR_MMU_DISABLED (0 << 0)
+    // todo: i,d cache enable; mmu enable
     #define __SCTLR_VALUE (__SCTLR_RESERVED | __SCTLR_EE_LITTLE_ENDIAN | __SCTLR_I_CACHE_DISABLED | __SCTLR_D_CACHE_DISABLED | __SCTLR_MMU_DISABLED)
 
     mov x0, xzr /* clear x0 */
@@ -135,38 +123,6 @@ _goto_kernel_main:
     bl   print_mem_stack
     bl   bss_clean
 
-test_only:
-    /* read counter frequency */
-    mrs x1, cntfrq_el0
-    ldr x0, =__message_counter_frq_value
-    bl printf_
-
-enable_counter_timer_physical_timer:
-    mov x0, #0b01
-    msr CNTP_CTL_EL0, x0
-
-    mrs x1, CNTP_CTL_EL0
-    ldr x0, =__message_counter_frq_value
-    bl printf_
-
-    ldr x0, =625000000
-    msr CNTP_CVAL_EL0, x0
-
-    mrs x1, CNTP_CVAL_EL0
-    ldr x0, =__message_counter_frq_value
-    bl printf_
-
-    mrs x1, CNTP_TVAL_EL0
-    ldr x0, =__message_counter_frq_value
-    bl printf_
-
-//l:
-    ISB
-    mrs x1, cntpct_el0
-    ldr x0, =__message_counter_frq_value
-    bl printf_
-//    b l
-
     __macro_print_current_el
 #ifndef ENV_KERNEL_UNIT_TESTS
     bl   kernel_main
@@ -190,10 +146,4 @@ __message_core_hung:
 
 __message_sctlr_el1_value:
     .asciz "[DEBUG] sctlr_el1 is: 0x%x\n"
-
-__message_counter_frq_value:
-    .asciz "[DEBUG] counter frq is: %llu\n"
-
-__message_mpidr_el1_value:
-    .asciz "[DEBUG] mpidr_el1 is: %llu\n"
 ///////////////////////////////////////////////////////////////////
