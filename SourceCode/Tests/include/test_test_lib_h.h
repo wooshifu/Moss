@@ -44,5 +44,6 @@ TEST(should_test_lib_test_eq_works) {
   ASSERT_EQ_CHAR(xs, ys);
 
   const char *hello = "Hello";
-  ASSERT_EQ_POINTER(hello, hello);
+  const char *hello1 = hello;
+  ASSERT_EQ_POINTER(hello, hello1);
 }
