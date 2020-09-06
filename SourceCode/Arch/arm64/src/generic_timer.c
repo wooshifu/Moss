@@ -35,5 +35,5 @@ uint64_t read_cntfrq() {
 
 void handle_generic_timer_irq() {
   log_d("handle_generic_timer_irq");
-  write_cntv_tval(625000);
+  write_cntv_tval(62500);
 }

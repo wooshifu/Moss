@@ -3,8 +3,7 @@
 #include "raspi3/mmio.h"
 
 bool handle_cpu_interrupt(uint64_t interrupt_number) {
-  switch (interrupt_number) {
-  case COREn_CNTV_INTERRUPT_SOURCE:
+  if (interrupt_number & COREn_CNTV_INTERRUPT_SOURCE) {
     handle_generic_timer_irq();
     return true;
   }

@@ -23,10 +23,11 @@ void show_invalid_entry_message(int type, uint64_t esr, uint64_t address) {
  */
 static void interrupt_dispatcher(uint32_t interrupt_number) {
   /// firstly, dispatch interrupt to cpu handler; secondly, dispatch interrupt to peripheral handler;
-  if (handle_cpu_interrupt(interrupt_number) || handle_peripheral_interrupt(interrupt_number)) {
-    return;
+  bool cpu_interrupt_handled = handle_cpu_interrupt(interrupt_number);
+  bool peripheral_interrupt_handled = handle_peripheral_interrupt(interrupt_number);
+  if (!cpu_interrupt_handled && !peripheral_interrupt_handled) {
+    log_e("unknown pending irq: 0x%x", interrupt_number);
   }
-  log_e("unknown pending irq: 0x%x", interrupt_number);
 }
 
 void handle_interrupt(void) {

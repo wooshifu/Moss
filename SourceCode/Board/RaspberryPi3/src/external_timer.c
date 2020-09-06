@@ -4,7 +4,7 @@
 #include "raspi3/mmio.h"
 
 /* reload value, should be max 28 bits(268435455). 38.4MHz */
-const unsigned int interval = 38400000;
+const unsigned int interval = 38400;
 
 #if 0
 #define TIMER_CS (MMIO_BASE + 0x00003000)

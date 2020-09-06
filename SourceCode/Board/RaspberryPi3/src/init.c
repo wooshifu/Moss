@@ -8,9 +8,11 @@ int init_board() {
 
   init_random_generator();
 
+  // enable generic timer
   routing_core0_cntv_to_core0_irq();
-  // todo: fix generic timer won't work with local timer simultaneously
-  // routing_local_timer_to_core0_irq();
+
+  // enable local timer
+  routing_local_timer_to_core0_irq();
 
   //  init_lfb();
   //  // display a pixmap
