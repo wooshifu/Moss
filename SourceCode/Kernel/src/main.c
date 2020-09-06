@@ -17,11 +17,5 @@ void kernel_main(void) {
   double z = x / y;
   log_d("5/3=%f", z);
 
-  int count = 0;
-  while (1) {
-    count++;
-    if (count % 1000000 == 0)
-      log_d("main");
-  };
   log_d(">>>>>>>>> exited kernel_main <<<<<<<<<");
 }

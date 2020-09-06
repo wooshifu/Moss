@@ -33,7 +33,7 @@ static void interrupt_dispatcher(uint32_t interrupt_number) {
 void handle_interrupt(void) {
   // each core has its own pending local interrupts register
   uint32_t interrupt_number = read_core0_pending_interrupt();
-  log_d("irq source is: %d", interrupt_number);
+  // log_d("irq source is: %d", interrupt_number);
   interrupt_dispatcher(interrupt_number);
 }
 

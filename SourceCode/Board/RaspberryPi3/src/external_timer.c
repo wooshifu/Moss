@@ -5,7 +5,7 @@
 
 /* reload value, should be max 28 bits(268435455). 38.4MHz */
 // todo: change value
-static const uint32_t interval = 38400;
+static const uint32_t interval = 38400000;
 
 #if 0
 #define TIMER_CS (MMIO_BASE + 0x00003000)
@@ -40,7 +40,9 @@ void routing_local_timer_to_core0_irq(void) {
   memory_write_32bits((uint32_t *)LOCAL_TIMER_CONTROL, (interval | LOCAL_TIMER_CONTROL_VALUE));
 }
 
+static uint64_t elapsed_seconds = 0;
 void handle_local_timer_irq(void) {
-  log_d("local timer interrupt received");
+  ++elapsed_seconds;
+  log_d("current elapsed seconds:%llu", elapsed_seconds);
   memory_write_32bits((uint32_t *)LOCAL_TIMER_CLEAR, LOCAL_TIMER_CLEAR_ACK);
 }
