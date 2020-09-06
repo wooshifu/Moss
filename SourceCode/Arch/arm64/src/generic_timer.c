@@ -35,5 +35,6 @@ uint64_t read_cntfrq() {
 
 void handle_generic_timer_irq() {
   log_d("handle_generic_timer_irq");
+  // todo: change value
   write_cntv_tval(62500);
 }
