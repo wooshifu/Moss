@@ -1,8 +1,8 @@
 #include "arch/generic_timer.h"
 #include "arch/interrupt_controller.h"
+#include "hal/interrupt.h"
 #include "hal/interrupt_handler.h"
 #include "libc/log.h"
-#include "raspi3/timer_controller.h"
 
 static const char *entry_error_messages[] = {
     "SYNC_INVALID_EL1t",   "IRQ_INVALID_EL1t",   "FIQ_INVALID_EL1t",   "ERROR_INVALID_EL1T",
