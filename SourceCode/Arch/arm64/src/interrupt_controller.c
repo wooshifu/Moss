@@ -1,7 +1,6 @@
 #include "arch/generic_timer.h"
 #include "arch/interrupt_controller.h"
 #include "hal/interrupt.h"
-#include "hal/interrupt_handler.h"
 #include "libc/log.h"
 
 static const char *entry_error_messages[] = {

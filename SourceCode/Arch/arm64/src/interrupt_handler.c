@@ -1,5 +1,5 @@
 #include "arch/generic_timer.h"
-#include "hal/interrupt_handler.h"
+#include "hal/interrupt.h"
 
 #ifndef COREn_CNTV_INTERRUPT_SOURCE
 #define COREn_CNTV_INTERRUPT_SOURCE (1 << 3)

@@ -1,4 +1,4 @@
-#include "hal/interrupt_handler.h"
+#include "hal/interrupt.h"
 #include "raspi3/external_timer.h"
 #include "raspi3/mmio.h"
 
