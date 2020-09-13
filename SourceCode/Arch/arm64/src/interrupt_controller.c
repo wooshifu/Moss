@@ -1,5 +1,5 @@
-#include "arch/asm.h"
-#include "arch/interrupt_controller.h"
+#include "arm64/asm.h"
+#include "arm64/interrupt_controller.h"
 #include "hal/interrupt.h"
 #include "libc/log.h"
 

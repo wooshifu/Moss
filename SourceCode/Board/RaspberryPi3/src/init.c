@@ -1,7 +1,7 @@
-#include "raspi3/external_timer.h"
-#include "raspi3/random.h"
-#include "raspi3/timer_controller.h"
-#include "raspi3/uart0.h"
+#include "rpi3/external_timer.h"
+#include "rpi3/random.h"
+#include "rpi3/timer_controller.h"
+#include "rpi3/uart0.h"
 
 int init_board() {
   init_uart0();

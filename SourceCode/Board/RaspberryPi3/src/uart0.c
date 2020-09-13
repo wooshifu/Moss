@@ -1,6 +1,6 @@
 #include "libc/log.h"
-#include "raspi3/mailbox.h"
-#include "raspi3/mmio.h"
+#include "rpi3/mailbox.h"
+#include "rpi3/mmio.h"
 
 /* PL011 UART registers */
 #define UART0_DATA_REGISTER ((volatile unsigned int *)(MMIO_BASE + 0x00201000))

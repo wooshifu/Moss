@@ -1,4 +1,4 @@
-#include "arch/generic_timer.h"
+#include "arm64/generic_timer.h"
 #include "hal/interrupt.h"
 
 #ifndef COREn_CNTV_INTERRUPT_SOURCE

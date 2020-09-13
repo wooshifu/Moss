@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "raspi3/mmio.h"
+#include "rpi3/mmio.h"
 
 /**
  *        0       4       8      12      16      20      24      28      32

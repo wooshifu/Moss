@@ -1,6 +1,6 @@
 #include "libc/memory.h"
-#include "raspi3/interrupt_controller.h"
-#include "raspi3/mmio.h"
+#include "rpi3/interrupt_controller.h"
+#include "rpi3/mmio.h"
 
 /**
  * THIS IS UNUSED INTERRUPT CONTROLLER

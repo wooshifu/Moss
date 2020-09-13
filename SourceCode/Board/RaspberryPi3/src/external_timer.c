@@ -1,7 +1,7 @@
 #include "libc/log.h"
 #include "libc/memory.h"
-#include "raspi3/external_timer.h"
-#include "raspi3/mmio.h"
+#include "rpi3/external_timer.h"
+#include "rpi3/mmio.h"
 
 /* reload value, should be max 28 bits(268435455). 38.4MHz */
 // todo: change value

@@ -1,5 +1,5 @@
-#include "arch/asm.h"
-#include "arch/generic_timer.h"
+#include "arm64/asm.h"
+#include "arm64/generic_timer.h"
 #include "libc/log.h"
 
 #include <stdint.h>

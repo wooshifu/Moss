@@ -1,4 +1,4 @@
-#include "raspi3/mmio.h"
+#include "rpi3/mmio.h"
 
 #define SYSTMR_LO ((volatile unsigned int *)(MMIO_BASE + 0x00003004))
 #define SYSTMR_HI ((volatile unsigned int *)(MMIO_BASE + 0x00003008))

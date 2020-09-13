@@ -1,6 +1,6 @@
 #include "hal/interrupt.h"
-#include "raspi3/external_timer.h"
-#include "raspi3/mmio.h"
+#include "rpi3/external_timer.h"
+#include "rpi3/mmio.h"
 
 bool handle_peripheral_interrupt(uint64_t interrupt_number) {
   if (interrupt_number & COREn_LOCAL_TIMER_INTERRUPT_SOURCE) {
