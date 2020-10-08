@@ -9,7 +9,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
     && apt-get install --fix-missing -y build-essential binutils qemu-system-arm qemu-system-aarch64\
-       gdb-multiarch gcc-arm-none-eabi gcc-aarch64-linux-gnu make cmake gcc \
+       gdb-multiarch gcc-arm-none-eabi gcc-aarch64-linux-gnu g++-aarch64-linux-gnu make cmake gcc \
        clang-format-10 ssh rsync cmake-curses-gui less vim \
     && update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-10 100 \
     && apt-get clean \
