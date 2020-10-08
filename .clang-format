@@ -4,3 +4,4 @@ Language:        Cpp
 BasedOnStyle:    LLVM
 ColumnLimit:     120
 SortIncludes:    false
+IncludeBlocks:    Regroup
