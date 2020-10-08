@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 set(CMAKE_C_COMPILER_WORKS TRUE)
 set(CMAKE_CXX_COMPILER_WORKS TRUE)
 
-project(Moss LANGUAGES C ASM)
+project(Moss)
 
 if (${Moss_SOURCE_DIR} STREQUAL ${Moss_BINARY_DIR})
     message(FATAL_ERROR "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there.")
@@ -31,16 +31,17 @@ endif ()
 
 set(IGNORE_SPECIFIC_WARNINGS "-Wno-unused-variable -Wno-unused-parameter")
 # todo: optimization level at Release mode
-set(COMMON_CMAKE_C_FLAGS "-save-temps -O0 -g -Wall -Wextra -Werror ${IGNORE_SPECIFIC_WARNINGS} -MD -fpic -ffreestanding -std=gnu11 -nostdlib -nostartfiles")
+set(COMMON_CMAKE_C_FLAGS "-save-temps -O0 -g -Wall -Wextra -Werror ${IGNORE_SPECIFIC_WARNINGS} -MD -fpic -ffreestanding -nostdlib -nostartfiles")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_CMAKE_C_FLAGS}")
 set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS}")
 # define __CURRENT_FILE_NAME__, log function will use this macro to output the file name
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__CURRENT_FILE_NAME__='\"$(subst ${CMAKE_SOURCE_DIR}/SourceCode/,,$(abspath $<))\"'")
+set(CMAKE_CXX_FLAGS "-std=c++17 ${CMAKE_C_FLAGS} -D__CURRENT_FILE_NAME__='\"$(notdir $(abspath $<))\"'")
+set(CMAKE_C_FLAGS "-std=gnu11 ${CMAKE_C_FLAGS} -D__CURRENT_FILE_NAME__='\"$(notdir $(abspath $<))\"'")
 
-message(STATUS "CMAKE_C_FLAGS is ${CMAKE_C_FLAGS}")
-message(STATUS "CMAKE_ASM_FLAGS is ${CMAKE_ASM_FLAGS}")
-message(STATUS "TOOLCHAIN_PREFIX is ${TOOLCHAIN_PREFIX}")
-message(STATUS "CMAKE_OBJCOPY is ${CMAKE_OBJCOPY}")
+message(STATUS "CMAKE_C_FLAGS: ${CMAKE_C_FLAGS}")
+message(STATUS "CMAKE_ASM_FLAGS: ${CMAKE_ASM_FLAGS}")
+message(STATUS "TOOLCHAIN_PREFIX: ${TOOLCHAIN_PREFIX}")
+message(STATUS "CMAKE_OBJCOPY: ${CMAKE_OBJCOPY}")
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
