@@ -1,5 +1,7 @@
 #include "rpi3/mmio.h"
 
+#include <stdint.h>
+
 #define SYSTMR_LO ((volatile unsigned int *)(MMIO_BASE + 0x00003004))
 #define SYSTMR_HI ((volatile unsigned int *)(MMIO_BASE + 0x00003008))
 
@@ -35,9 +37,9 @@ void wait_msec(unsigned int n) {
 /**
  * Get System Timer's counter
  */
-unsigned long get_system_timer() {
-  unsigned int h = -1;
-  unsigned int l;
+uint64_t get_system_timer() {
+  uint64_t h = -1;
+  uint64_t l = 0;
   // we must read MMIO area as two separate 32 bit reads
   h = *SYSTMR_HI;
   l = *SYSTMR_LO;
@@ -47,7 +49,7 @@ unsigned long get_system_timer() {
     l = *SYSTMR_LO;
   }
   // compose long int value
-  return ((unsigned long)h << 32) | l;
+  return (h << 32) | l;
 }
 
 /**
