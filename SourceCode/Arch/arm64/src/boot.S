@@ -54,7 +54,7 @@ _init_core0:
     ldr  x0, =0x80000
     mov  sp, x0
 
-    /* TODO: check where we are now in el3 ot not. In this case, we assume we are in el3, because qemu raspi3 boot into el3 */
+    /* TODO: check whether we are now in el3 or not. In this case, we assume we are in el3, because qemu raspi3 boot into el3 */
     /* try drop from el3 to el1 secure */
     __macro_print_current_el /* NOTE: before we can use bl instruction, sp must be set */
 
