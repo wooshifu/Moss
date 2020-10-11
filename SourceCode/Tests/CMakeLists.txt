@@ -19,5 +19,5 @@ add_executable(${KernelUnitTestsElf}
         $<TARGET_OBJECTS:ObjKernel>
         $<TARGET_OBJECTS:ObjLibC>
         $<TARGET_OBJECTS:ObjBoardRaspberryPi3>)
-target_link_options(${KernelUnitTestsElf} PRIVATE -T ${ArchDir}/kernel.ld)
+set_target_properties(${KernelUnitTestsElf} PROPERTIES LINK_FLAGS "-Xlinker -T ${ArchDir}/kernel.ld -Xlinker -Map=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/KernelUnitTests.map")
 target_link_libraries(${KernelUnitTestsElf} PRIVATE gcc)

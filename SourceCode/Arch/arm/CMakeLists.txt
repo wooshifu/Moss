@@ -16,7 +16,7 @@ add_executable(${KernelName}
         $<TARGET_OBJECTS:ObjKernel>
         $<TARGET_OBJECTS:ObjLibC>
         $<TARGET_OBJECTS:ObjBoardRaspberryPi3>)
-target_link_options(${KernelName} PRIVATE -T ${ObjArch_SOURCE_DIR}/src/kernel.ld)
+set_target_properties(${KernelName} PROPERTIES LINK_FLAGS "-Xlinker -T ${ObjArch_SOURCE_DIR}/src/kernel.ld -Xlinker -Map=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/KernelArm32.map")
 target_link_libraries(${KernelName} PRIVATE gcc)
 
 
