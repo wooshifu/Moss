@@ -7,7 +7,7 @@
 
 static void init_generic_timer() {
 #if defined(TARGET_QEMU) && TARGET_QEMU == 1
-  uint64_t counter_frequency = read_cntfrq();
+  u64 counter_frequency = read_cntfrq();
   log_d("counter frq: %llu", counter_frequency);
   write_cntv_tval(counter_frequency);
   enable_cntv();

@@ -3,17 +3,17 @@
 #include "libc/string.h"
 
 TEST(should_mem_clean_works) {
-  int32_t array[5] = {0x12345678, 0x9abcdef1, 0x23456789, 0xabcdef12, 0x3456789a};
-  memzero((uint8_t *)array, (const uint8_t *)(array + 5));
-  for (size_t index = 0; index < sizeof(int32_t) * 5; ++index) {
-    ASSERT_EQ_UINT8(*((uint8_t *)(array) + index), 0);
+  i32 array[5] = {0x12345678, 0x9abcdef1, 0x23456789, 0xabcdef12, 0x3456789a};
+  memzero((u8 *)array, (const u8 *)(array + 5));
+  for (size_t index = 0; index < sizeof(i32) * 5; ++index) {
+    ASSERT_EQ_UINT8(*((u8 *)(array) + index), 0);
   }
 }
 
 TEST(should_memset_set_memory) {
-  int32_t array[] = {1, 2, 3};
+  i32 array[] = {1, 2, 3};
   size_t count = sizeof(array) / sizeof(array[0]);
-  int32_t *destination = memset(array, 0, count);
+  i32 *destination = memset(array, 0, count);
   for (size_t index = 0; index < count; ++index) {
     ASSERT_EQ_INT32(array[index], 0);
     ASSERT_EQ_INT32(destination[index], 0);

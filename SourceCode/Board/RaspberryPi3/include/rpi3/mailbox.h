@@ -1,7 +1,6 @@
 #pragma once
 
-#include <stdbool.h>
-#include <stdint.h>
+#include "libc/types.h"
 
 #include "rpi3/mmio.h"
 
@@ -39,13 +38,13 @@
  * found it sufficient to read only from this address) 0-3(channel):	The mailbox channel number from which the data
  * originated 4-31(data):	The 28 bits of data sent to the CPU
  */
-#define MAILBOX0_READ ((volatile uint32_t *)(VIDEOCORE_MBOX + 0x0))
+#define MAILBOX0_READ ((volatile u32 *)(VIDEOCORE_MBOX + 0x0))
 
 // Read from the mailbox without removing data from it.
-#define MAILBOX0_PEAK ((volatile uint32_t *)(VIDEOCORE_MBOX + 0x10))
+#define MAILBOX0_PEAK ((volatile u32 *)(VIDEOCORE_MBOX + 0x10))
 
 // Sender ID (bottom 2 bits only)
-#define MAILBOX0_SENDER ((volatile uint32_t *)(VIDEOCORE_MBOX + 0x14))
+#define MAILBOX0_SENDER ((volatile u32 *)(VIDEOCORE_MBOX + 0x14))
 
 /**
  * The status register for mailbox 0
@@ -53,17 +52,17 @@
  * 30:	MAIL_EMPTY	Set if the mailbox is empty, and thus no more data is available to be read from it.
  * 31:	MAIL_FULL	Set if the mailbox is full, and thus no more data can be written to it.
  */
-#define MAILBOX0_STATUS ((volatile uint32_t *)(VIDEOCORE_MBOX + 0x18))
+#define MAILBOX0_STATUS ((volatile u32 *)(VIDEOCORE_MBOX + 0x18))
 
 // The configuration register for mailbox 0
-#define MAILBOX0_CONFIG ((volatile uint32_t *)(VIDEOCORE_MBOX + 0x1C))
+#define MAILBOX0_CONFIG ((volatile u32 *)(VIDEOCORE_MBOX + 0x1C))
 
 /**
  *  The write register for mailbox 0 (this is actually the read register for mailbox 1).
  *  0-3:	channel	The mailbox channel number to which the data is to be sent
  *  4-31:	data	The 28 bits of data to be sent to the destination
  */
-#define MAILBOX0_WRITE ((volatile uint32_t *)(VIDEOCORE_MBOX + 0x20))
+#define MAILBOX0_WRITE ((volatile u32 *)(VIDEOCORE_MBOX + 0x20))
 
 #define MAILBOX_CODE_REQUEST 0x00000000
 #define MAILBOX_CODE_RESPONSE_SUCCESS 0x80000000
@@ -139,17 +138,17 @@
 #define MAILBOX_PROPERTY_TAG_SET_CLOCK_RATE 0x00038002
 // NOTE: don't change the struct member order, it should be this order described by rasberrypi docs
 typedef struct mailbox_property_set_clock_rate_t {
-  uint32_t size; // =sizeof(struct my_property_set_clock_rate_t);
-  uint32_t code; // =MAILBOX_CODE_REQUEST ;
+  u32 size; // =sizeof(struct my_property_set_clock_rate_t);
+  u32 code; // =MAILBOX_CODE_REQUEST ;
 
-  uint32_t tag;                // =MAILBOX_PROPERTY_TAG_SET_CLOCK_RATE;
-  uint32_t buffer_size;        // =12;
-  uint32_t tag_code;           // =MAILBOX_CODE_REQUEST;
-  uint32_t clock_id;           // =CLOCK_ID_UART;
-  uint32_t rate;               // =4000000;
-  uint32_t skip_setting_turbo; // =0;
+  u32 tag;                // =MAILBOX_PROPERTY_TAG_SET_CLOCK_RATE;
+  u32 buffer_size;        // =12;
+  u32 tag_code;           // =MAILBOX_CODE_REQUEST;
+  u32 clock_id;           // =CLOCK_ID_UART;
+  u32 rate;               // =4000000;
+  u32 skip_setting_turbo; // =0;
 
-  uint32_t end; // =MAILBOX_PROPERTY_TAG_END
+  u32 end; // =MAILBOX_PROPERTY_TAG_END
 } __attribute__((aligned(16))) mailbox_property_set_clock_rate_t;
 // The buffer itself is 16-byte aligned as only the upper 28 bits of the address can be passed via the mailbox.
 
@@ -158,7 +157,7 @@ typedef struct mailbox_property_set_clock_rate_t {
  * @param channel which channel to send
  * @param data message data
  */
-void mailbox_call(uint32_t channel, void *data);
+void mailbox_call(u32 channel, void *data);
 
 /**
  * after mailbox_call, we should detect the response is successful or not
@@ -166,4 +165,4 @@ void mailbox_call(uint32_t channel, void *data);
  * @param tag_code tag code
  * @return true on success, false on failure
  */
-bool is_valid_mailbox_response(uint32_t code, uint32_t tag_code);
+bool is_valid_mailbox_response(u32 code, u32 tag_code);

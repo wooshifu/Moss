@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+#include "libc/types.h"
 
 /**
  * put character

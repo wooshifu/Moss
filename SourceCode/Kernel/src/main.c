@@ -4,6 +4,10 @@
 #include "libc/log.h"
 
 void kernel_main(void) {
+#ifdef __GNUC__
+  log_d("gcc version: %s", __VERSION__);
+#endif
+
   log_d(">>>>>>>>> entered kernel_main <<<<<<<<<");
   init_board();
 

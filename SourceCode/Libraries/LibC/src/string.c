@@ -1,7 +1,7 @@
 #include "libc/log.h"
 #include "libc/string.h"
 
-void memzero(uint8_t *mem_start, const uint8_t *mem_end) {
+void memzero(u8 *mem_start, const u8 *mem_end) {
   log_d("mem start is: %p, mem end is: %p", mem_start, mem_end);
   if (mem_start > mem_end) {
     log_e("mem start: %p greater than mem end: %p, mem not cleaned", mem_start, mem_end);

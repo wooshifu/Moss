@@ -1,21 +1,21 @@
 #include "libc/log.h"
 #include "libc/string.h"
 
-extern uint8_t __text_start;
-extern uint8_t __text_end;
-extern uint8_t __rodata_start;
-extern uint8_t __rodata_end;
-extern uint8_t __data_start;
-extern uint8_t __data_end;
-extern uint8_t __bss_start;
-extern uint8_t __bss_end;
-extern uint8_t __svc_stack;
-extern uint8_t __irq_stack;
-extern uint8_t __fiq_stack;
-extern uint8_t __sys_stack;
-extern uint8_t __end_stack;
-extern uint8_t __PAGE_TABLE;
-extern uint8_t __HEAP_BEGIN;
+extern u8 __text_start;
+extern u8 __text_end;
+extern u8 __rodata_start;
+extern u8 __rodata_end;
+extern u8 __data_start;
+extern u8 __data_end;
+extern u8 __bss_start;
+extern u8 __bss_end;
+extern u8 __svc_stack;
+extern u8 __irq_stack;
+extern u8 __fiq_stack;
+extern u8 __sys_stack;
+extern u8 __end_stack;
+extern u8 __PAGE_TABLE;
+extern u8 __HEAP_BEGIN;
 
 void print_mem_stack() {
 #if 0

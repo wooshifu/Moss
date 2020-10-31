@@ -3,10 +3,10 @@
 #include "libc/memory.h"
 
 TEST(should_io_write_and_read_works) {
-  uint8_t a = 0;
-  uint16_t b = 0;
-  uint32_t c = 0;
-  uint64_t d = 0;
+  u8 a = 0;
+  u16 b = 0;
+  u32 c = 0;
+  u64 d = 0;
   memory_write_8bits(&a, 1);
   ASSERT_EQ_UINT8(a, 1);
   memory_write_16bits(&b, 1);

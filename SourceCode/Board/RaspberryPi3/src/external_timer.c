@@ -5,7 +5,7 @@
 
 /* reload value, should be max 28 bits(268435455). 38.4MHz */
 // todo: change value
-static const uint32_t interval = 38400000;
+static const u32 interval = 38400000;
 
 #if 0
 #define TIMER_CS (MMIO_BASE + 0x00003000)
@@ -22,27 +22,27 @@ static const uint32_t interval = 38400000;
 #define TIMER_CS_M3 (1 << 3)
 
 void timer_init(void) {
-  curVal = memory_read_32bits((const uint32_t *)TIMER_CLO);
+  curVal = memory_read_32bits((const u32 *)TIMER_CLO);
   curVal += interval;
-  memory_write_32bits((uint32_t *)TIMER_C1, curVal);
+  memory_write_32bits((u32 *)TIMER_C1, curVal);
 }
 
 void handle_timer_irq(void) {
   curVal += interval;
-  memory_write_32bits((uint32_t *)TIMER_C1, curVal);
-  memory_write_32bits((uint32_t *)TIMER_CS, TIMER_CS_M1);
+  memory_write_32bits((u32 *)TIMER_C1, curVal);
+  memory_write_32bits((u32 *)TIMER_CS, TIMER_CS_M1);
   log_i("Timer interrupt received");
 }
 #endif
 
 void routing_local_timer_to_core0_irq(void) {
-  memory_write_32bits((uint32_t *)LOCAL_INTERRUPT_ROUTING, LOCAL_TIMER_INTERRUPT_ROUTING_TO_CORE0_IRQ);
-  memory_write_32bits((uint32_t *)LOCAL_TIMER_CONTROL, (interval | LOCAL_TIMER_CONTROL_VALUE));
+  memory_write_32bits((u32 *)LOCAL_INTERRUPT_ROUTING, LOCAL_TIMER_INTERRUPT_ROUTING_TO_CORE0_IRQ);
+  memory_write_32bits((u32 *)LOCAL_TIMER_CONTROL, (interval | LOCAL_TIMER_CONTROL_VALUE));
 }
 
-static uint64_t elapsed_seconds = 0;
+static u64 elapsed_seconds = 0;
 void handle_local_timer_irq(void) {
   ++elapsed_seconds;
   log_d("current elapsed seconds:%llu", elapsed_seconds);
-  memory_write_32bits((uint32_t *)LOCAL_TIMER_CLEAR, LOCAL_TIMER_CLEAR_ACK);
+  memory_write_32bits((u32 *)LOCAL_TIMER_CLEAR, LOCAL_TIMER_CLEAR_ACK);
 }

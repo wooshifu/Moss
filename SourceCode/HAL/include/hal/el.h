@@ -1,9 +1,9 @@
 #pragma once
 
-#include <stdint.h>
+#include "libc/types.h"
 
 /**
  * get current exception level
  * @return current exception level
  */
-uint64_t get_current_el();
+u64 get_current_el();

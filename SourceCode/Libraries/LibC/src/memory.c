@@ -1,11 +1,12 @@
 #include "libc/memory.h"
+#include "libc/types.h"
 
-void memory_write_8bits(uint8_t *address, uint8_t value) { *address = value; }
-void memory_write_16bits(uint16_t *address, uint16_t value) { *address = value; }
-void memory_write_32bits(uint32_t *address, uint32_t value) { *address = value; }
-void memory_write_64bits(uint64_t *address, uint64_t value) { *address = value; }
+void memory_write_8bits(u8 *address, u8 value) { *address = value; }
+void memory_write_16bits(u16 *address, u16 value) { *address = value; }
+void memory_write_32bits(u32 *address, u32 value) { *address = value; }
+void memory_write_64bits(u64 *address, u64 value) { *address = value; }
 
-uint8_t memory_read_8bits(const uint8_t *address) { return *address; }
-uint16_t memory_read_16bits(const uint16_t *address) { return *address; }
-uint32_t memory_read_32bits(const uint32_t *address) { return *address; }
-uint64_t memory_read_64bits(const uint64_t *address) { return *address; }
+u8 memory_read_8bits(const u8 *address) { return *address; }
+u16 memory_read_16bits(const u16 *address) { return *address; }
+u32 memory_read_32bits(const u32 *address) { return *address; }
+u64 memory_read_64bits(const u64 *address) { return *address; }

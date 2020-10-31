@@ -1,9 +1,9 @@
 #pragma once
 
 #include <stddef.h>
-#include <stdint.h>
+#include "libc/types.h"
 
-void memzero(uint8_t *mem_start, const uint8_t *mem_end);
+void memzero(u8 *mem_start, const u8 *mem_end);
 
 void *memset(void *destination, int character, size_t count);
 

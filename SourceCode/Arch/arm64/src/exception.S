@@ -66,7 +66,7 @@
 /*
  * Exception vectors table.
  */
-.align	11
+.align 11 // 2k align, vbar_el1 [11:0] is RES0, so 2k align is required
 .globl exception_vectors_table
 exception_vectors_table:
     exception_vector_entry  sync_invalid_el1t           // Synchronous EL1t
@@ -74,9 +74,11 @@ exception_vectors_table:
     exception_vector_entry  fiq_invalid_el1t            // FIQ EL1t
     exception_vector_entry  error_invalid_el1t          // Error EL1t
 
+    // todo: handing sync_el1h
     exception_vector_entry  sync_invalid_el1h           // Synchronous EL1h
     exception_vector_entry  el1_irq                     // IRQ EL1h
     exception_vector_entry  fiq_invalid_el1h            // FIQ EL1h
+    // todo: handing error_el1h
     exception_vector_entry  error_invalid_el1h          // Error EL1h
 
     exception_vector_entry  sync_invalid_el0_64         // Synchronous 64-bit EL0
