@@ -1,5 +1,7 @@
 #pragma once
 
+#include "libc/macro.h"
+#include "libc/printf.h"
 #include "libc/stdio.h"
 #include "libc/string.h"
 
@@ -16,11 +18,36 @@
 #define LOG_LEVEL DEFAULT_LOG_LEVEL
 #endif
 
-#ifndef COLORFUL_LOG_OUTPUT
-#define COLORFUL_LOG_OUTPUT 1
+#ifndef LOG_OUTPUT_COLORFUL
+#define LOG_OUTPUT_COLORFUL 1
 #endif
 
-#if COLORFUL_LOG_OUTPUT
+/// log filename, line number, function name or not
+/// enable log format like [DEBUG finename.c:25(function_name)] or not
+#ifndef LOG_OUTPUT_LABEL
+#define LOG_OUTPUT_LABEL 1
+/// enable log format like [DEBUG finename.c:25] or not
+#ifndef LOG_OUTPUT_FUNCTION_NAME
+#define LOG_OUTPUT_FUNCTION_NAME 1
+#define LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER "(%s)"
+#define LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER_VALUE __func__
+#endif
+#endif
+
+#if LOG_OUTPUT_LABEL
+#ifndef LOG_OUTPUT_LABEL_VALUE
+#if LOG_OUTPUT_FUNCTION_NAME
+#define LOG_OUTPUT_LABEL_VALUE(value)                                                                                  \
+  "[" #value " " __CURRENT_FILE_NAME__ ":" __STRINGIFY__(__LINE__) LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER "] "
+#else
+#define LOG_OUTPUT_LABEL_VALUE(value) "[" #value " " __CURRENT_FILE_NAME__ ":" __STRINGIFY__(__LINE__) "] "
+#endif
+#endif
+#else
+#define LOG_OUTPUT_LABEL_VALUE(value)
+#endif
+
+#if LOG_OUTPUT_COLORFUL
 #define LOG_OUTPUT_COLOR_BLACK "\033[30m"
 #define LOG_OUTPUT_COLOR_RED "\033[31m"
 #define LOG_OUTPUT_COLOR_GREEN "\033[32m"
@@ -62,75 +89,98 @@
 #define LOG_OUTPUT_COLOR_RESET
 #endif
 
-const char *__extract_file_name_from_path(const char *file_path);
-
 #ifndef __CURRENT_FILE_NAME__
-//#define __CURRENT_FILE_NAME__ __extract_file_name_from_path(__FILE__)
 #define __CURRENT_FILE_NAME__ __FILE__
 #endif
 
-/// log verbose
-void _log_v(const char *format, ...);
+#ifndef _log_function
+#define _log_function(format, ...) printf(format, ##__VA_ARGS__)
+#endif
 
+/// log verbose
 #if LOG_LEVEL <= LOG_LEVEL_VERBOSE
+#if LOG_OUTPUT_LABEL && LOG_OUTPUT_FUNCTION_NAME
 #define log_v(format, ...)                                                                                             \
-  _log_v(LOG_OUTPUT_COLOR_BLUE "[VERBOSE %s:%d(%s)]: " format LOG_OUTPUT_COLOR_RESET "\n", __CURRENT_FILE_NAME__,      \
-         __LINE__, __func__, ##__VA_ARGS__)
+  _log_function(LOG_OUTPUT_COLOR_BLUE LOG_OUTPUT_LABEL_VALUE(VERBOSE) format LOG_OUTPUT_COLOR_RESET "\n",              \
+                LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER_VALUE, ##__VA_ARGS__)
+#else
+#define log_v(format, ...)                                                                                             \
+  _log_function(LOG_OUTPUT_COLOR_BLUE LOG_OUTPUT_LABEL_VALUE(VERBOSE) format LOG_OUTPUT_COLOR_RESET "\n", ##__VA_ARGS__)
+#endif
 #else
 #define log_v(format, ...)
 #endif
 
 /// log debug
-void _log_d(const char *format, ...);
-
 #if LOG_LEVEL <= LOG_LEVEL_DEBUG
+#if LOG_OUTPUT_LABEL && LOG_OUTPUT_FUNCTION_NAME
 #define log_d(format, ...)                                                                                             \
-  _log_d(LOG_OUTPUT_COLOR_CYAN "[DEBUG %s:%d(%s)]: " format LOG_OUTPUT_COLOR_RESET "\n", __CURRENT_FILE_NAME__,        \
-         __LINE__, __func__, ##__VA_ARGS__)
+  _log_function(LOG_OUTPUT_COLOR_CYAN LOG_OUTPUT_LABEL_VALUE(DEBUG) format LOG_OUTPUT_COLOR_RESET "\n",                \
+                LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER_VALUE, ##__VA_ARGS__)
+#else
+#define log_d(format, ...)                                                                                             \
+  _log_function(LOG_OUTPUT_COLOR_CYAN LOG_OUTPUT_LABEL_VALUE(DEBUG) format LOG_OUTPUT_COLOR_RESET "\n", ##__VA_ARGS__)
+#endif
+/// log trace
+#define log_trace log_d("---TRACING LOG---")
 #else
 #define log_d(format, ...)
+#define log_trace()
 #endif
 
 /// log info
-void _log_i(const char *format, ...);
-
 #if LOG_LEVEL <= LOG_LEVEL_INFO
+#if LOG_OUTPUT_LABEL && LOG_OUTPUT_FUNCTION_NAME
 #define log_i(format, ...)                                                                                             \
-  _log_i(LOG_OUTPUT_COLOR_WHITE "[INFO %s:%d(%s)]: " format LOG_OUTPUT_COLOR_RESET "\n", __CURRENT_FILE_NAME__,        \
-         __LINE__, __func__, ##__VA_ARGS__)
+  _log_function(LOG_OUTPUT_COLOR_WHITE LOG_OUTPUT_LABEL_VALUE(INFO) format LOG_OUTPUT_COLOR_RESET "\n",                \
+                LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER_VALUE, ##__VA_ARGS__)
+#else
+#define log_i(format, ...)                                                                                             \
+  _log_function(LOG_OUTPUT_COLOR_WHITE LOG_OUTPUT_LABEL_VALUE(INFO) format LOG_OUTPUT_COLOR_RESET "\n", ##__VA_ARGS__)
+#endif
 #else
 #define log_i(format, ...)
 #endif
 
 /// log warning
-void _log_w(const char *format, ...);
-
 #if LOG_LEVEL <= LOG_LEVEL_WARNING
+#if LOG_OUTPUT_LABEL && LOG_OUTPUT_FUNCTION_NAME
 #define log_w(format, ...)                                                                                             \
-  _log_w(LOG_OUTPUT_COLOR_YELLOW "[WARN %s:%d(%s)]: " format LOG_OUTPUT_COLOR_RESET "\n", __CURRENT_FILE_NAME__,       \
-         __LINE__, __func__, ##__VA_ARGS__)
+  _log_function(LOG_OUTPUT_COLOR_YELLOW LOG_OUTPUT_LABEL_VALUE(WARN) format LOG_OUTPUT_COLOR_RESET "\n",               \
+                LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER_VALUE, ##__VA_ARGS__)
+#else
+#define log_w(format, ...)                                                                                             \
+  _log_function(LOG_OUTPUT_COLOR_YELLOW LOG_OUTPUT_LABEL_VALUE(WARN) format LOG_OUTPUT_COLOR_RESET "\n", ##__VA_ARGS__)
+#endif
 #else
 #define log_w(format, ...)
 #endif
 
 /// log error
-void _log_e(const char *format, ...);
-
 #if LOG_LEVEL <= LOG_LEVEL_ERROR
+#if LOG_OUTPUT_LABEL && LOG_OUTPUT_FUNCTION_NAME
 #define log_e(format, ...)                                                                                             \
-  _log_e(LOG_OUTPUT_COLOR_RED "[ERROR] %s:%d(%s)]: " format LOG_OUTPUT_COLOR_RESET "\n", __CURRENT_FILE_NAME__,        \
-         __LINE__, __func__, ##__VA_ARGS__)
+  _log_function(LOG_OUTPUT_COLOR_RED LOG_OUTPUT_LABEL_VALUE(ERROR) format LOG_OUTPUT_COLOR_RESET "\n",                 \
+                LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER_VALUE, ##__VA_ARGS__)
+#else
+#define log_e(format, ...)                                                                                             \
+  _log_function(LOG_OUTPUT_COLOR_RED LOG_OUTPUT_LABEL_VALUE(ERROR) format LOG_OUTPUT_COLOR_RESET "\n", ##__VA_ARGS__)
+#endif
 #else
 #define log_e(format, ...)
 #endif
 
 /// log fatal
-void _log_f(const char *format, ...);
-
 #if LOG_LEVEL <= LOG_LEVEL_FATAL
+#if LOG_OUTPUT_LABEL && LOG_OUTPUT_FUNCTION_NAME
 #define log_f(format, ...)                                                                                             \
-  _log_f(LOG_OUTPUT_COLOR_MAGENTA "[FATAL] %s:%d(%s)]: " format LOG_OUTPUT_COLOR_RESET "\n", __CURRENT_FILE_NAME__,    \
-         __LINE__, __func__, ##__VA_ARGS__)
+  _log_function(LOG_OUTPUT_COLOR_MAGENTA LOG_OUTPUT_LABEL_VALUE(FATAL) format LOG_OUTPUT_COLOR_RESET "\n",             \
+                LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER_VALUE, ##__VA_ARGS__)
+#else
+#define log_f(format, ...)                                                                                             \
+  _log_function(LOG_OUTPUT_COLOR_MAGENTA LOG_OUTPUT_LABEL_VALUE(FATAL) format LOG_OUTPUT_COLOR_RESET "\n",             \
+                ##__VA_ARGS__)
+#endif
 #else
 #define log_f(format, ...)
 #endif
