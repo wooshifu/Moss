@@ -65,3 +65,52 @@ char *strrchr(const char *str, int character) {
   }
   return NULL;
 }
+
+char *strcpy(char *destination, const char *source) { return strncpy(destination, source, strlen(source) + 1); }
+char *strncpy(char *destination, const char *source, usize count) {
+  if (count != 0) {
+    char *d = destination;
+    const char *s = source;
+
+    do {
+      if ((*d++ = *s++) == 0) {
+        /* NUL pad the remaining count-1 bytes */
+        while (--count != 0) {
+          *d++ = 0;
+        }
+        break;
+      }
+    } while (--count != 0);
+  }
+
+  return (destination);
+}
+
+char *strcat(char *destination, const char *source) {
+  char *tmp = destination;
+
+  while (*destination) {
+    destination++;
+  }
+  while ((*destination++ = *source++) != '\0') {
+  }
+
+  return tmp;
+}
+char *strncat(char *destination, const char *source, usize count) {
+  char *tmp = destination;
+
+  if (count) {
+    while (*destination) {
+      destination++;
+    }
+    while ((*destination++ = *source++)) {
+      if (--count == 0) {
+        *destination = '\0';
+        break;
+      }
+    }
+  }
+
+  return tmp;
+}

@@ -1,15 +1,15 @@
 #pragma once
 
-#include <stddef.h>
-
 #include "libc/log.h"
 #include "libc/stdio.h"
 #include "libc/string.h"
+#include "libc/types.h"
 
 u32 __test_all_asserts = 0;
 u32 __test_success_asserts = 0;
 u32 __test_failed_asserts = 0;
 
+#if 0
 #define __on_assert_func_success_(type, failed_expression, actual, expected, format_specifier)                         \
   do {                                                                                                                 \
     ++__test_success_asserts;                                                                                          \
@@ -148,6 +148,7 @@ void assert_eq_int(int actual, int expected) { ASSERT_EQ_INT(actual, expected); 
 void assert_eq_pointer(const void* actual, const void* expected) { ASSERT_EQ_POINTER(actual, expected); }
 void assert_eq_size_t(size_t actual, size_t expected) { ASSERT_EQ_SIZE_T(actual, expected); }
 */
+#endif
 
 #ifndef __TEST_NAME_CONCAT
 #define __TEST_NAME_CONCAT(a, b) a##b
@@ -155,4 +156,65 @@ void assert_eq_size_t(size_t actual, size_t expected) { ASSERT_EQ_SIZE_T(actual,
 
 #ifndef TEST
 #define TEST(test_func_name) void __TEST_NAME_CONCAT(, test_func_name)()
+#endif
+
+#define __format_specifier(x)                                                                                          \
+  _Generic((x),                                                                                                        \
+           const char* : "%p",                                                                                         \
+           char*       : "%p",                                                                                         \
+           void*       : "%p",                                                                                         \
+           char        : "%c",                                                                                         \
+           i8          : "%hhi",                                                                                       \
+           u8          : "%hhu",                                                                                       \
+           i16         : "%hi",                                                                                        \
+           u16         : "%hu",                                                                                        \
+           i32         : "%li",                                                                                        \
+           u32         : "%lu",                                                                                        \
+           i64         : "%lli",                                                                                       \
+           u64         : "%llu"                                                                                        \
+  )
+
+#if LOG_OUTPUT_LABEL && LOG_OUTPUT_FUNCTION_NAME
+#define ASSERT_EQ(actual, expected)                                                                                    \
+  do {                                                                                                                 \
+    char __test_log_format[256];                                                                                       \
+    if ((actual) == (expected)) {                                                                                      \
+      strcpy(__test_log_format, LOG_OUTPUT_COLOR_WHITE LOG_OUTPUT_LABEL_VALUE(INFO));                                  \
+    } else {                                                                                                           \
+      strcpy(__test_log_format, LOG_OUTPUT_COLOR_RED LOG_OUTPUT_LABEL_VALUE(INFO));                                    \
+    }                                                                                                                  \
+    strcat(__test_log_format, "expected: %s == %s, actual: ");                                                         \
+    strcat(__test_log_format, __format_specifier(actual));                                                             \
+    strcat(__test_log_format, " == ");                                                                                 \
+    strcat(__test_log_format, __format_specifier(expected));                                                           \
+    strcat(__test_log_format, LOG_OUTPUT_COLOR_RESET);                                                                 \
+    strcat(__test_log_format, "\n");                                                                                   \
+    /*printf("format is %s", __test_log_format);*/                                                                     \
+                                                                                                                       \
+    ++__test_all_asserts;                                                                                              \
+    if ((actual) == (expected)) {                                                                                      \
+      ++__test_success_asserts;                                                                                        \
+    } else {                                                                                                           \
+      ++__test_failed_asserts;                                                                                         \
+    }                                                                                                                  \
+    printf(__test_log_format, LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER_VALUE, #actual, #expected, (actual), (expected));  \
+  } while (0)
+#else
+#define ASSERT_EQ(actual, expected)                                                                                    \
+  do {                                                                                                                 \
+    char __test_log_format[256];                                                                                       \
+    strcpy(__test_log_format, "expected: %s == %s, actual: ");                                                         \
+    strcat(__test_log_format, __format_specifier(actual));                                                             \
+    strcat(__test_log_format, " == ");                                                                                 \
+    strcat(__test_log_format, __format_specifier(expected));                                                           \
+    strcat(__test_log_format, "\n");                                                                                   \
+                                                                                                                       \
+    ++__test_all_asserts;                                                                                              \
+    if ((actual) == (expected)) {                                                                                      \
+      ++__test_success_asserts;                                                                                        \
+    } else {                                                                                                           \
+      ++__test_failed_asserts;                                                                                         \
+    }                                                                                                                  \
+    printf(__test_log_format, #actual, #expected, (actual), (expected));                                               \
+  } while (0)
 #endif

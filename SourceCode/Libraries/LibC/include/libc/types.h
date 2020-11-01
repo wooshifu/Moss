@@ -12,6 +12,11 @@ typedef __INT16_TYPE__ i16;
 typedef __INT32_TYPE__ i32;
 typedef __INT64_TYPE__ i64;
 
+typedef __INTPTR_TYPE__ iptr;
+typedef __UINTPTR_TYPE__ uptr;
+typedef u64 usize;
+// typedef i64 isize;
+
 #else
 #error "put ypur own int types header here. currently only gcc is supported"
 #endif
