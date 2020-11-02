@@ -1,5 +1,6 @@
 #include "rpi3/mmio.h"
 #include "rpi3/random.h"
+#include "libc/log.h"
 
 #define RANDOM_GEN_CTRL ((volatile unsigned int *)(MMIO_BASE + 0x00104000))
 #define RANDOM_GEN_STATUS ((volatile unsigned int *)(MMIO_BASE + 0x00104004))

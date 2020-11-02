@@ -51,7 +51,7 @@ _hang_core:
 
 _init_core0:
     /* TODO: (which value should sp be) */
-    ldr  x0, =0x80000
+    ldr  x0, =0x400000
     mov  sp, x0
 
     /* TODO: check whether we are now in el3 or not. In this case, we assume we are in el3, because qemu raspi3 boot into el3 */
@@ -116,8 +116,9 @@ _init_core0:
     eret
 
 _goto_kernel_main:
-    /* TODO: which value shoule sp be */
-    ldr  x0, =0x80000
+    // TODO: which value shoule sp be
+    // sp 栈空间必须在 mmu 映射范围内
+    ldr  x0, =0x400000
     mov  sp, x0
 
     bl   print_mem_stack

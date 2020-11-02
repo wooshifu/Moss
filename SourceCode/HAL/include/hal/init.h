@@ -11,3 +11,5 @@ int init_board();
  * @return 0 on success
  */
 int init_cpu();
+
+void init_mmu();

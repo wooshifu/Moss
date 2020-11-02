@@ -25,7 +25,9 @@ SECTIONS
     {
         *(.data)
     }
-    . = ALIGN(8);
+    . = ALIGN(4096);
+    	idmap_pg_dir = .;
+    	. += 4096;
     __data_end = .;
 
     __bss_start = .;

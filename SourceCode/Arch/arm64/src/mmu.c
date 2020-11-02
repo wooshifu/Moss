@@ -1,158 +1,322 @@
-#if 0
-
-#include "gpio.h" // get MMIO_BASE
-#include "log.h"
-
-#define PAGESIZE 4096
-
-// granularity
-#define PT_PAGE 0b11       // 4k granule
-#define PT_BLOCK 0b01      // 2M granule
-// accessibility
-#define PT_KERNEL (0 << 6) // privileged, supervisor EL1 access only
-#define PT_USER (1 << 6)   // unprivileged, EL0 access allowed
-#define PT_RW (0 << 7)     // read-write
-#define PT_RO (1 << 7)     // read-only
-#define PT_AF (1 << 10)    // accessed flag
-#define PT_NX (1UL << 54)  // no execute
-// shareability
-#define PT_OSH (2 << 8)    // outer shareable
-#define PT_ISH (3 << 8)    // inner shareable
-// defined in MAIR register
-#define PT_MEM (0 << 2)    // normal memory
-#define PT_DEV (1 << 2)    // device MMIO
-#define PT_NC (2 << 2)     // non-cachable
+#include "arm64/mmu.h"
+#include "libc/log.h"
+#include "libc/types.h"
 
 #define TTBR_CNP 1
 
-// get addresses from linker
-extern volatile unsigned char __data_start;
-extern volatile unsigned char __data_end;
+typedef unsigned long int uint64_t;
 
-/**
- * Set up page translation tables and enable virtual memory
+/// main table
+static unsigned long main_tbl[512 * 20] __attribute__((aligned(4096)));
+
+#define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a)-1)) == 0)
+
+#define PMD_TYPE_SECT (1 << 0)
+
+#define PMD_TYPE_TABLE (3 << 0)
+
+#define PTE_TYPE_PAGE (3 << 0)
+
+#define BITS_PER_VA 39
+
+/* Granule size of 4KB is being used */
+#define GRANULE_SIZE_SHIFT 12
+#define GRANULE_SIZE (1 << GRANULE_SIZE_SHIFT)
+#define XLAT_ADDR_MASK ((1UL << BITS_PER_VA) - GRANULE_SIZE)
+
+#define PMD_TYPE_MASK (3 << 0)
+
+/*
+ * Memory types available.
  */
-void mmu_init() {
-  unsigned long data_page = (unsigned long)&__data_start / PAGESIZE;
-  unsigned long r = 0;
-  unsigned long b = 0;
-  unsigned long *paging = (unsigned long *)&__data_end;
+#define MT_DEVICE_nGnRnE 0
+#define MT_DEVICE_nGnRE 1
+#define MT_DEVICE_GRE 2
+#define MT_NORMAL_NC 3
+#define MT_NORMAL 4
+#define MT_NORMAL_WT 5
 
-  /* create MMU translation tables at _end */
+#define MAIR(attr, mt) ((attr) << ((mt)*8))
 
-  // TTBR0, identity L1
-  paging[0] = (unsigned long)((unsigned char *)&__data_end + 2 * PAGESIZE) | // physical address
-              PT_PAGE | // it has the "Present" flag, which must be set, and we have area in it mapped by pages
-              PT_AF |   // accessed flag. Without this we're going to have a Data Abort exception
-              PT_USER | // non-privileged
-              PT_ISH |  // inner shareable
-              PT_MEM;   // normal memory
+int free_idx = 1;
 
-  // identity L2, first 2M block
-  paging[2 * 512] = (unsigned long)((unsigned char *)&__data_end + 3 * PAGESIZE) | // physical address
-                    PT_PAGE |                                                      // we have area in it mapped by pages
-                    PT_AF |                                                        // accessed flag
-                    PT_USER |                                                      // non-privileged
-                    PT_ISH |                                                       // inner shareable
-                    PT_MEM;                                                        // normal memory
+void __asm_invalidate_icache_all(void);
+void __asm_flush_dcache_all(void);
+int __asm_flush_l3_cache(void);
+void __asm_flush_dcache_range(unsigned long long start, unsigned long long end);
+void __asm_invalidate_dcache_all(void);
+void __asm_invalidate_icache_all(void);
 
-  // identity L2 2M blocks
-  b = MMIO_BASE >> 21;
-  // skip 0th, as we're about to map it by L3
-  for (r = 1; r < 512; r++)
-    paging[2 * 512 + r] = (unsigned long)((r << 21)) |                  // physical address
-                          PT_BLOCK |                                    // map 2M block
-                          PT_AF |                                       // accessed flag
-                          PT_NX |                                       // no execute
-                          PT_USER |                                     // non-privileged
-                          (r >= b ? PT_OSH | PT_DEV : PT_ISH | PT_MEM); // different attributes for device memory
-
-  // identity L3
-  for (r = 0; r < 512; r++)
-    paging[3 * 512 + r] = (unsigned long)(r * PAGESIZE) |                         // physical address
-                          PT_PAGE |                                               // map 4k
-                          PT_AF |                                                 // accessed flag
-                          PT_USER |                                               // non-privileged
-                          PT_ISH |                                                // inner shareable
-                          ((r < 0x80 || r >= data_page) ? PT_RW | PT_NX : PT_RO); // different for code and data
-
-  // TTBR1, kernel L1
-  paging[512 + 511] = (unsigned long)((unsigned char *)&__data_end + 4 * PAGESIZE) | // physical address
-                      PT_PAGE |   // we have area in it mapped by pages
-                      PT_AF |     // accessed flag
-                      PT_KERNEL | // privileged
-                      PT_ISH |    // inner shareable
-                      PT_MEM;     // normal memory
-
-  // kernel L2
-  paging[4 * 512 + 511] = (unsigned long)((unsigned char *)&__data_end + 5 * PAGESIZE) | // physical address
-                          PT_PAGE |   // we have area in it mapped by pages
-                          PT_AF |     // accessed flag
-                          PT_KERNEL | // privileged
-                          PT_ISH |    // inner shareable
-                          PT_MEM;     // normal memory
-
-  // kernel L3
-  paging[5 * 512] = (unsigned long)(MMIO_BASE + 0x00201000) | // physical address
-                    PT_PAGE |                                 // map 4k
-                    PT_AF |                                   // accessed flag
-                    PT_NX |                                   // no execute
-                    PT_KERNEL |                               // privileged
-                    PT_OSH |                                  // outter shareable
-                    PT_DEV;                                   // device memory
-
-  /* okay, now we have to set system registers to enable MMU */
-
-  // check for 4k granule and at least 36 bits physical address bus */
-  asm volatile("mrs %0, id_aa64mmfr0_el1" : "=r"(r));
-  b = r & 0xF;
-  if (r & (0xF << 28) /*4k*/ || b < 1 /*36 bits*/) {
-    log_e("ERROR: 4k granule or 36 bit address space not supported\n");
-    return;
+void mmu_memset(char *dst, char v, usize len) {
+  while (len--) {
+    *dst++ = v;
   }
-
-  // first, set Memory Attributes array, indexed by PT_MEM, PT_DEV, PT_NC in our example
-  r = (0xFF << 0) | // AttrIdx=0: normal, IWBWA, OWBWA, NTR
-      (0x04 << 8) | // AttrIdx=1: device, nGnRE (must be OSH too)
-      (0x44 << 16); // AttrIdx=2: non cacheable
-  asm volatile("msr mair_el1, %0" : : "r"(r));
-
-  // next, specify mapping characteristics in translate control register
-  r = (0b00LL << 37) | // TBI=0, no tagging
-      (b << 32) |      // IPS=autodetected
-      (0b10LL << 30) | // TG1=4k
-      (0b11LL << 28) | // SH1=3 inner
-      (0b01LL << 26) | // ORGN1=1 write back
-      (0b01LL << 24) | // IRGN1=1 write back
-      (0b0LL << 23) |  // EPD1 enable higher half
-      (25LL << 16) |   // T1SZ=25, 3 levels (512G)
-      (0b00LL << 14) | // TG0=4k
-      (0b11LL << 12) | // SH0=3 inner
-      (0b01LL << 10) | // ORGN0=1 write back
-      (0b01LL << 8) |  // IRGN0=1 write back
-      (0b0LL << 7) |   // EPD0 enable lower half
-      (25LL << 0);     // T0SZ=25, 3 levels (512G)
-  asm volatile("msr tcr_el1, %0; isb" : : "r"(r));
-
-  // tell the MMU where our translation tables are. TTBR_CNP bit not documented, but required
-  // lower half, user space
-  asm volatile("msr ttbr0_el1, %0" : : "r"((unsigned long)&__data_end + TTBR_CNP));
-  // upper half, kernel space
-  asm volatile("msr ttbr1_el1, %0" : : "r"((unsigned long)&__data_end + TTBR_CNP + PAGESIZE));
-
-  // finally, toggle some bits in system control register to enable page translation
-  asm volatile("dsb ish; isb; mrs %0, sctlr_el1" : "=r"(r));
-  r |= 0xC00800;     // set mandatory reserved bits
-  r &= ~((1 << 25) | // clear EE, little endian translation tables
-         (1 << 24) | // clear E0E
-         (1 << 19) | // clear WXN
-         (1 << 12) | // clear I, no instruction cache
-         (1 << 4) |  // clear SA0
-         (1 << 3) |  // clear SA
-         (1 << 2) |  // clear C, no cache at all
-         (1 << 1));  // clear A, no aligment check
-  r |= (1 << 0);     // set M, enable MMU
-  asm volatile("msr sctlr_el1, %0; isb" : : "r"(r));
 }
 
-#endif
+static unsigned long __page_off = 0;
+static unsigned long get_free_page(void) {
+  __page_off += 512;
+  return (unsigned long)(main_tbl + __page_off);
+}
+
+static inline unsigned int get_sctlr(void) {
+  unsigned int val;
+  asm volatile("mrs %0, sctlr_el1" : "=r"(val) : : "cc");
+  return val;
+}
+
+static inline void set_sctlr(unsigned int val) {
+  asm volatile("msr sctlr_el1, %0" : : "r"(val) : "cc");
+  asm volatile("isb");
+}
+
+void mmu_init(void) {
+//  u64 mair = mair = MAIR(0x00UL, MT_DEVICE_nGnRnE) | MAIR(0x04UL, MT_DEVICE_nGnRE) | MAIR(0x0cUL, MT_DEVICE_GRE) |
+//                    MAIR(0x44UL, MT_NORMAL_NC) | MAIR(0xffUL, MT_NORMAL) | MAIR(0xbbUL, MT_NORMAL_WT);
+//  log_i("mair: 0x%llx", mair);
+//  u64 mair_el1 = mair; // also woks? why?
+  u64 mair_el1 = 0x007f6eUL; // 0b111_1111_0110_1110
+  /// Memory Attribute Indirection Register
+  asm volatile("msr MAIR_EL1, %0\ndsb sy\n" ::"r"(mair_el1));
+  asm volatile("mrs %0, MAIR_EL1\ndsb sy\n" : "=r"(mair_el1));
+  log_i("mair_el1: 0x%llx", mair_el1);
+
+  // TCR_EL1
+  u64 tcr_el1 = (16UL << 0)                                                  // 48bit
+                | (0x0UL << 6) | (0x0UL << 7) | (0x3UL << 8) | (0x3UL << 10) // Inner Shareable
+                | (0x2UL << 12) | (0x0UL << 14)                              // 4K
+                | (0x0UL << 16) | (0x0UL << 22) | (0x1UL << 23) | (0x2UL << 30) | (0x1UL << 32) | (0x0UL << 35) |
+                (0x0UL << 36) | (0x0UL << 37) | (0x0UL << 38);
+
+  asm volatile("msr TCR_EL1, %0\n" ::"r"(tcr_el1));
+  asm volatile("mrs %0, TCR_EL1\n" : "=r"(tcr_el1));
+
+  asm volatile("msr TTBR0_EL1, %0\ndsb sy\n" ::"r"(main_tbl));
+  asm volatile("mrs %0, TTBR0_EL1\ndsb sy\n" : "=r"(mair_el1));
+
+  mmu_memset((char *)main_tbl, 0, 4096);
+}
+
+void mmu_enable(void) {
+  unsigned long sctlr_el1 = 0;
+  asm volatile("mrs %0, SCTLR_EL1\n" : "=r"(sctlr_el1));
+  sctlr_el1 &= ~0x1000; // disable I
+  asm volatile("dmb sy\n msr SCTLR_EL1, %0\n isb sy\n" ::"r"(sctlr_el1));
+
+  asm volatile("IC IALLUIS\n dsb sy\n isb sy\n");
+  asm volatile("tlbi vmalle1\n dsb sy\n isb sy\n");
+
+  unsigned long val32 = 0;
+  // SCTLR_EL1, turn on mmu
+  asm volatile("mrs %0, SCTLR_EL1\n" : "=r"(val32));
+  val32 |= 0x1005; // enable mmu, I C M
+  asm volatile("dmb sy\n msr SCTLR_EL1, %0\nisb sy\n" ::"r"(val32));
+  rt_hw_icache_enable();
+  rt_hw_dcache_enable();
+}
+
+static int map_single_page_2M(unsigned long *lv0_tbl, unsigned long va, unsigned long pa, unsigned long attr) {
+  int level;
+  unsigned long *cur_lv_tbl = lv0_tbl;
+  unsigned long page;
+  unsigned long off;
+  int level_shift = 39;
+
+  if (va & (0x200000UL - 1)) {
+    return MMU_MAP_ERROR_VANOTALIGN;
+  }
+  if (pa & (0x200000UL - 1)) {
+    return MMU_MAP_ERROR_PANOTALIGN;
+  }
+  for (level = 0; level < 2; level++) {
+    off = (va >> level_shift);
+    off &= MMU_LEVEL_MASK;
+    if ((cur_lv_tbl[off] & 1) == 0) {
+      page = get_free_page();
+      if (!page) {
+        return MMU_MAP_ERROR_NOPAGE;
+      }
+      mmu_memset((char *)page, 0, 4096);
+      cur_lv_tbl[off] = page | 0x3UL;
+    }
+    page = cur_lv_tbl[off];
+    if (!(page & 0x2)) {
+      // is block! error!
+      return MMU_MAP_ERROR_CONFLICT;
+    }
+    cur_lv_tbl = (unsigned long *)(page & 0x0000fffffffff000UL);
+    level_shift -= 9;
+  }
+  attr &= 0xfff0000000000ffcUL;
+  pa |= (attr | 0x1UL); // block
+  off = (va >> 21);
+  off &= MMU_LEVEL_MASK;
+  cur_lv_tbl[off] = pa;
+  return 0;
+}
+
+int armv8_map_2M(unsigned long va, unsigned long pa, int count, unsigned long attr) {
+  int i;
+  int ret;
+
+  if (va & (0x200000 - 1)) {
+    return -1;
+  }
+  if (pa & (0x200000 - 1)) {
+    return -1;
+  }
+  for (i = 0; i < count; i++) {
+    ret = map_single_page_2M((unsigned long *)main_tbl, va, pa, attr);
+    va += 0x200000;
+    pa += 0x200000;
+    if (ret != 0) {
+      return ret;
+    }
+  }
+  return 0;
+}
+
+static void set_table(uint64_t *pt, uint64_t *table_addr) {
+  uint64_t val;
+  val = (0x3UL | (uint64_t)table_addr);
+  *pt = val;
+}
+
+void mmu_memset2(unsigned char *dst, char v, int len) {
+  while (len--) {
+    *dst++ = v;
+  }
+}
+
+static uint64_t *create_table(void) {
+  uint64_t *new_table = (uint64_t *)((unsigned char *)&main_tbl[0] + free_idx * 4096); //+ free_idx * GRANULE_SIZE;
+  /* Mark all entries as invalid */
+  mmu_memset2((unsigned char *)new_table, 0, 4096);
+  free_idx++;
+  return new_table;
+}
+
+static int pte_type(uint64_t *pte) { return *pte & PMD_TYPE_MASK; }
+
+static int level2shift(int level) {
+  /* Page is 12 bits wide, every level translates 9 bits */
+  return (12 + 9 * (3 - level));
+}
+
+static uint64_t *get_level_table(uint64_t *pte) {
+  uint64_t *table = (uint64_t *)(*pte & XLAT_ADDR_MASK);
+
+  if (pte_type(pte) != PMD_TYPE_TABLE) {
+    table = create_table();
+    set_table(pte, table);
+  }
+  return table;
+}
+
+static void map_region(uint64_t virt, uint64_t phys, uint64_t size, uint64_t attr) {
+  uint64_t block_size = 0;
+  uint64_t block_shift = 0;
+  uint64_t *pte;
+  uint64_t idx = 0;
+  uint64_t addr = 0;
+  uint64_t *table = 0;
+  int level = 0;
+
+  addr = virt;
+  while (size) {
+    table = &main_tbl[0];
+    //    log_d("table: %p", table);
+    for (level = 0; level < 4; level++) {
+      block_shift = level2shift(level);
+      idx = addr >> block_shift;
+      idx = idx % 512;
+      block_size = (uint64_t)(1L << block_shift);
+      pte = table + idx;
+
+      if (size >= block_size && IS_ALIGNED(addr, block_size)) {
+        attr &= 0xfff0000000000ffcUL;
+        if (level != 3) {
+          *pte = phys | (attr | 0x1UL);
+        } else {
+          *pte = phys | (attr | 0x3UL);
+        }
+        addr += block_size;
+        phys += block_size;
+        size -= block_size;
+        break;
+      }
+      table = get_level_table(pte);
+      //      log_d("level table: %p", table);
+    }
+  }
+}
+
+void armv8_map(unsigned long va, unsigned long pa, unsigned long size, unsigned long attr) {
+  map_region(va, pa, size, attr);
+}
+
+void rt_hw_dcache_enable(void) {
+  if (!(get_sctlr() & CR_M)) {
+    log_e("please init mmu!\n");
+  } else {
+    set_sctlr(get_sctlr() | CR_C);
+  }
+}
+
+void rt_hw_dcache_flush_all(void) {
+  int ret;
+
+  __asm_flush_dcache_all();
+  ret = __asm_flush_l3_cache();
+  if (ret) {
+    log_d("flushing dcache returns 0x%x\n", ret);
+  } else {
+    log_i("flushing dcache successfully.\n");
+  }
+}
+
+void rt_hw_dcache_flush_range(unsigned long start_addr, unsigned long size) {
+  __asm_flush_dcache_range(start_addr, start_addr + size);
+}
+void rt_hw_dcache_invalidate_range(unsigned long start_addr, unsigned long size) {
+  __asm_flush_dcache_range(start_addr, start_addr + size);
+}
+
+void rt_hw_dcache_invalidate_all(void) { __asm_invalidate_dcache_all(); }
+
+void rt_hw_dcache_disable(void) {
+  /* if cache isn't enabled no need to disable */
+  if (!(get_sctlr() & CR_C)) {
+    log_e("need enable cache!\n");
+    return;
+  }
+  set_sctlr(get_sctlr() & ~CR_C);
+}
+
+// icache
+void rt_hw_icache_enable(void) {
+  __asm_invalidate_icache_all();
+  set_sctlr(get_sctlr() | CR_I);
+}
+
+void rt_hw_icache_invalidate_all(void) { __asm_invalidate_icache_all(); }
+
+void rt_hw_icache_disable(void) { set_sctlr(get_sctlr() & ~CR_I); }
+
+extern void paging_init(void);
+
+void init_mmu() {
+//  mmu_init();
+//  log_d("begin mmu map");
+//  armv8_map(0, 0, 0x6400000, MEM_ATTR_MEMORY);
+//  armv8_map(0x3f000000, 0x3f000000, 0x200000, MEM_ATTR_IO); // timer
+//  armv8_map(0x3f200000, 0x3f200000, 0x16000, MEM_ATTR_IO);  // uart
+//  armv8_map(0x40000000, 0x40000000, 0x1000, MEM_ATTR_IO);   // core timer
+//  armv8_map(0x3F300000, 0x3F300000, 0x1000, MEM_ATTR_IO);   // sdio
+//  armv8_map(0xc00000, 0xc00000, 0x1000, MEM_ATTR_IO);       // mbox
+//  armv8_map(0x3f804000, 0x3f804000, 0x1000, MEM_ATTR_IO);   // i2c0
+//  armv8_map(0x3f205000, 0x3f205000, 0x1000, MEM_ATTR_IO);   // i2c1
+//  log_d("end mmu map");
+//  mmu_enable();
+  paging_init();
+}
