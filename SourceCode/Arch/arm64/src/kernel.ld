@@ -26,8 +26,8 @@ SECTIONS
         *(.data)
     }
     . = ALIGN(4096);
-    	idmap_pg_dir = .;
-    	. += 4096;
+    idmap_pg_dir = .;
+    . += 4096;
     __data_end = .;
 
     __bss_start = .;
@@ -38,24 +38,4 @@ SECTIONS
     }
     . = ALIGN(8);
     __bss_end = .;
-
-    . = 0x20000 + __bss_end;
-    __svc_stack = .;
-
-    . = 0x20000 + __svc_stack;
-    __irq_stack = .;
-
-    . = 0x20000 + __irq_stack;
-    __fiq_stack = .;
-
-    . = 0x20000 + __fiq_stack;
-    __sys_stack = .;
-
-    __end_stack = .;
-    . = ALIGN(8);
-
-    __PAGE_TABLE = .;
-    . = 0x805000 + __PAGE_TABLE;
-
-    __HEAP_BEGIN = .;
 }
