@@ -15,7 +15,7 @@ extern u64 l0_page_table;
 
 static void alloc_init_pte(pmd_t *pmdp, unsigned long addr, unsigned long end, unsigned long phys, unsigned long prot,
                            unsigned long (*alloc_pgtable)(void), unsigned long flags) {
-  pte_t *ptep = NULL;
+  pte_t *ptep = nullptr;
 
   if (pmd_none(*pmdp)) {
     u64 pte_phys = alloc_pgtable();

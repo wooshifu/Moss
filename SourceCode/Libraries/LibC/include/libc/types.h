@@ -2,20 +2,31 @@
 
 #ifdef __GNUC__
 
-typedef __UINT8_TYPE__ u8;
-typedef __UINT16_TYPE__ u16;
-typedef __UINT32_TYPE__ u32;
-typedef __UINT64_TYPE__ u64;
+using u8  = __UINT8_TYPE__;
+using u16 = __UINT16_TYPE__;
+using u32 = __UINT32_TYPE__;
+using u64 = __UINT64_TYPE__;
 
-typedef __INT8_TYPE__ i8;
-typedef __INT16_TYPE__ i16;
-typedef __INT32_TYPE__ i32;
-typedef __INT64_TYPE__ i64;
+using i8  = __INT8_TYPE__;
+using i16 = __INT16_TYPE__;
+using i32 = __INT32_TYPE__;
+using i64 = __INT64_TYPE__;
 
-typedef __INTPTR_TYPE__ iptr;
-typedef __UINTPTR_TYPE__ uptr;
-typedef u64 usize;
-// typedef i64 isize;
+using iptr   = __INTPTR_TYPE__;
+using uptr   = __UINTPTR_TYPE__;
+using usize  = __SIZE_TYPE__;
+using size_t = usize;
+
+using intmax_t  = __INTMAX_TYPE__;
+using uintptr_t = uptr;
+using ptrdiff_t = __PTRDIFF_TYPE__;
+
+#ifdef __DBL_MAX__
+constexpr double DBL_MAX = __DBL_MAX__;
+static_assert(DBL_MAX == 1.79769313486231570814527423731704357e+308L, "unexpected DBL_MAX");
+#else
+#error "DBL_MAX not defined, define it here"
+#endif
 
 #else
 #error "put ypur own int types header here. currently only gcc is supported"

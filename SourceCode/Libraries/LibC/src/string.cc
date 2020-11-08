@@ -20,7 +20,7 @@ void *memset(void *destination, int character, size_t count) {
 }
 
 size_t strlen(const char *str) {
-  if (str == NULL) {
+  if (str == nullptr) {
     return 0;
   }
 
@@ -37,8 +37,8 @@ int strcmp(const char *left, const char *right) {
 }
 
 char *strchr(const char *str, int character) {
-  if (str == NULL) {
-    return NULL;
+  if (str == nullptr) {
+    return nullptr;
   }
 
   while (*str) {
@@ -47,12 +47,12 @@ char *strchr(const char *str, int character) {
     }
     ++str;
   }
-  return NULL;
+  return nullptr;
 }
 
 char *strrchr(const char *str, int character) {
-  if (str == NULL) {
-    return NULL;
+  if (str == nullptr) {
+    return nullptr;
   }
 
   // todo: optimization. two loops here now
@@ -63,7 +63,7 @@ char *strrchr(const char *str, int character) {
       return (char *)string;
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 char *strcpy(char *destination, const char *source) { return strncpy(destination, source, strlen(source) + 1); }

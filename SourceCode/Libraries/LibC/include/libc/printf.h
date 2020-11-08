@@ -31,10 +31,8 @@
 
 #pragma once
 
-#include <stdarg.h>
-#include <stddef.h>
-
 #include "hal/print.h"
+#include "libc/stdarg.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -78,7 +76,7 @@ int sprintf_(char *buffer, const char *format, ...);
  *         null character. A value equal or larger than count indicates truncation. Only when the returned value
  *         is non-negative and less than count, the string has been completely written.
  */
-#define snprintf snprintf_
+#define snprintf  snprintf_
 #define vsnprintf vsnprintf_
 int snprintf_(char *buffer, size_t count, const char *format, ...);
 int vsnprintf_(char *buffer, size_t count, const char *format, va_list va);

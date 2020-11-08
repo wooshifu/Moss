@@ -30,10 +30,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <stdbool.h>
-#include <stdint.h>
-
 #include "libc/printf.h"
+#include "libc/types.h"
 
 // define this globally (e.g. gcc -DPRINTF_INCLUDE_CONFIG_H ...) to include the
 // printf_config.h header file
@@ -111,7 +109,7 @@
 
 // import float.h for DBL_MAX
 #if defined(PRINTF_SUPPORT_FLOAT)
-#include <float.h>
+//#include <float.h>
 #endif
 
 // output function type
