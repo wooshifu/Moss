@@ -11,8 +11,8 @@ TEST(should_mem_clean_works) {
 }
 
 TEST(should_memset_set_memory) {
-  i32 array[] = {1, 2, 3};
-  size_t count = sizeof(array) / sizeof(array[0]);
+  i32 array[]      = {1, 2, 3};
+  size_t count     = sizeof(array) / sizeof(array[0]);
   i32 *destination = static_cast<i32 *>(memset(array, 0, count));
   for (size_t index = 0; index < count; ++index) {
     ASSERT_EQ(array[index], 0);
@@ -21,7 +21,7 @@ TEST(should_memset_set_memory) {
 }
 
 TEST(should_strlen_return_correct_len) {
-  const char *n = NULL;
+  const char *n = nullptr;
   ASSERT_EQ(strlen(n), 0);
   const char *a = "HelloWorld";
   ASSERT_EQ(strlen(a), 10);
@@ -37,7 +37,7 @@ TEST(should_strlen_return_correct_len) {
 
 TEST(should_strchr_works) {
   const char *msg = "ABCDabcd";
-  char *A = strchr(msg, 'A');
+  char *A         = strchr(msg, 'A');
   ASSERT_EQ(*A, 'A');
   char *B = strchr(msg, 'B');
   ASSERT_EQ(*B, 'B');
@@ -51,7 +51,7 @@ TEST(should_strchr_works) {
 
 TEST(should_strrchr_works) {
   const char *msg = "ABCDabcd";
-  char *A = strrchr(msg, 'A');
+  char *A         = strrchr(msg, 'A');
   ASSERT_EQ(*A, 'A');
   char *B = strrchr(msg, 'B');
   ASSERT_EQ(*B, 'B');

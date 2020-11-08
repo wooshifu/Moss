@@ -2,7 +2,7 @@
 
 /*  GIMP header image file format (RGB)  */
 
-static unsigned int homer_width = 96;
+static unsigned int homer_width  = 96;
 static unsigned int homer_height = 64;
 
 /*  Call this macro repeatedly.  After each use, the pixel data can be extracted  */

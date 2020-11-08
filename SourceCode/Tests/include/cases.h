@@ -8,7 +8,7 @@
 #include "test_test_lib_h.h"
 // --- TEST CASES END ---
 
-typedef void (*test_case_func)();
+using test_case_func = void (*)();
 
 test_case_func test_cases[] = {
     // clang-format off
@@ -29,7 +29,7 @@ void run_tests() {
   size_t test_count = sizeof(test_cases) / sizeof(test_cases[0]);
   for (unsigned int index = 0; index < test_count; ++index) {
     test_case_func test_case = test_cases[index];
-    if (test_case != NULL) {
+    if (test_case != nullptr) {
       test_case();
     }
   }

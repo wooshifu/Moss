@@ -22,7 +22,7 @@ extern "C" void show_invalid_entry_message(int type, u64 esr, u64 address) {
  */
 static void interrupt_dispatcher(u32 interrupt_number) {
   /// firstly, dispatch interrupt to cpu handler; secondly, dispatch interrupt to peripheral handler;
-  bool cpu_interrupt_handled = handle_cpu_interrupt(interrupt_number);
+  bool cpu_interrupt_handled        = handle_cpu_interrupt(interrupt_number);
   bool peripheral_interrupt_handled = handle_peripheral_interrupt(interrupt_number);
   if (!cpu_interrupt_handled && !peripheral_interrupt_handled) {
     log_e("unknown pending irq: 0x%x", interrupt_number);

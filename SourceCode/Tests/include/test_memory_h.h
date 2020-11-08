@@ -3,7 +3,7 @@
 #include "libc/memory.h"
 
 TEST(should_io_write_and_read_works) {
-  u8 a = 0;
+  u8 a  = 0;
   u16 b = 0;
   u32 c = 0;
   u64 d = 0;

@@ -1,19 +1,20 @@
 #include "arm64/mm.h"
-#include "libc/log.h"
 #include "arm64/pgtable_hwdef.h"
+#include "libc/log.h"
 
 #define NR_PAGES (TOTAL_MEMORY / PAGE_SIZE)
 
-static unsigned short mem_map[NR_PAGES] = {0,};
+static unsigned short mem_map[NR_PAGES] = {
+    0,
+};
 
 static unsigned long phy_start_address;
 
-void mem_init(unsigned long start_mem, unsigned long end_mem)
-{
+void mem_init(unsigned long start_mem, unsigned long end_mem) {
   unsigned long nr_free_pages = 0;
   unsigned long free;
 
-  start_mem = PAGE_ALIGN(start_mem);
+  start_mem         = PAGE_ALIGN(start_mem);
   phy_start_address = start_mem;
   end_mem &= PAGE_MASK;
   free = end_mem - start_mem;
@@ -23,12 +24,11 @@ void mem_init(unsigned long start_mem, unsigned long end_mem)
     start_mem += PAGE_SIZE;
   }
 
-  log_i("Memory: %uKB available, %u free pages\n", free/1024, nr_free_pages);
+  log_i("Memory: %uKB available, %u free pages\n", free / 1024, nr_free_pages);
 }
 
-#define LOW_MEMORY              	(2 * SECTION_SIZE)
-unsigned long get_free_page(void)
-{
+#define LOW_MEMORY (2 * SECTION_SIZE)
+unsigned long get_free_page(void) {
   int i;
 
   for (i = 0; i < NR_PAGES; i++) {
@@ -40,7 +40,4 @@ unsigned long get_free_page(void)
   return 0;
 }
 
-void free_page(unsigned long p)
-{
-  mem_map[(p - LOW_MEMORY)/PAGE_SIZE] = 0;
-}
+void free_page(unsigned long p) { mem_map[(p - LOW_MEMORY) / PAGE_SIZE] = 0; }

@@ -69,7 +69,7 @@ char *strrchr(const char *str, int character) {
 char *strcpy(char *destination, const char *source) { return strncpy(destination, source, strlen(source) + 1); }
 char *strncpy(char *destination, const char *source, usize count) {
   if (count != 0) {
-    char *d = destination;
+    char *d       = destination;
     const char *s = source;
 
     do {

@@ -43,7 +43,7 @@ TEST(should_test_lib_test_eq_works) {
   size_t ys = 1;
   ASSERT_EQ(xs, ys);
 
-  const char *hello = "Hello";
+  const char *hello  = "Hello";
   const char *hello1 = hello;
   ASSERT_EQ(hello, hello1);
 }

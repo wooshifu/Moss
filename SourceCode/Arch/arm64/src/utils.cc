@@ -23,4 +23,4 @@ extern "C" void print_mem_stack() {
 #endif
 }
 
-extern "C" void bss_clean() { memzero((u8*)&__bss_start, (u8*)&__bss_end); }
+extern "C" void bss_clean() { memzero((u8 *)&__bss_start, (u8 *)&__bss_end); }

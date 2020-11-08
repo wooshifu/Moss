@@ -3,14 +3,14 @@
 #include "rpi3/mmio.h"
 
 /* PL011 UART registers */
-#define UART0_DATA_REGISTER ((volatile unsigned int *)(MMIO_BASE + 0x00201000))
-#define UART0_FLAG_REGISTER ((volatile unsigned int *)(MMIO_BASE + 0x00201018))
-#define UART0_INTEGER_BAUD_RATE_DIVISOR ((volatile unsigned int *)(MMIO_BASE + 0x00201024))
-#define UART0_FRACTIONAL_BAUD_RATE_DIVISOR ((volatile unsigned int *)(MMIO_BASE + 0x00201028))
-#define UART0_LINE_CONTROL_REGISTER ((volatile unsigned int *)(MMIO_BASE + 0x0020102C))
-#define UART0_CONTROL_REGISTER ((volatile unsigned int *)(MMIO_BASE + 0x00201030))
+#define UART0_DATA_REGISTER                     ((volatile unsigned int *)(MMIO_BASE + 0x00201000))
+#define UART0_FLAG_REGISTER                     ((volatile unsigned int *)(MMIO_BASE + 0x00201018))
+#define UART0_INTEGER_BAUD_RATE_DIVISOR         ((volatile unsigned int *)(MMIO_BASE + 0x00201024))
+#define UART0_FRACTIONAL_BAUD_RATE_DIVISOR      ((volatile unsigned int *)(MMIO_BASE + 0x00201028))
+#define UART0_LINE_CONTROL_REGISTER             ((volatile unsigned int *)(MMIO_BASE + 0x0020102C))
+#define UART0_CONTROL_REGISTER                  ((volatile unsigned int *)(MMIO_BASE + 0x00201030))
 #define UART0_INTERRUPT_MASK_SET_CLEAR_REGISTER ((volatile unsigned int *)(MMIO_BASE + 0x00201038))
-#define UART0_INTERRUPT_CLEAR_REGISTER ((volatile unsigned int *)(MMIO_BASE + 0x00201044))
+#define UART0_INTERRUPT_CLEAR_REGISTER          ((volatile unsigned int *)(MMIO_BASE + 0x00201044))
 
 /**
  * Set baud rate and characteristics (115200 8N1) and map to GPIO
@@ -22,11 +22,11 @@ void init_uart0() {
   mailbox_property_set_clock_rate_t data = {.size = sizeof(struct mailbox_property_set_clock_rate_t),
                                             .code = MAILBOX_CODE_REQUEST,
 
-                                            .tag = MAILBOX_PROPERTY_TAG_SET_CLOCK_RATE,
-                                            .buffer_size = 12, // 12 bytes, clock_id,rate,skip_setting_turbo
-                                            .tag_code = MAILBOX_CODE_REQUEST,
-                                            .clock_id = MAILBOX_CLOCK_ID_UART,
-                                            .rate = 4000000,
+                                            .tag                = MAILBOX_PROPERTY_TAG_SET_CLOCK_RATE,
+                                            .buffer_size        = 12, // 12 bytes, clock_id,rate,skip_setting_turbo
+                                            .tag_code           = MAILBOX_CODE_REQUEST,
+                                            .clock_id           = MAILBOX_CLOCK_ID_UART,
+                                            .rate               = 4000000,
                                             .skip_setting_turbo = 0,
 
                                             .end = MAILBOX_PROPERTY_TAG_END};
@@ -44,22 +44,22 @@ void init_uart0() {
   r &= ~((7 << 12) | (7 << 15)); // gpio14, gpio15, [17:15]:FSEL15, [14:12]:FSEL14
   r |= (4 << 12) | (4 << 15);    // alt0, 0b100 = GPIO Pin takes alternate function 0
   *GPFSEL1 = r;
-  *GPPUD = 0; // enable pins 14 and 15
-  r = 150;
+  *GPPUD   = 0; // enable pins 14 and 15
+  r        = 150;
   while (r--) {
     asm volatile("nop");
   }
   *GPPUDCLK0 = (1 << 14) | (1 << 15);
-  r = 150;
+  r          = 150;
   while (r--) {
     asm volatile("nop");
   }
-  *GPPUDCLK0 = 0;                            // flush GPIO setup
-  *UART0_INTERRUPT_CLEAR_REGISTER = 0x7FF;   // clear interrupts
-  *UART0_INTEGER_BAUD_RATE_DIVISOR = 2;      // 115200 baud, 4000000/(16*115200)
-  *UART0_FRACTIONAL_BAUD_RATE_DIVISOR = 0xB; // BAUDDIV = (FUARTCLK/(16 * Baud rate))
-  *UART0_LINE_CONTROL_REGISTER = 0b11 << 5;  // 8n1, b11 = 8 bits
-  *UART0_CONTROL_REGISTER = 0x301;           // enable Tx, Rx, FIFO
+  *GPPUDCLK0                          = 0;         // flush GPIO setup
+  *UART0_INTERRUPT_CLEAR_REGISTER     = 0x7FF;     // clear interrupts
+  *UART0_INTEGER_BAUD_RATE_DIVISOR    = 2;         // 115200 baud, 4000000/(16*115200)
+  *UART0_FRACTIONAL_BAUD_RATE_DIVISOR = 0xB;       // BAUDDIV = (FUARTCLK/(16 * Baud rate))
+  *UART0_LINE_CONTROL_REGISTER        = 0b11 << 5; // 8n1, b11 = 8 bits
+  *UART0_CONTROL_REGISTER             = 0x301;     // enable Tx, Rx, FIFO
   log_d("uart0 successfully initialized");
 }
 

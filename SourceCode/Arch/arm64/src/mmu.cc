@@ -18,24 +18,24 @@ static unsigned long main_tbl[512 * 20] __attribute__((aligned(4096)));
 
 #define PTE_TYPE_PAGE (3 << 0)
 
-#define BITS_PER_VA 39
+#define BITS_PER_VA        39
 
 /* Granule size of 4KB is being used */
 #define GRANULE_SIZE_SHIFT 12
-#define GRANULE_SIZE (1 << GRANULE_SIZE_SHIFT)
-#define XLAT_ADDR_MASK ((1UL << BITS_PER_VA) - GRANULE_SIZE)
+#define GRANULE_SIZE       (1 << GRANULE_SIZE_SHIFT)
+#define XLAT_ADDR_MASK     ((1UL << BITS_PER_VA) - GRANULE_SIZE)
 
-#define PMD_TYPE_MASK (3 << 0)
+#define PMD_TYPE_MASK    (3 << 0)
 
 /*
  * Memory types available.
  */
 #define MT_DEVICE_nGnRnE 0
-#define MT_DEVICE_nGnRE 1
-#define MT_DEVICE_GRE 2
-#define MT_NORMAL_NC 3
-#define MT_NORMAL 4
-#define MT_NORMAL_WT 5
+#define MT_DEVICE_nGnRE  1
+#define MT_DEVICE_GRE    2
+#define MT_NORMAL_NC     3
+#define MT_NORMAL        4
+#define MT_NORMAL_WT     5
 
 #define MAIR(attr, mt) ((attr) << ((mt)*8))
 
