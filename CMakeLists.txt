@@ -29,7 +29,7 @@ else ()
     message(FATAL_ERROR "unexpected ARCH ${MossArch}")
 endif ()
 
-set(IGNORE_SPECIFIC_WARNINGS "-Wno-unused-variable -Wno-unused-parameter")
+set(IGNORE_SPECIFIC_WARNINGS "-Wno-unused-variable -Wno-unused-parameter -Wno-unused-function")
 # todo: optimization level at Release mode
 set(COMMON_CMAKE_C_FLAGS "-save-temps -O0 -g -Wall -Wextra -Werror ${IGNORE_SPECIFIC_WARNINGS} -MD -fpic -ffreestanding -nostdlib -nostartfiles")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_CMAKE_C_FLAGS}")
