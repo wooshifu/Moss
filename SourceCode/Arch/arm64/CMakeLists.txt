@@ -1,4 +1,4 @@
-project(ObjArch C ASM)
+project(ObjArch CXX ASM)
 
 
 find_asm_source_files(ASM_SOURCE_FILES ${ObjArch_SOURCE_DIR}/src)

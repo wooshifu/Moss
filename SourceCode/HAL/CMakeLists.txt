@@ -1,1 +1,1 @@
-project(HAL LANGUAGES C DESCRIPTION "HAL, also known as hardware abstract layer")
+project(HAL LANGUAGES CXX DESCRIPTION "HAL, also known as hardware abstract layer")

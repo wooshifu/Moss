@@ -1,4 +1,4 @@
-project(Config LANGUAGES C DESCRIPTION "Configurations of this project")
+project(Config LANGUAGES CXX DESCRIPTION "Configurations of this project")
 
 
 #######################################################################

@@ -99,7 +99,7 @@ typedef struct page_table_4k {
   u64 execute_never                           : 1;  /// bit 54
   u64 ignored                                 : 9;  /// bit [55:63]
 } __attribute__((packed)) page_table_4k;
-_Static_assert(sizeof(page_table_4k) == 8, "size of page_table_4k must be 8");
+static_assert(sizeof(page_table_4k) == 8, "size of page_table_4k must be 8");
 
 const page_table_4k page_kernel_rox = {.is_valid                 = 1UL,
                                        .descriptor_type          = 1UL,

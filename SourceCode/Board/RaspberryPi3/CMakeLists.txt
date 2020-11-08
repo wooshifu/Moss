@@ -1,4 +1,4 @@
-project(ObjBoardRaspberryPi3 C ASM)
+project(ObjBoardRaspberryPi3 CXX ASM)
 
 aux_source_directory(${ObjBoardRaspberryPi3_SOURCE_DIR}/src ObjBoardRaspberryPi3Src)
 add_library(${PROJECT_NAME}

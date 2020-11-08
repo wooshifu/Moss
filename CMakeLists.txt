@@ -4,13 +4,14 @@ cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 set(CMAKE_C_COMPILER_WORKS TRUE)
 set(CMAKE_CXX_COMPILER_WORKS TRUE)
 
-project(Moss)
+project(Moss LANGUAGES CXX ASM)
 
 if (${Moss_SOURCE_DIR} STREQUAL ${Moss_BINARY_DIR})
     message(FATAL_ERROR "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there.")
 endif ()
 
 set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # compile commands can be used to help clang-tidy code analysis
 
 set(MOSS_SOURCE_CODE_DIR ${Moss_SOURCE_DIR}/SourceCode)
@@ -35,6 +36,7 @@ set(COMMON_CMAKE_C_FLAGS "-save-temps -O0 -g -Wall -Wextra -Werror ${IGNORE_SPEC
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_CMAKE_C_FLAGS}")
 set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS}")
 # define __CURRENT_FILE_NAME__, log function will use this macro to output the file name
+# todo: refactor __CURRENT_FILE_NAME__, using constexpr impl
 set(CMAKE_CXX_FLAGS "-std=c++17 ${CMAKE_C_FLAGS} -D__CURRENT_FILE_NAME__='\"$(notdir $(abspath $<))\"'")
 # todo: considering -std=gnu17
 # about c17, see https://stackoverflow.com/questions/47529854/what-is-c17-and-what-changes-have-been-made-to-the-language

@@ -1,4 +1,4 @@
-PROJECT(ObjUnitTests C ASM)
+PROJECT(ObjUnitTests CXX ASM)
 
 
 aux_source_directory(${ObjUnitTests_SOURCE_DIR}/src UnitTestsSrc)

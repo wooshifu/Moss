@@ -5,9 +5,9 @@
 #include "libc/string.h"
 #include "libc/types.h"
 
-u32 __test_all_asserts = 0;
+u32 __test_all_asserts     = 0;
 u32 __test_success_asserts = 0;
-u32 __test_failed_asserts = 0;
+u32 __test_failed_asserts  = 0;
 
 #if 0
 #define __on_assert_func_success_(type, failed_expression, actual, expected, format_specifier)                         \
@@ -123,15 +123,15 @@ u32 __test_failed_asserts = 0;
 #error "macro __SIZE_WIDTH__ not defined"
 #endif
 
-#define ASSERT_EQ_INT8(actual, expected) tests_assert_(i8, (actual) == (expected), actual, expected)
-#define ASSERT_EQ_UINT8(actual, expected) tests_assert_(u8, (actual) == (expected), actual, expected)
-#define ASSERT_EQ_INT16(actual, expected) tests_assert_(i16, (actual) == (expected), actual, expected)
-#define ASSERT_EQ_UINT16(actual, expected) tests_assert_(u16, (actual) == (expected), actual, expected)
-#define ASSERT_EQ_INT32(actual, expected) tests_assert_(i32, (actual) == (expected), actual, expected)
-#define ASSERT_EQ_UINT32(actual, expected) tests_assert_(u32, (actual) == (expected), actual, expected)
-#define ASSERT_EQ_INT64(actual, expected) tests_assert_(i64, (actual) == (expected), actual, expected)
-#define ASSERT_EQ_UINT64(actual, expected) tests_assert_(u64, (actual) == (expected), actual, expected)
-#define ASSERT_EQ_INT(actual, expected) tests_assert_(int, (actual) == (expected), actual, expected)
+#define ASSERT_EQ_INT8(actual, expected)    tests_assert_(i8, (actual) == (expected), actual, expected)
+#define ASSERT_EQ_UINT8(actual, expected)   tests_assert_(u8, (actual) == (expected), actual, expected)
+#define ASSERT_EQ_INT16(actual, expected)   tests_assert_(i16, (actual) == (expected), actual, expected)
+#define ASSERT_EQ_UINT16(actual, expected)  tests_assert_(u16, (actual) == (expected), actual, expected)
+#define ASSERT_EQ_INT32(actual, expected)   tests_assert_(i32, (actual) == (expected), actual, expected)
+#define ASSERT_EQ_UINT32(actual, expected)  tests_assert_(u32, (actual) == (expected), actual, expected)
+#define ASSERT_EQ_INT64(actual, expected)   tests_assert_(i64, (actual) == (expected), actual, expected)
+#define ASSERT_EQ_UINT64(actual, expected)  tests_assert_(u64, (actual) == (expected), actual, expected)
+#define ASSERT_EQ_INT(actual, expected)     tests_assert_(int, (actual) == (expected), actual, expected)
 #define ASSERT_EQ_POINTER(actual, expected) tests_assert_(ptrdiff_t, (actual) == (expected), actual, expected)
 
 /*
@@ -158,6 +158,7 @@ void assert_eq_size_t(size_t actual, size_t expected) { ASSERT_EQ_SIZE_T(actual,
 #define TEST(test_func_name) void __TEST_NAME_CONCAT(, test_func_name)()
 #endif
 
+#ifndef __cplusplus
 #define __format_specifier(x)                                                                                          \
   _Generic((x),                                                                                                        \
            const char* : "%p",                                                                                         \
@@ -173,6 +174,20 @@ void assert_eq_size_t(size_t actual, size_t expected) { ASSERT_EQ_SIZE_T(actual,
            i64         : "%lli",                                                                                       \
            u64         : "%llu"                                                                                        \
   )
+#else
+constexpr const char *__format_specifier(const char *) { return "%p"; }
+constexpr const char *__format_specifier(char *) { return "%p"; }
+constexpr const char *__format_specifier(void *) { return "%p"; }
+constexpr const char *__format_specifier(char) { return "%c"; }
+constexpr const char *__format_specifier(i8) { return "%hhi"; }
+constexpr const char *__format_specifier(u8) { return "%hhu"; }
+constexpr const char *__format_specifier(i16) { return "%hi"; }
+constexpr const char *__format_specifier(u16) { return "%hu"; }
+constexpr const char *__format_specifier(i32) { return "%li"; }
+constexpr const char *__format_specifier(u32) { return "%lu"; }
+constexpr const char *__format_specifier(i64) { return "%lli"; }
+constexpr const char *__format_specifier(u64) { return "%llu"; }
+#endif
 
 #if LOG_OUTPUT_LABEL && LOG_OUTPUT_FUNCTION_NAME
 #define ASSERT_EQ(actual, expected)                                                                                    \

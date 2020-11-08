@@ -1,4 +1,4 @@
-project(ObjKernel C ASM)
+project(ObjKernel CXX ASM)
 
 aux_source_directory(${ObjKernel_SOURCE_DIR}/src ObjKernelSrc)
 

@@ -3,7 +3,7 @@
 #include "libc/string.h"
 
 TEST(should_mem_clean_works) {
-  i32 array[5] = {0x12345678, 0x9abcdef1, 0x23456789, 0xabcdef12, 0x3456789a};
+  i32 array[5] = {0x12345678, 0x1abcdef1, 0x23456789, 0x1bcdef12, 0x3456789a};
   memzero((u8 *)array, (const u8 *)(array + 5));
   for (size_t index = 0; index < sizeof(i32) * 5; ++index) {
     ASSERT_EQ(*((u8 *)(array) + index), 0);
@@ -13,7 +13,7 @@ TEST(should_mem_clean_works) {
 TEST(should_memset_set_memory) {
   i32 array[] = {1, 2, 3};
   size_t count = sizeof(array) / sizeof(array[0]);
-  i32 *destination = memset(array, 0, count);
+  i32 *destination = static_cast<i32 *>(memset(array, 0, count));
   for (size_t index = 0; index < count; ++index) {
     ASSERT_EQ(array[index], 0);
     ASSERT_EQ(destination[index], 0);
@@ -46,7 +46,7 @@ TEST(should_strchr_works) {
   char *b = strchr(msg, 'b');
   ASSERT_EQ(*b, 'b');
   char *non = strchr(msg, 'z');
-  ASSERT_EQ(non, NULL);
+  ASSERT_EQ(non, 0);
 }
 
 TEST(should_strrchr_works) {
@@ -60,5 +60,5 @@ TEST(should_strrchr_works) {
   char *b = strrchr(msg, 'b');
   ASSERT_EQ(*b, 'b');
   char *non = strrchr(msg, 'z');
-  ASSERT_EQ(non, NULL);
+  ASSERT_EQ(non, 0);
 }

@@ -15,7 +15,7 @@ void before_run_tests() {
   printf("\n\n");
 }
 
-void kernel_main_tests() {
+extern "C" void kernel_main_tests() {
   before_run_tests();
 
   run_tests();

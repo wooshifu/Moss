@@ -108,8 +108,8 @@ static void create_l0_mapping(l0_page_table_entry_t *l0_page_table_address, unsi
   } while (l0_page_table_entry++, addr = next, addr != end);
 }
 
-extern unsigned long get_free_page(void);
-static unsigned long early_pgtable_alloc(void) {
+extern unsigned long get_free_page();
+static unsigned long early_pgtable_alloc() {
   u64 phys = get_free_page();
   memset((void *)phys, 0, PAGE_SIZE);
 
@@ -119,7 +119,7 @@ static unsigned long early_pgtable_alloc(void) {
 extern u64 __text_start;
 extern u64 __text_end;
 
-static void create_identical_mapping(void) {
+static void create_identical_mapping() {
   /*map text*/
   u64 start = (u64)&__text_start;
   log_i("text start is: 0x%p", &__text_start);
@@ -145,7 +145,7 @@ static void create_identical_mapping(void) {
                     early_pgtable_alloc, 0);
 }
 
-static void create_mmio_mapping(void) {
+static void create_mmio_mapping() {
   //  __create_pgd_mapping((pgd_t *)idmap_pg_dir, PBASE, PBASE,
   //                       DEVICE_SIZE, PROT_DEVICE_nGnRnE,
   //                       early_pgtable_alloc,
@@ -155,7 +155,7 @@ static void create_mmio_mapping(void) {
                     /*DEVICE_SIZE*/ 0x10000000, PROT_DEVICE_nGnRnE, early_pgtable_alloc, 0);
 }
 
-static void cpu_init(void) {
+static void cpu_init() {
   asm("tlbi vmalle1");
   dsb(nsh);
 
@@ -177,7 +177,7 @@ static void cpu_init(void) {
   write_sysreg(tcr, tcr_el1);
 }
 
-static int enable_mmu(void) {
+static int enable_mmu() {
   u64 tmp    = read_sysreg(ID_AA64MMFR0_EL1);
   u64 tgran4 = (tmp >> ID_AA64MMFR0_TGRAN4_SHIFT) & 0xf;
   log_i("tgran4 is: %llu", tgran4);
@@ -197,7 +197,7 @@ static int enable_mmu(void) {
   return 0;
 }
 
-void paging_init(void) {
+void paging_init() {
   log_i("l0_page_table is: 0x%p", &l0_page_table);
   // NOTE: PAGE_SIZE must be same with the value defined in the linker script
   memset(&l0_page_table, 0, PAGE_SIZE);
@@ -208,3 +208,5 @@ void paging_init(void) {
 
   log_i("enable mmu done\n");
 }
+
+void init_mmu() { paging_init(); }

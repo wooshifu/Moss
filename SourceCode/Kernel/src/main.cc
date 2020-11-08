@@ -3,7 +3,7 @@
 #include "kernel/logo.h"
 #include "libc/log.h"
 
-void kernel_main(void) {
+extern "C" void kernel_main(void) {
 #ifdef __GNUC__
   log_d("gcc version: %s", __VERSION__);
 #endif

@@ -34,15 +34,17 @@ struct mair {
   enum mair_field_value _5 : 8;
   enum mair_field_value _6 : 8; /// not used
   enum mair_field_value _7 : 8; /// not used
-} __attribute__((packed)) const mair_value = {._0 = device_nGnRnE,
-                                              ._1 = device_nGnRE,
-                                              ._2 = device_GRE,
-                                              ._3 = normal_NC,
-                                              ._4 = normal,
-                                              ._5 = normal_WT,
-                                              ._6 = _6,
-                                              ._7 = _7};
-_Static_assert(sizeof(struct mair) == 8, "sizeof mair must be 8");
+} __attribute__((packed));
+
+constexpr struct mair mair_value = {._0 = device_nGnRnE,
+                                    ._1 = device_nGnRE,
+                                    ._2 = device_GRE,
+                                    ._3 = normal_NC,
+                                    ._4 = normal,
+                                    ._5 = normal_WT,
+                                    ._6 = _6,
+                                    ._7 = _7};
+static_assert(sizeof(struct mair) == 8, "sizeof mair must be 8");
 
 void setup_mair_el1() {
   log_d("set mair to: 0x%llx", mair_value);

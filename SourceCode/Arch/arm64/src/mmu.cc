@@ -2,6 +2,7 @@
 #include "libc/log.h"
 #include "libc/types.h"
 
+#if 0
 #define TTBR_CNP 1
 
 typedef unsigned long int uint64_t;
@@ -320,3 +321,5 @@ void init_mmu() {
 //  mmu_enable();
   paging_init();
 }
+
+#endif
