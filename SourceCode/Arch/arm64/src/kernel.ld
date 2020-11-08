@@ -26,7 +26,7 @@ SECTIONS
         *(.data)
     }
     . = ALIGN(4096);
-    idmap_pg_dir = .;
+    l0_page_table = .;
     . += 4096;
     __data_end = .;
 
