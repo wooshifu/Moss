@@ -21,5 +21,7 @@ void kernel_main(void) {
   double z = x / y;
   log_d("5/3=%f", z);
 
+  // unmapped virtual memory invalid access test
+  // u64 v = *(u64*)0x16;
   log_d(">>>>>>>>> exited kernel_main <<<<<<<<<");
 }
