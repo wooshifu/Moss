@@ -11,7 +11,7 @@ void exit(int exit_code) {
   log_d("exited, code: %d", exit_code);
 }
 
-int atexit(void (*func)(void)) {
+int atexit(void (*func)()) {
   func();
   return 0;
 }

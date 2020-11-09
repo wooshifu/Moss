@@ -137,7 +137,8 @@
 
 #define MAILBOX_PROPERTY_TAG_SET_CLOCK_RATE 0x00038002
 // NOTE: don't change the struct member order, it should be this order described by rasberrypi docs
-typedef struct mailbox_property_set_clock_rate_t {
+constexpr int mailbox_property_alignment = 16;
+using mailbox_property_set_clock_rate_t = struct mailbox_property_set_clock_rate_t {
   u32 size; // =sizeof(struct my_property_set_clock_rate_t);
   u32 code; // =MAILBOX_CODE_REQUEST ;
 
@@ -149,7 +150,7 @@ typedef struct mailbox_property_set_clock_rate_t {
   u32 skip_setting_turbo; // =0;
 
   u32 end; // =MAILBOX_PROPERTY_TAG_END
-} __attribute__((aligned(16))) mailbox_property_set_clock_rate_t;
+};
 // The buffer itself is 16-byte aligned as only the upper 28 bits of the address can be passed via the mailbox.
 
 /**

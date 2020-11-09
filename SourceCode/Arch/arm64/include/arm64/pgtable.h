@@ -1,11 +1,11 @@
 #ifndef ASM_PGTABLE_H
 #define ASM_PGTABLE_H
 
-#include <arm64/pgtable_hwdef.h>
-#include <arm64/pgtable_types.h>
-#include <arm64/mm.h>
-#include <arm64/barrier.h>
+#include "arm64/barrier.h"
 #include "arm64/mair.h"
+#include "arm64/mm.h"
+#include "arm64/pgtable_hwdef.h"
+#include "arm64/pgtable_types.h"
 
 /* 查找PGD索引 */
 #define pgd_index(addr) (((addr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
@@ -83,7 +83,7 @@ static inline void set_pte(pte_t *ptep, pte_t pte) {
 
 static inline unsigned long mk_sect_prot(unsigned long prot) { return prot & ~PTE_TABLE_BIT; }
 
-typedef struct page_table_4k {
+using page_table_4k = struct page_table_4k {
   u64 is_valid                                : 1;  /// bit 0
   u64 descriptor_type                         : 1;  /// bit 1
   enum mair_field_value_index mair_attr_index : 3;  /// bit [2:4]
@@ -98,7 +98,7 @@ typedef struct page_table_4k {
   u64 privileged_execute_never                : 1;  /// bit 53
   u64 execute_never                           : 1;  /// bit 54
   u64 ignored                                 : 9;  /// bit [55:63]
-} __attribute__((packed)) page_table_4k;
+};
 static_assert(sizeof(page_table_4k) == 8, "size of page_table_4k must be 8");
 
 const page_table_4k page_kernel_rox = {.is_valid                 = 1UL,
@@ -116,7 +116,7 @@ const page_table_4k page_kernel_rox = {.is_valid                 = 1UL,
                                        .execute_never            = 1UL,
                                        .ignored                  = 0UL};
 /// NOTE: MUST be same with page_kernel_rox
-#define pk_rox 0x40000000000793
+constexpr u64 pk_rox = 0x40000000000793;
 
 // const struct page_table_4k page_kernel = (page_table_4k)0xe8000000000713;
 

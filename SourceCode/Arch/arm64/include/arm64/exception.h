@@ -23,5 +23,6 @@
 #define ERROR_INVALID_EL0_32 15
 
 #ifndef __ASSEMBLER__ // hidden function declaration in asm source files
-extern "C" void init_exception_vector_table();
+#include "libc/macro.h"
+EXTERN_C void init_exception_vector_table();
 #endif

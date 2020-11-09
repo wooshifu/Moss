@@ -1,6 +1,6 @@
 #include "arm64/exception.h"
-#include "arm64/generic_timer.h"
-#include "arm64/interrupt_controller.h"
+#include "arm64/interrupt.h"
+#include "arm64/timer.h"
 #include "config.h"
 #include "hal/init.h"
 #include "libc/log.h"

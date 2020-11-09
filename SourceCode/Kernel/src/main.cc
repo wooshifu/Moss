@@ -3,7 +3,7 @@
 #include "kernel/logo.h"
 #include "libc/log.h"
 
-extern "C" void kernel_main(void) {
+EXTERN_C void kernel_main(void) {
 #ifdef __GNUC__
   log_d("gcc version: %s", __VERSION__);
 #endif
@@ -21,7 +21,7 @@ extern "C" void kernel_main(void) {
   double z = x / y;
   log_d("5/3=%f", z);
 
-  // unmapped virtual memory invalid access test
-  // u64 v = *(u64*)0x16;
+//   unmapped virtual memory invalid access test
+//   u64 v = *(u64*)0x16;
   log_d(">>>>>>>>> exited kernel_main <<<<<<<<<");
 }

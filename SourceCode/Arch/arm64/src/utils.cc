@@ -10,7 +10,7 @@ extern u64 __data_end;
 extern u64 __bss_start;
 extern u64 __bss_end;
 
-extern "C" void print_mem_stack() {
+EXTERN_C void print_mem_stack() {
 #if 1
   log_d("__text_start is %p", &__text_start);
   log_d("__text_end is %p", &__text_end);
@@ -23,4 +23,4 @@ extern "C" void print_mem_stack() {
 #endif
 }
 
-extern "C" void bss_clean() { memzero((u8 *)&__bss_start, (u8 *)&__bss_end); }
+EXTERN_C void bss_clean() { memzero((u8 *)&__bss_start, (u8 *)&__bss_end); }

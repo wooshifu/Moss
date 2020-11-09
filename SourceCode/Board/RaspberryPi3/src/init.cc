@@ -1,8 +1,7 @@
 #include "hal/init.h"
 #include "libc/log.h"
-#include "rpi3/external_timer.h"
 #include "rpi3/random.h"
-#include "rpi3/timer_controller.h"
+#include "rpi3/timer.h"
 #include "rpi3/uart0.h"
 
 int init_board() {

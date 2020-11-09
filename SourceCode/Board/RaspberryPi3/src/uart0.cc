@@ -19,7 +19,7 @@ void init_uart0() {
   /* initialize UART */
   *UART0_CONTROL_REGISTER = 0; // turn off UART0
 
-  mailbox_property_set_clock_rate_t data = {.size = sizeof(struct mailbox_property_set_clock_rate_t),
+  mailbox_property_set_clock_rate_t data = {.size = sizeof(mailbox_property_set_clock_rate_t),
                                             .code = MAILBOX_CODE_REQUEST,
 
                                             .tag                = MAILBOX_PROPERTY_TAG_SET_CLOCK_RATE,

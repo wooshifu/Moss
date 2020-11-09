@@ -175,18 +175,18 @@ void assert_eq_size_t(size_t actual, size_t expected) { ASSERT_EQ_SIZE_T(actual,
            u64         : "%llu"                                                                                        \
   )
 #else
-constexpr const char *__format_specifier(const char *) { return "%p"; }
-constexpr const char *__format_specifier(char *) { return "%p"; }
-constexpr const char *__format_specifier(void *) { return "%p"; }
-constexpr const char *__format_specifier(char) { return "%c"; }
-constexpr const char *__format_specifier(i8) { return "%hhi"; }
-constexpr const char *__format_specifier(u8) { return "%hhu"; }
-constexpr const char *__format_specifier(i16) { return "%hi"; }
-constexpr const char *__format_specifier(u16) { return "%hu"; }
-constexpr const char *__format_specifier(i32) { return "%li"; }
-constexpr const char *__format_specifier(u32) { return "%lu"; }
-constexpr const char *__format_specifier(i64) { return "%lli"; }
-constexpr const char *__format_specifier(u64) { return "%llu"; }
+constexpr const char *__format_specifier(const char * /*unused*/) { return "%p"; }
+constexpr const char *__format_specifier(char * /*unused*/) { return "%p"; }
+constexpr const char *__format_specifier(void * /*unused*/) { return "%p"; }
+constexpr const char *__format_specifier(char /*unused*/) { return "%c"; }
+constexpr const char *__format_specifier(i8 /*unused*/) { return "%hhi"; }
+constexpr const char *__format_specifier(u8 /*unused*/) { return "%hhu"; }
+constexpr const char *__format_specifier(i16 /*unused*/) { return "%hi"; }
+constexpr const char *__format_specifier(u16 /*unused*/) { return "%hu"; }
+constexpr const char *__format_specifier(i32 /*unused*/) { return "%li"; }
+constexpr const char *__format_specifier(u32 /*unused*/) { return "%lu"; }
+constexpr const char *__format_specifier(i64 /*unused*/) { return "%lli"; }
+constexpr const char *__format_specifier(u64 /*unused*/) { return "%llu"; }
 #endif
 
 #if LOG_OUTPUT_LABEL && LOG_OUTPUT_FUNCTION_NAME
