@@ -21,3 +21,8 @@ add_executable(${KernelUnitTestsElf}
         $<TARGET_OBJECTS:ObjBoardRaspberryPi3>)
 set_target_properties(${KernelUnitTestsElf} PROPERTIES LINK_FLAGS "-Xlinker -T ${ArchDir}/kernel.ld -Xlinker -Map=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/KernelUnitTests.map")
 target_link_libraries(${KernelUnitTestsElf} PRIVATE gcc)
+
+add_custom_target(test
+        COMMAND qemu-system-aarch64 -M raspi3 -kernel ${KernelUnitTestsElf} -nographic -serial mon:stdio
+        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+add_dependencies(test ${KernelUnitTestsElf})
