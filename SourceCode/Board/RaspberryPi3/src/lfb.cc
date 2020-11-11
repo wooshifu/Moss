@@ -1,7 +1,7 @@
 #if 0
-#include "homer.h"
-#include "log.h"
-#include "mailbox.h"
+#include "homer.hpp"
+#include "log.hpp"
+#include "mailbox.hpp"
 
 unsigned int width, height, pitch, isrgb; /* dimensions and channel order */
 unsigned char *lfb;                       /* raw frame buffer address */

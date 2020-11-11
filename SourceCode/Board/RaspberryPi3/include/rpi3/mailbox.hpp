@@ -1,8 +1,8 @@
 #pragma once
 
-#include "libc/types.h"
+#include "libc/types.hpp"
 
-#include "rpi3/mmio.h"
+#include "rpi3/mmio.hpp"
 
 /**
  *        0       4       8      12      16      20      24      28      32

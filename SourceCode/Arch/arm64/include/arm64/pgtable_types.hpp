@@ -1,7 +1,7 @@
 #ifndef ASM_PGTABLE_TYPES_H
 #define ASM_PGTABLE_TYPES_H
 
-#include "libc/types.h"
+#include "libc/types.hpp"
 
 typedef u64 pteval_t;
 typedef u64 pmdval_t;

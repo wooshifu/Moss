@@ -1,6 +1,6 @@
 #pragma once
 
-#include "libc/types.h"
+#include "libc/types.hpp"
 
 void memzero(u8 *mem_start, const u8 *mem_end);
 

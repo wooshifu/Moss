@@ -1,5 +1,5 @@
-#include "libc/log.h"
-#include "libc/stdlib.h"
+#include "libc/log.hpp"
+#include "libc/stdlib.hpp"
 
 void abort() {
   /// todo: not implemented

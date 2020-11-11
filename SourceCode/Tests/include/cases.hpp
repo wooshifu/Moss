@@ -1,11 +1,11 @@
 #pragma once
 
-#include "lib/test_lib.h"
+#include "lib/test_lib.hpp"
 
 // --- TEST CASES BEGIN ---
-#include "test_memory_h.h"
-#include "test_string_h.h"
-#include "test_test_lib_h.h"
+#include "test_memory_h.hpp"
+#include "test_string_h.hpp"
+#include "test_test_lib_h.hpp"
 // --- TEST CASES END ---
 
 using test_case_func = void (*)();

@@ -1,8 +1,8 @@
 #if 0
-#include "delays.h"
-#include "gpio.h"
-#include "log.h"
-#include "mailbox.h"
+#include "delays.hpp"
+#include "gpio.hpp"
+#include "log.hpp"
+#include "mailbox.hpp"
 
 #define PM_RSTC         ((volatile unsigned int *)(MMIO_BASE + 0x0010001c))
 #define PM_RSTS         ((volatile unsigned int *)(MMIO_BASE + 0x00100020))

@@ -10,6 +10,6 @@ message("option TARGET_RASPBERRY_PI3 is: ${TARGET_RASPBERRY_PI3}")
 #######################################################################
 
 
-configure_file(${Config_SOURCE_DIR}/include/config.h.in
-        ${Config_SOURCE_DIR}/include/config.h
+configure_file(${Config_SOURCE_DIR}/include/config.hpp.in
+        ${Config_SOURCE_DIR}/include/config.hpp
         @ONLY)

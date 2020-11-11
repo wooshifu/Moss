@@ -1,5 +1,5 @@
-#include "cases.h"
-#include "hal/halt.h"
+#include "cases.hpp"
+#include "hal/halt.hpp"
 
 void before_run_tests() {
   printf("\n\n");

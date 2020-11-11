@@ -1,11 +1,11 @@
-#include "arm64/asm.h"
-#include "arm64/barrier.h"
-#include "arm64/mair.h"
-#include "arm64/pgtable.h"
-#include "arm64/pgtable_hwdef.h"
-#include "arm64/pgtable_prot.h"
-#include "arm64/sysregs.h"
-#include "libc/log.h"
+#include "arm64/asm.hpp"
+#include "arm64/barrier.hpp"
+#include "arm64/mair.hpp"
+#include "arm64/pgtable.hpp"
+#include "arm64/pgtable_hwdef.hpp"
+#include "arm64/pgtable_prot.hpp"
+#include "arm64/sysregs.hpp"
+#include "libc/log.hpp"
 
 #define BIT(nr)           (1UL << (nr))
 #define NO_BLOCK_MAPPINGS BIT(0)

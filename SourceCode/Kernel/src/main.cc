@@ -1,7 +1,7 @@
-#include "hal/el.h"
-#include "hal/init.h"
-#include "kernel/logo.h"
-#include "libc/log.h"
+#include "hal/el.hpp"
+#include "hal/init.hpp"
+#include "kernel/logo.hpp"
+#include "libc/log.hpp"
 
 EXTERN_C void kernel_main(void) {
 #ifdef __GNUC__

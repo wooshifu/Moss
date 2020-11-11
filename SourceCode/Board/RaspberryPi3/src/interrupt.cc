@@ -1,8 +1,8 @@
-#include "hal/interrupt.h"
-#include "libc/memory.h"
-#include "rpi3/interrupt.h"
-#include "rpi3/mmio.h"
-#include "rpi3/timer.h"
+#include "hal/interrupt.hpp"
+#include "libc/memory.hpp"
+#include "rpi3/interrupt.hpp"
+#include "rpi3/mmio.hpp"
+#include "rpi3/timer.hpp"
 
 /**
  * THIS IS UNUSED INTERRUPT CONTROLLER

@@ -1,5 +1,5 @@
-#include "libc/log.h"
-#include "libc/string.h"
+#include "libc/log.hpp"
+#include "libc/string.hpp"
 
 extern u64 __text_start;
 extern u64 __text_end;

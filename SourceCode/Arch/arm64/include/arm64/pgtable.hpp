@@ -1,11 +1,11 @@
 #ifndef ASM_PGTABLE_H
 #define ASM_PGTABLE_H
 
-#include "arm64/barrier.h"
-#include "arm64/mair.h"
-#include "arm64/mm.h"
-#include "arm64/pgtable_hwdef.h"
-#include "arm64/pgtable_types.h"
+#include "arm64/barrier.hpp"
+#include "arm64/mair.hpp"
+#include "arm64/mm.hpp"
+#include "arm64/pgtable_hwdef.hpp"
+#include "arm64/pgtable_types.hpp"
 
 /* 查找PGD索引 */
 #define pgd_index(addr) (((addr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))

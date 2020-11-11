@@ -1,6 +1,6 @@
 #pragma once
 
-#include "libc/types.h"
+#include "libc/types.hpp"
 
 #ifndef ARM64_WRITE_SYSTEM_REGISTER
 #define ARM64_WRITE_SYSTEM_REGISTER(register_name, value) asm volatile("msr " #register_name ", %0" ::"r"(value))

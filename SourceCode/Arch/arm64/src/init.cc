@@ -1,9 +1,9 @@
-#include "arm64/exception.h"
-#include "arm64/interrupt.h"
-#include "arm64/timer.h"
-#include "config.h"
-#include "hal/init.h"
-#include "libc/log.h"
+#include "arm64/exception.hpp"
+#include "arm64/interrupt.hpp"
+#include "arm64/timer.hpp"
+#include "config.hpp"
+#include "hal/init.hpp"
+#include "libc/log.hpp"
 
 static void init_generic_timer() {
 #if defined(TARGET_QEMU) && TARGET_QEMU == 1

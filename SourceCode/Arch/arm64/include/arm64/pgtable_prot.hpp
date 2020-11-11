@@ -1,7 +1,7 @@
 #ifndef ASM_PGTABLE_PROT_H
 #define ASM_PGTABLE_PROT_H
 
-#include "arm64/pgtable_hwdef.h"
+#include "arm64/pgtable_hwdef.hpp"
 
 /*
  * Software defined PTE bits definition.

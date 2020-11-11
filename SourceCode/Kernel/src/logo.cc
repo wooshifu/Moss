@@ -1,5 +1,5 @@
-#include "hal/print.h"
-#include "kernel/logo.h"
+#include "hal/print.hpp"
+#include "kernel/logo.hpp"
 
 static const char *__moss_logo = "      ___           ___           ___           ___     \n"
                                  "     /__/\\         /  /\\         /  /\\         /  /\\    \n"

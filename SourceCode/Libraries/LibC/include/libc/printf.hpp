@@ -31,9 +31,9 @@
 
 #pragma once
 
-#include "hal/print.h"
-#include "libc/macro.h"
-#include "libc/stdarg.h"
+#include "hal/print.hpp"
+#include "libc/macro.hpp"
+#include "libc/stdarg.hpp"
 
 #ifdef __cplusplus
 EXTERN_C {
