@@ -1,6 +1,6 @@
-#ifndef ASM_PGTABLE_TYPES_H
-#define ASM_PGTABLE_TYPES_H
+#pragma once
 
+#include "libc/constants.hpp"
 #include "libc/types.hpp"
 
 typedef u64 pteval_t;
@@ -32,4 +32,17 @@ typedef struct {
 #define pgd_val(x) ((x).pgd)
 #define __pgd(x)   ((l0_page_table_entry_t){(x)})
 
-#endif /*ASM_PGTABLE_TYPES_H*/
+#if 0
+using l0_page_table_entry = u64;
+static_assert(sizeof(l0_page_table_entry) == 8);
+using l1_page_table_entry = u64;
+using l2_page_table_entry = u64;
+using l3_page_table_entry = u64;
+/// 4k page
+constexpr int page_table_size = 512;
+using l0_page_table           = l0_page_table_entry[page_table_size];
+using l1_page_table           = l1_page_table_entry[page_table_size];
+using l2_page_table           = l2_page_table_entry[page_table_size];
+using l3_page_table           = l3_page_table_entry[page_table_size];
+static_assert(sizeof(l0_page_table) == 4_Kb);
+#endif

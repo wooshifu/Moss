@@ -17,16 +17,26 @@ static void alloc_init_pte(pmd_t *pmdp, unsigned long addr, unsigned long end, u
                            unsigned long (*alloc_pgtable)(void), unsigned long flags) {
   pte_t *ptep = nullptr;
 
-  if (pmd_none(*pmdp)) {
+  if (pmdp->pmd == 0U) {
     u64 pte_phys = alloc_pgtable();
-    set_pmd(pmdp, __pmd(pte_phys | PMD_TYPE_TABLE));
+    //    set_pmd(pmdp, __pmd(pte_phys | PMD_TYPE_TABLE));
+    pmdp->pmd = pte_phys | PMD_TYPE_TABLE;
+    dsb(ishst);
   }
 
-  ptep = pte_offset_phys(pmdp, addr);
+  /// [20:12]
+  ptep = ((pte_t *)((pmdp->pmd & 0xffff'ffff'f000) + ((addr >> 12) & 0x1ff) * sizeof(pte_t)));
+  //  ptep = pte_offset_phys(pmdp, addr);
+  log_i("pte index: 0x%llx", pte_index(addr));
   do {
-    set_pte(ptep, pfn_pte(phys >> PAGE_SHIFT, prot));
+    //    set_pte(ptep, pfn_pte(phys >> PAGE_SHIFT, prot));
+    ptep->pte = (((phys >> 12) << 12) | (prot));
+    dsb(ishst);
+
     phys += PAGE_SIZE;
-  } while (ptep++, addr += PAGE_SIZE, addr != end);
+    ptep++;
+    addr += PAGE_SIZE;
+  } while (addr != end);
 }
 
 void pmd_set_section(pmd_t *pmdp, unsigned long phys, unsigned long prot) {
@@ -39,13 +49,18 @@ void pmd_set_section(pmd_t *pmdp, unsigned long phys, unsigned long prot) {
 
 static void alloc_init_pmd(pud_t *pudp, unsigned long addr, unsigned long end, unsigned long phys, unsigned long prot,
                            unsigned long (*alloc_pgtable)(void), unsigned long flags) {
-  if (pud_none(*pudp)) {
+  if (pudp->pud == 0U) {
     u64 pmd_phys = alloc_pgtable();
-    set_pud(pudp, __pud(pmd_phys | PUD_TYPE_TABLE));
+    //    set_pud(pudp, __pud(pmd_phys | PUD_TYPE_TABLE));
+    pudp->pud = pmd_phys | PUD_TYPE_TABLE;
+    dsb(ishst);
   }
 
-  pmd_t *pmdp = pmd_offset_phys(pudp, addr);
-  u64 next    = 0;
+  /// [29:21]
+  pmd_t *pmdp = ((pmd_t *)((pudp->pud & 0xffff'ffff'f000) + (((addr >> 21) & 0x1ff) * sizeof(pmd_t))));
+  //  pmd_t *pmdp = pmd_offset_phys(pudp, addr);
+  log_i("pmdp: %p, pmd index 0x%llx", pmdp, pmd_index(addr));
+  u64 next = 0;
   do {
     next = pmd_addr_end(addr, end);
 
@@ -56,38 +71,51 @@ static void alloc_init_pmd(pud_t *pudp, unsigned long addr, unsigned long end, u
     }
 
     phys += next - addr;
-  } while (pmdp++, addr = next, addr != end);
+    pmdp++;
+    addr = next;
+  } while (addr != end);
 }
 
-static void alloc_init_pud(l0_page_table_entry_t *pgdp, unsigned long addr, unsigned long end, unsigned long phys,
-                           unsigned long prot, unsigned long (*alloc_pgtable)(void), unsigned long flags) {
-  if (pgd_none(*pgdp)) {
+static void alloc_init_pud(l0_page_table_entry_t *pgdp, unsigned long virtual_address, unsigned long end,
+                           unsigned long phys, unsigned long prot, unsigned long (*alloc_pgtable)(void),
+                           unsigned long flags) {
+  if (pgdp->pgd == 0U) {
     u64 pud_phys = alloc_pgtable();
+    log_i("pud_phys is: 0x%llx", pud_phys);
 
-    set_pgd(pgdp, __pgd(pud_phys | PUD_TYPE_TABLE));
+    pgdp->pgd = pud_phys | PUD_TYPE_TABLE;
+    dsb(ishst);
+    log_i("pgdp is: 0x%llx", pgdp->pgd);
   }
 
-  pud_t *pudp = pud_offset_phys(pgdp, addr);
-  u64 next    = 0;
+  /// [38:30]
+  pud_t *pudp = (pud_t *)(pgdp->pgd & 0xffff'ffff'f000) + ((virtual_address >> 30) & 0x1ff) * sizeof(pud_t);
+  //  pud_t *pudp = pud_offset_phys(pgdp, addr);
+  log_i("pudp index: 0x%llx", pud_index(virtual_address));
+  u64 next = 0;
   do {
-    next = pud_addr_end(addr, end);
-    alloc_init_pmd(pudp, addr, next, phys, prot, alloc_pgtable, flags);
-    phys += next - addr;
-
-  } while (pudp++, addr = next, addr != end);
+    next = pud_addr_end(virtual_address, end);
+    alloc_init_pmd(pudp, virtual_address, next, phys, prot, alloc_pgtable, flags);
+    phys += next - virtual_address;
+    pudp++;
+    virtual_address = next;
+  } while (virtual_address != end);
 }
 
-static inline u64 l0_index(u64 address) {
-  log_d("address is 0x%llx", address);
-  /// [47:39]
-  u64 offset = (address >> 39) & (1 << 8);
+static inline u64 l0_page_table_index(u64 virtual_address) {
+  log_d("address is 0x%llx", virtual_address);
+  //  u64 offset = (address >> 39) & (1 << 8);
+  /// virtual address offset in l0
+  //  u64 offset = (virtual_address >> 39) & (0b1'1111'1111);
+  /// [47:39] bits
+  u64 offset = virtual_address & 0x0000'FF80'0000'0000;
   log_d("offset is: 0x%llx", offset);
   return offset;
 }
 
 static inline l0_page_table_entry_t *locate_l0_entry_offset(l0_page_table_entry_t *l0_page_table_address,
                                                             u64 virtual_addr) {
-  return (l0_page_table_address + l0_index(virtual_addr));
+  return (l0_page_table_address + l0_page_table_index(virtual_addr));
 }
 
 static void create_l0_mapping(l0_page_table_entry_t *l0_page_table_address, unsigned long phys, unsigned long virt,
@@ -96,16 +124,26 @@ static void create_l0_mapping(l0_page_table_entry_t *l0_page_table_address, unsi
   log_i("prot is: 0x%llx", prot);
   l0_page_table_entry_t *l0_page_table_entry = locate_l0_entry_offset(l0_page_table_address, virt);
 
-  phys &= PAGE_MASK;
-  u64 addr = virt & PAGE_MASK;
-  u64 end  = PAGE_ALIGN(virt + size);
+  log_i("phys is: 0x%llx", phys);
+//  phys &= PAGE_MASK;
+  phys &= 0xffff'ffff'ffff'f000;
+  log_i("phys is: 0x%llx", phys);
+  log_i("virt is: 0x%llx", virt);
+  u64 virtual_address = virt & 0xffff'ffff'ffff'f000;
+  log_i("addr is: 0x%llx", virtual_address);
+  log_i("virt + size is: 0x%llx", virt + size);
+  u64 end = PAGE_ALIGN(virt + size);
+  log_i("end is: 0x%llx", end);
 
   u64 next = 0;
   do {
-    next = pgd_addr_end(addr, end);
-    alloc_init_pud(l0_page_table_entry, addr, next, phys, prot, alloc_pgtable, flags);
-    phys += next - addr;
-  } while (l0_page_table_entry++, addr = next, addr != end);
+    log_i("l0 do while");
+    next = pgd_addr_end(virtual_address, end);
+    alloc_init_pud(l0_page_table_entry, virtual_address, next, phys, prot, alloc_pgtable, flags);
+    phys += next - virtual_address;
+    l0_page_table_entry++;
+    virtual_address = next;
+  } while (virtual_address != end);
 }
 
 extern unsigned long get_free_page();
@@ -128,11 +166,10 @@ static void create_identical_mapping() {
   log_i("text end is: 0x%p", &__text_end);
   log_i("end is: 0x%p", end);
   log_i("PAGE_KERNEL_ROX is: 0x%llx", PAGE_KERNEL_ROX);
-  log_i("page_kernel_rox is: 0x%llx", page_kernel_rox);
-  log_i("pk_rox is: 0x%llx", pk_rox);
-  // todo: non standard
-  //  u64 x = *(u64 *)&page_kernel_rox;
-  create_l0_mapping((l0_page_table_entry_t *)&l0_page_table, start, start, end - start, pk_rox, early_pgtable_alloc, 0);
+  log_i("page_kernel_rox is: 0x%llx", PAGE_KERNEL_ROX);
+  log_i("pk_rox is: 0x%llx", PAGE_KERNEL_ROX);
+  create_l0_mapping((l0_page_table_entry_t *)&l0_page_table, start, start, end - start, PAGE_KERNEL_ROX,
+                    early_pgtable_alloc, 0);
   log_i("text start => end: 0x%llx => 0x%llx", start, end);
   // todo: map rodata section, data section
 
@@ -206,7 +243,7 @@ void paging_init() {
   cpu_init();
   enable_mmu();
 
-  log_i("enable mmu done\n");
+  log_i("enable mmu done");
 }
 
 void init_mmu() { paging_init(); }
