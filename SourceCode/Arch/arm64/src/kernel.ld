@@ -26,7 +26,7 @@ SECTIONS
         *(.data)
     }
     . = ALIGN(4096);
-    l0_page_table = .;
+    l0_page_table_base_address = .;
     . += 4096;
     __data_end = .;
 
