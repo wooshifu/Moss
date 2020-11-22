@@ -32,9 +32,7 @@ typedef struct {
 #define pgd_val(x) ((x).pgd)
 #define __pgd(x)   ((l0_page_table_entry_t){(x)})
 
-#if 0
 using l0_page_table_entry = u64;
-static_assert(sizeof(l0_page_table_entry) == 8);
 using l1_page_table_entry = u64;
 using l2_page_table_entry = u64;
 using l3_page_table_entry = u64;
@@ -44,5 +42,7 @@ using l0_page_table           = l0_page_table_entry[page_table_size];
 using l1_page_table           = l1_page_table_entry[page_table_size];
 using l2_page_table           = l2_page_table_entry[page_table_size];
 using l3_page_table           = l3_page_table_entry[page_table_size];
-static_assert(sizeof(l0_page_table) == 4_Kb);
-#endif
+static_assert(sizeof(l0_page_table) == 4096, "l0_page_table must be size of 4096");
+static_assert(sizeof(l1_page_table) == 4096, "l1_page_table must be size of 4096");
+static_assert(sizeof(l2_page_table) == 4096, "l2_page_table must be size of 4096");
+static_assert(sizeof(l3_page_table) == 4096, "l3_page_table must be size of 4096");
