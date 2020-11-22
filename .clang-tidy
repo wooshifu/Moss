@@ -6,8 +6,17 @@ HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
 FormatStyle: none
 User: moss
-#CheckOptions:
+CheckOptions:
 #  - key: cppcoreguidelines-macro-usage.CheckCapsOnly
 #    value: true
 #  - key: cppcoreguidelines-macro-usage.AllowedRegexp
 #    value: 'va_start|va_end|va_arg'
+
+  - key: readability-magic-numbers.IgnorePowersOf2IntegerValues
+    value: true
+  - key: readability-magic-numbers.IgnoreBitFieldsWidths
+    value: true
+  - key: cppcoreguidelines-avoid-magic-numbers.IgnorePowersOf2IntegerValues
+    value: true
+  - key: cppcoreguidelines-avoid-magic-numbers.IgnoreBitFieldsWidths
+    value: true
