@@ -12,6 +12,7 @@ SECTIONS
     . = ALIGN(8);
     __text_end = .;
 
+    . = ALIGN(8);
     __rodata_start = .;
     .rodata :
     {
@@ -20,16 +21,17 @@ SECTIONS
     . = ALIGN(8);
     __rodata_end = .;
 
+    . = ALIGN(8);
     __data_start = .;
     .data :
     {
         *(.data)
     }
-    . = ALIGN(4096);
-    l0_page_table_base_address = .;
-    . += 4096;
+    . = ALIGN(8);
     __data_end = .;
 
+    /* must be aligned */
+    . = ALIGN(8);
     __bss_start = .;
     .bss :
     {
