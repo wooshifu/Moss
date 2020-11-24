@@ -5,8 +5,8 @@
 #define __STRINGIFY__(x)                 __INTERNAL_STRINGIFY_HELPER__(x)
 #endif
 
-#ifndef EXTERN_C
-#define EXTERN_C extern "C"
+#ifndef extern_C
+#define extern_C extern "C"
 #endif
 
 #if 0

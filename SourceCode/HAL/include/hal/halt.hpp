@@ -3,4 +3,4 @@
 /**
  * halt the cpu
  */
-EXTERN_C void halt();
+extern_C void halt();

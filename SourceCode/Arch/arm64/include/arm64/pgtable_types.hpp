@@ -3,6 +3,7 @@
 #include "libc/constants.hpp"
 #include "libc/types.hpp"
 
+/*
 typedef u64 pteval_t;
 typedef u64 pmdval_t;
 typedef u64 pudval_t;
@@ -31,18 +32,22 @@ typedef struct {
 } l0_page_table_entry_t;
 #define pgd_val(x) ((x).pgd)
 #define __pgd(x)   ((l0_page_table_entry_t){(x)})
+*/
 
-using l0_page_table_entry = u64;
-using l1_page_table_entry = u64;
-using l2_page_table_entry = u64;
-using l3_page_table_entry = u64;
+using page_table_entry_type = u64;
+static_assert(sizeof(page_table_entry_type) == 8);
+using l0_page_table_entry = page_table_entry_type;
+using l1_page_table_entry = page_table_entry_type;
+using l2_page_table_entry = page_table_entry_type;
+using l3_page_table_entry = page_table_entry_type;
 /// 4k page
-constexpr int page_table_size = 512;
-using l0_page_table           = l0_page_table_entry[page_table_size];
-using l1_page_table           = l1_page_table_entry[page_table_size];
-using l2_page_table           = l2_page_table_entry[page_table_size];
-using l3_page_table           = l3_page_table_entry[page_table_size];
-static_assert(sizeof(l0_page_table) == 4096, "l0_page_table must be size of 4096");
-static_assert(sizeof(l1_page_table) == 4096, "l1_page_table must be size of 4096");
-static_assert(sizeof(l2_page_table) == 4096, "l2_page_table must be size of 4096");
-static_assert(sizeof(l3_page_table) == 4096, "l3_page_table must be size of 4096");
+constexpr int PAGE_TABLE_SIZE = PAGE_SIZE / sizeof(page_table_entry_type);
+static_assert(PAGE_TABLE_SIZE == 512);
+using l0_page_table = l0_page_table_entry[PAGE_TABLE_SIZE];
+using l1_page_table = l1_page_table_entry[PAGE_TABLE_SIZE];
+using l2_page_table = l2_page_table_entry[PAGE_TABLE_SIZE];
+using l3_page_table = l3_page_table_entry[PAGE_TABLE_SIZE];
+static_assert(sizeof(l0_page_table) == PAGE_SIZE, "l0_page_table must be size of 4096");
+static_assert(sizeof(l1_page_table) == PAGE_SIZE, "l1_page_table must be size of 4096");
+static_assert(sizeof(l2_page_table) == PAGE_SIZE, "l2_page_table must be size of 4096");
+static_assert(sizeof(l3_page_table) == PAGE_SIZE, "l3_page_table must be size of 4096");

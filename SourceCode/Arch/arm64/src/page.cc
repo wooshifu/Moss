@@ -1,4 +1,5 @@
 #include "arm64/mm.hpp"
+#include "arm64/page.hpp"
 #include "arm64/pgtable_hwdef.hpp"
 #include "libc/log.hpp"
 

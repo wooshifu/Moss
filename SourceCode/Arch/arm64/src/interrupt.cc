@@ -13,7 +13,7 @@ static const char *const entry_error_messages[] = {
 
     "SYNC_INVALID_EL0_32", "IRQ_INVALID_EL0_32", "FIQ_INVALID_EL0_32", "ERROR_INVALID_EL0_32"};
 
-EXTERN_C void show_invalid_entry_message(int type, u64 esr, u64 address) {
+extern_C void show_invalid_entry_message(int type, u64 esr, u64 address) {
   log_e("%s, ESR: %x, address: %x", entry_error_messages[type], esr, address);
 }
 
@@ -30,7 +30,7 @@ static void interrupt_dispatcher(u32 interrupt_number) {
   }
 }
 
-EXTERN_C void handle_interrupt(void) {
+extern_C void handle_interrupt(void) {
   // each core has its own pending local interrupts register
   u32 interrupt_number = read_core0_pending_interrupt();
   // log_d("irq source is: %d", interrupt_number);

@@ -36,7 +36,7 @@
 #include "libc/stdarg.hpp"
 
 #ifdef __cplusplus
-EXTERN_C {
+extern_C {
 #endif
 
   /**
