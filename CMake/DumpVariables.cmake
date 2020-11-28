@@ -1,5 +1,5 @@
 # this function will dump all cmake predefined variables to the specific files
-macro(dump_cmake_variables)
+function(dump_cmake_variables)
     get_cmake_property(variable_names VARIABLES)
 
     string(APPEND cmake_variables_dump_separator "\n")
@@ -20,5 +20,5 @@ macro(dump_cmake_variables)
     set(cmake_variables_dump_file ${cmake_variables_dump_dir}/cmake_variables_${vars_dump_file_timestamp}_${CMAKE_BUILD_TYPE}.txt)
     file(MAKE_DIRECTORY ${cmake_variables_dump_dir})
     file(WRITE ${cmake_variables_dump_file} ${cmake_variables_list})
-    message("cmake variables have been saved to ${cmake_variables_dump_file}")
-endmacro()
+    message(STATUS "cmake variables have been saved to ${cmake_variables_dump_file}")
+endfunction()
