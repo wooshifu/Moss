@@ -31,9 +31,8 @@ static void l3_mapping(l2_page_table_entry *l2_page_table_entry, u64 virtual_add
   }
 
   /// [20:12]
-  l3_page_table_entry *l3_page_table_entry_ =
-      (l3_page_table_entry *)((*l2_page_table_entry & 0xffff'ffff'f000) +
-                              ((virtual_address >> 12) & 0x1ff) * sizeof(l3_page_table_entry));
+  l3_page_table_entry *l3_page_table_entry_ = reinterpret_cast<l3_page_table_entry *>(
+      ((*l2_page_table_entry & 0xffff'ffff'f000) + ((virtual_address >> 12) & 0x1ff) * sizeof(l3_page_table_entry)));
   //  ptep = pte_offset_phys(pmdp, addr);
   log_i("pte index: 0x%llx", locate_l3_entry_offset(virtual_address));
   do {
