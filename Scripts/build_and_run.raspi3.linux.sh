@@ -3,12 +3,12 @@
 THIS_DIR=$(realpath "$(dirname "$0")")
 echo "current dir: ${THIS_DIR}"
 
-BUILD_DIR="${THIS_DIR}"/buildRaspi3
+BUILD_DIR="${THIS_DIR}"/output/Raspi3/linux
 rm -rf "${BUILD_DIR}"
-mkdir "${BUILD_DIR}"
+mkdir -p "${BUILD_DIR}"
 
 cd "${BUILD_DIR}" || exit
-cmake -DCMAKE_TOOLCHAIN_FILE="${THIS_DIR}"/../CMake/Toolchain/ToolchainMacArm64.cmake -DARCH=arm64 "${THIS_DIR}/.."
+cmake -DCMAKE_TOOLCHAIN_FILE="${THIS_DIR}"/../CMake/Toolchain/ToolchainLinuxArm64.cmake -DARCH=arm64 "${THIS_DIR}/.."
 make
 cd - || exit
 
