@@ -39,7 +39,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_CMAKE_C_FLAGS}")
 set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS}")
 # define __CURRENT_FILE_NAME__, log function will use this macro to output the file name
 # todo: refactor __CURRENT_FILE_NAME__, using constexpr impl
-set(CMAKE_CXX_FLAGS "-std=c++17 ${CMAKE_C_FLAGS} -D__CURRENT_FILE_NAME__='\"$(notdir $(abspath $<))\"'")
+set(CMAKE_CXX_FLAGS "-std=c++2a ${CMAKE_C_FLAGS} -D__CURRENT_FILE_NAME__='\"$(notdir $(abspath $<))\"'")
 # todo: considering -std=gnu17
 # about c17, see https://stackoverflow.com/questions/47529854/what-is-c17-and-what-changes-have-been-made-to-the-language
 set(CMAKE_C_FLAGS "-std=gnu11 ${CMAKE_C_FLAGS} -D__CURRENT_FILE_NAME__='\"$(notdir $(abspath $<))\"'")
