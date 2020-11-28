@@ -1,6 +1,6 @@
 #include "arm64/mmu_rt.hpp"
-#include "libc/log.hpp"
-#include "libc/types.hpp"
+#include "libcxx/log.hpp"
+#include "libcxx/types.hpp"
 
 #if 0
 #define TTBR_CNP 1

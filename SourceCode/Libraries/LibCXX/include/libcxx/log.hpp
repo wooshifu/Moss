@@ -1,9 +1,9 @@
 #pragma once
 
-#include "libc/macro.hpp"
-#include "libc/printf.hpp"
-#include "libc/stdio.hpp"
-#include "libc/string.hpp"
+#include "libcxx/macro.hpp"
+#include "libcxx/printf.hpp"
+#include "libcxx/stdio.hpp"
+#include "libcxx/string.hpp"
 
 #define LOG_LEVEL_VERBOSE 1
 #define LOG_LEVEL_DEBUG   2

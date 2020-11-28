@@ -1,7 +1,7 @@
 #include "arm64/mm.hpp"
 #include "arm64/page.hpp"
 #include "arm64/pgtable_hwdef.hpp"
-#include "libc/log.hpp"
+#include "libcxx/log.hpp"
 
 #define NR_PAGES (TOTAL_MEMORY / PAGE_SIZE)
 

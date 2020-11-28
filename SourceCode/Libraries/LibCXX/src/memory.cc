@@ -1,5 +1,5 @@
-#include "libc/memory.hpp"
-#include "libc/types.hpp"
+#include "libcxx/memory.hpp"
+#include "libcxx/types.hpp"
 
 void memory_write_8bits(u8 *address, u8 value) { *address = value; }
 void memory_write_16bits(u16 *address, u16 value) { *address = value; }

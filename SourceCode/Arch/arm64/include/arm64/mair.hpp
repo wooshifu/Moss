@@ -1,7 +1,7 @@
 #pragma once
 
 #include "arm64/asm.hpp"
-#include "libc/log.hpp"
+#include "libcxx/log.hpp"
 
 enum mair_field_value_index {
   device_nGnRnE_index = 0UL,

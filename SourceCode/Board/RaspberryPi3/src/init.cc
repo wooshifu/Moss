@@ -1,5 +1,5 @@
 #include "hal/init.hpp"
-#include "libc/log.hpp"
+#include "libcxx/log.hpp"
 #include "rpi3/random.hpp"
 #include "rpi3/timer.hpp"
 #include "rpi3/uart0.hpp"

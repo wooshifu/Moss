@@ -7,7 +7,7 @@ add_library(${PROJECT_NAME}
         ${ASM_SOURCE_FILES})
 
 target_include_raspberry_pi3_header_files(${PROJECT_NAME})
-target_include_libc_header_files(${PROJECT_NAME})
+target_include_libcxx_header_files(${PROJECT_NAME})
 target_include_hal_header_files(${PROJECT_NAME})
 target_include_kernel_header_files(${PROJECT_NAME})
 
@@ -15,7 +15,7 @@ target_include_kernel_header_files(${PROJECT_NAME})
 add_executable(${KernelName}
         $<TARGET_OBJECTS:ObjArch>
         $<TARGET_OBJECTS:ObjKernel>
-        $<TARGET_OBJECTS:ObjLibC>
+        $<TARGET_OBJECTS:ObjLibCXX>
         $<TARGET_OBJECTS:ObjBoardRaspberryPi3>)
 # following line also works
 #target_link_options(${KernelName} PRIVATE -T ${ObjArch_SOURCE_DIR}/src/kernel.ld -Xlinker -Map=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/KernelArm64.map)

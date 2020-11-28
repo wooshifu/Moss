@@ -1,7 +1,7 @@
 #pragma once
 
-#include "libc/constants.hpp"
-#include "libc/types.hpp"
+#include "libcxx/constants.hpp"
+#include "libcxx/types.hpp"
 
 /*
 typedef u64 pteval_t;

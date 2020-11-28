@@ -1,5 +1,5 @@
 #include "hal/interrupt.hpp"
-#include "libc/memory.hpp"
+#include "libcxx/memory.hpp"
 #include "rpi3/interrupt.hpp"
 #include "rpi3/mmio.hpp"
 #include "rpi3/timer.hpp"

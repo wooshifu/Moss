@@ -1,6 +1,6 @@
 #pragma once
 
-#include "libc/string.hpp"
+#include "libcxx/string.hpp"
 
 TEST(should_mem_clean_works) {
   i32 array[5] = {0x12345678, 0x1abcdef1, 0x23456789, 0x1bcdef12, 0x3456789a};

@@ -1,5 +1,5 @@
-#include "libc/log.hpp"
-#include "libc/memory.hpp"
+#include "libcxx/log.hpp"
+#include "libcxx/memory.hpp"
 #include "rpi3/mmio.hpp"
 #include "rpi3/timer.hpp"
 

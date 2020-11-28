@@ -1,8 +1,8 @@
 #include "arm64/asm.hpp"
 #include "arm64/timer.hpp"
-#include "libc/log.hpp"
+#include "libcxx/log.hpp"
 
-#include "libc/types.hpp"
+#include "libcxx/types.hpp"
 
 void enable_cntv() {
   u64 cntv_ctl = 1;

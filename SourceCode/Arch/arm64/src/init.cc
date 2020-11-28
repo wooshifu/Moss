@@ -3,7 +3,7 @@
 #include "arm64/timer.hpp"
 #include "config.hpp"
 #include "hal/init.hpp"
-#include "libc/log.hpp"
+#include "libcxx/log.hpp"
 
 static void init_generic_timer() {
 #if defined(TARGET_QEMU) && TARGET_QEMU == 1

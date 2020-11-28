@@ -2,7 +2,7 @@
 #include "arm64/interrupt.hpp"
 #include "arm64/timer.hpp"
 #include "hal/interrupt.hpp"
-#include "libc/log.hpp"
+#include "libcxx/log.hpp"
 
 static const char *const entry_error_messages[] = {
     "SYNC_INVALID_EL1t",   "IRQ_INVALID_EL1t",   "FIQ_INVALID_EL1t",   "ERROR_INVALID_EL1T",

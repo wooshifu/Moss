@@ -1,6 +1,6 @@
 #pragma once
 
-#include "libc/memory.hpp"
+#include "libcxx/memory.hpp"
 
 TEST(should_io_write_and_read_works) {
   u8 a  = 0;

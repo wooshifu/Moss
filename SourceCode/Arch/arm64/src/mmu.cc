@@ -6,14 +6,14 @@
 #include "arm64/pgtable_hwdef.hpp"
 #include "arm64/pgtable_prot.hpp"
 #include "arm64/sysregs.hpp"
-#include "libc/log.hpp"
+#include "libcxx/log.hpp"
 
 #define BIT(nr)           (1UL << (nr))
 #define NO_BLOCK_MAPPINGS BIT(0)
 #define NO_CONT_MAPPINGS  BIT(1)
 
 /// the l0 page table
-static l0_page_table l0_page_table_base_address __attribute__((aligned(PAGE_SIZE)));
+/*[[gnu::aligned(PAGE_SIZE)]]*/ static l0_page_table l0_page_table_base_address __attribute__((aligned(PAGE_SIZE)));
 
 /// pointer to function to allocate page table
 using func_allocate_page = u64 (*)();

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "libc/log.hpp"
-#include "libc/stdio.hpp"
-#include "libc/string.hpp"
-#include "libc/types.hpp"
+#include "libcxx/log.hpp"
+#include "libcxx/stdio.hpp"
+#include "libcxx/string.hpp"
+#include "libcxx/types.hpp"
 
 u32 __test_all_asserts     = 0;
 u32 __test_success_asserts = 0;

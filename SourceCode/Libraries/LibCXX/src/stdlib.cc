@@ -1,6 +1,7 @@
-#include "libc/log.hpp"
-#include "libc/stdlib.hpp"
+#include "libcxx/log.hpp"
+#include "libcxx/stdlib.hpp"
 
+#if 0
 void abort() {
   /// todo: not implemented
   log_d("aborted!!!");
@@ -15,3 +16,5 @@ int atexit(void (*func)()) {
   func();
   return 0;
 }
+#endif
+

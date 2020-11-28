@@ -1,5 +1,5 @@
-#include "libc/log.hpp"
-#include "libc/string.hpp"
+#include "libcxx/log.hpp"
+#include "libcxx/string.hpp"
 
 void memzero(u8 *mem_start, const u8 *mem_end) {
   log_d("mem start is: %p, mem end is: %p", mem_start, mem_end);
