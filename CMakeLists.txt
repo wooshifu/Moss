@@ -16,26 +16,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # compile commands can be used to help cla
 
 set(MOSS_SOURCE_CODE_DIR ${Moss_SOURCE_DIR}/SourceCode)
 
-# find all cmake files, and then include the file
-file(GLOB CMakeFiles LIST_DIRECTORIES false ${Moss_SOURCE_DIR}/CMake/*.cmake)
-message(STATUS "found CmakeFiles: ${CMakeFiles}")
-foreach (CMakeFile ${CMakeFiles})
-    message(STATUS "include ${CMakeFile}")
-    include(${CMakeFile})
-endforeach ()
+include(${Moss_SOURCE_DIR}/CMake/Setup.cmake)
 
 setup_compiler_flags()
-
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
 
 set(KernelName Kernel.elf)
 
 # make config.h to be available
 include_directories(${MOSS_SOURCE_CODE_DIR}/Config/include)
 add_subdirectory(${MOSS_SOURCE_CODE_DIR})
-
-dump_cmake_variables()
-
