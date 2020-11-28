@@ -7,7 +7,7 @@
             ],
             "defines": [],
             "macFrameworkPath": [],
-            "compilerPath": "/usr/local/bin/aarch64-none-elf-gcc",
+            "compilerPath": "${HOME}/aarch64-unknown-linux-gnu/bin/aarch64-unknown-linux-gnu-g++",
             "cStandard": "gnu11",
             "cppStandard": "c++17",
             "intelliSenseMode": "gcc-arm64",

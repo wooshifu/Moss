@@ -3,10 +3,10 @@ How to **Build and Run** the kernel
 ============
 
 - for linux
-    cmake -DCMAKE_TOOLCHAIN_FILE=${DIR_OF_THIS_PROJECT}/CMake/ToolchainLinuxArm64.cmake -DARCH=arm64 ..
+    cmake -DCMAKE_TOOLCHAIN_FILE=${DIR_OF_THIS_PROJECT}/CMake/Toolchain/ToolchainLinuxArm64.cmake -DARCH=arm64 ..
 
 - for mac
-    cmake -DCMAKE_TOOLCHAIN_FILE=${DIR_OF_THIS_PROJECT}/CMake/ToolchainMacArm64.cmake -DARCH=arm64 ..
+    cmake -DCMAKE_TOOLCHAIN_FILE=${DIR_OF_THIS_PROJECT}/CMake/Toolchain/ToolchainMacArm64.cmake -DARCH=arm64 ..
 
 - for windows
     currently not supported
