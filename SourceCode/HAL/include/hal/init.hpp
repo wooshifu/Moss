@@ -12,4 +12,4 @@ int init_board();
  */
 int init_cpu();
 
-void init_mmu();
+void initMmu();

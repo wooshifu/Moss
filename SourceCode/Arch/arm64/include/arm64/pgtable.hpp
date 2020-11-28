@@ -43,7 +43,7 @@
 static inline unsigned long pgd_page_paddr(l0_page_table_entry_t pgd) { return pgd_val(pgd) & PTE_ADDR_MASK; }
 
 //#define locate_l1_entry_offset(addr)            ((addr) >> PUD_SHIFT & (PTRS_PER_PUD - 1))
-#define pud_offset_phys(pgd, addr) ((pud_t *)((pgd_page_paddr(*(pgd)) + locate_l1_entry_offset(addr) * sizeof(pud_t))))
+#define pud_offset_phys(pgd, addr) ((pud_t *)((pgd_page_paddr(*(pgd)) + locateL1EntryOffset(addr) * sizeof(pud_t))))
 
 static inline unsigned long pud_page_paddr(pud_t pud) { return pud_val(pud) & PTE_ADDR_MASK; }
 
@@ -83,12 +83,12 @@ static inline void set_pte(pte_t *ptep, pte_t pte) {
 }
 #endif
 
-static inline unsigned long mk_sect_prot(unsigned long prot) { return prot & ~PTE_TABLE_BIT; }
+static inline unsigned long makeSectionProperty(unsigned long prot) { return prot & ~PTE_TABLE_BIT; }
 
-using page_table_4k = struct page_table_4k {
+using PageTable4K = struct PageTable4K {
   u64 is_valid                                : 1;  /// bit 0
   u64 descriptor_type                         : 1;  /// bit 1
-  enum mair_field_value_index mair_attr_index : 3;  /// bit [2:4]
+  enum MairFieldValueIndex mair_attr_index : 3;  /// bit [2:4]
   u64 non_secure                              : 1;  /// bit [5]
   u64 data_access_permission                  : 2;  /// bit [6:7]
   u64 shareability                            : 2;  /// bit [8:9]
@@ -101,11 +101,11 @@ using page_table_4k = struct page_table_4k {
   u64 execute_never                           : 1;  /// bit 54
   u64 ignored                                 : 9;  /// bit [55:63]
 };
-static_assert(sizeof(page_table_4k) == 8, "size of page_table_4k must be 8");
+static_assert(sizeof(PageTable4K) == 8, "size of page_table_4k must be 8");
 
-constexpr page_table_4k _page_kernel_rox = {.is_valid                 = 1UL,
+constexpr PageTable4K _PAGE_KERNEL_ROX = {.is_valid                 = 1UL,
                                             .descriptor_type          = 1UL,
-                                            .mair_attr_index          = mair_field_value_index::normal_index,
+                                            .mair_attr_index          = MairFieldValueIndex::normal_index,
                                             .non_secure               = 0UL,
                                             .data_access_permission   = 0b10UL,
                                             .shareability             = 0b11UL,
@@ -119,20 +119,20 @@ constexpr page_table_4k _page_kernel_rox = {.is_valid                 = 1UL,
                                             .ignored                  = 0UL};
 // clang-format off
 /// NOTE: MUST be same with page_kernel_rox
-constexpr u64 PAGE_KERNEL_ROX = _page_kernel_rox.is_valid << 0
-                              | _page_kernel_rox.descriptor_type << 1
-                              | _page_kernel_rox.mair_attr_index << 2
-                              | _page_kernel_rox.non_secure << 5
-                              | _page_kernel_rox.data_access_permission << 6
-                              | _page_kernel_rox.shareability << 8
-                              | _page_kernel_rox.access_flag << 10
-                              | _page_kernel_rox.not_global << 11
-                              | _page_kernel_rox.output_address << 12
-                              | (u64)(_page_kernel_rox.reserved0) << 48
-                              | (u64)(_page_kernel_rox.contiguous) << 52
-                              | (u64)(_page_kernel_rox.privileged_execute_never) << 53
-                              | (u64)(_page_kernel_rox.execute_never) << 54
-                              | (u64)(_page_kernel_rox.ignored) << 55 ;
+constexpr u64 PAGE_KERNEL_ROX = _PAGE_KERNEL_ROX.is_valid << 0
+                              | _PAGE_KERNEL_ROX.descriptor_type << 1
+                              | _PAGE_KERNEL_ROX.mair_attr_index << 2
+                              | _PAGE_KERNEL_ROX.non_secure << 5
+                              | _PAGE_KERNEL_ROX.data_access_permission << 6
+                              | _PAGE_KERNEL_ROX.shareability << 8
+                              | _PAGE_KERNEL_ROX.access_flag << 10
+                              | _PAGE_KERNEL_ROX.not_global << 11
+                              | _PAGE_KERNEL_ROX.output_address << 12
+                              | (u64)(_PAGE_KERNEL_ROX.reserved0) << 48
+                              | (u64)(_PAGE_KERNEL_ROX.contiguous) << 52
+                              | (u64)(_PAGE_KERNEL_ROX.privileged_execute_never) << 53
+                              | (u64)(_PAGE_KERNEL_ROX.execute_never) << 54
+                              | (u64)(_PAGE_KERNEL_ROX.ignored) << 55 ;
 // clang-format on
 static_assert(PAGE_KERNEL_ROX == 0x40000000000793, "page_kernel_rox must be 0x40000000000793");
 
