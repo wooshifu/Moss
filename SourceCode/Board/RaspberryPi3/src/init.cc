@@ -5,7 +5,7 @@
 #include "rpi3/uart0.hpp"
 
 int init_board() {
-  initMmu();
+  init_mmu();
   log_i("MMU ENABLED!!!");
   //  *(u64 *)(104857500 + 8) = 0x1234;
   //  for (u64 i = 104857500; i < 104857600 - 8; ++i) {
