@@ -25,6 +25,7 @@ enum mair_field_value {
   _7            = 0x00UL
 };
 
+/// Memory Attribute Indirection Registers
 struct mair {
   enum mair_field_value _0 : 8;
   enum mair_field_value _1 : 8;
@@ -50,8 +51,4 @@ constexpr u64 mair_value = _mair_value._0 << 0 | _mair_value._1 << 8 | _mair_val
                            (u64)_mair_value._7 << 56;
 static_assert(mair_value == 0XBBFF'440C'0400);
 
-void setup_mair_el1() {
-  log_d("set mair to: 0x%llx", mair_value);
-  ARM64_WRITE_SYSTEM_REGISTER(mair_el1, mair_value);
-  log_d("mair set to: 0x%llx", ARM64_READ_SYSTEM_REGISTER(mair_el1));
-}
+void setup_mair_el1() { ARM64_WRITE_SYSREG(mair_el1, mair_value); }

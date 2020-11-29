@@ -38,3 +38,11 @@ constexpr const char *compile_time_filename(const char *file_path, const int off
 #ifndef __CURRENT_FILE_LINE__
 #define __CURRENT_FILE_LINE__ compile_time_filename(__CURRENT_FILE_PATH_LINE__, sizeof(__CURRENT_FILE_PATH_LINE__) - 1)
 #endif
+
+#ifndef likely
+#define likely(x) __builtin_expect(!!(x), 1)
+#endif
+
+#ifndef unlikely
+#define unlikely(x) __builtin_expect(!!(x), 0)
+#endif

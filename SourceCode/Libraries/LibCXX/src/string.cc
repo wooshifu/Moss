@@ -8,7 +8,7 @@ void memzero(u8 *mem_start, const u8 *mem_end) {
     return;
   }
   for (size_t i = 0; mem_start + i < mem_end; i++) {
-    *(mem_start + i) = '\0';
+    *(mem_start + i) = 0;
   }
 }
 

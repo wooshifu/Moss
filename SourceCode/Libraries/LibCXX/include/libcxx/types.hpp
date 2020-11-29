@@ -20,10 +20,11 @@ static_assert(sizeof(i16) == 2, "u8 must be size of 2");
 static_assert(sizeof(i32) == 4, "u8 must be size of 4");
 static_assert(sizeof(i64) == 8, "u8 must be size of 8");
 
-using iptr   = __INTPTR_TYPE__;
-using uptr   = __UINTPTR_TYPE__;
-using usize  = __SIZE_TYPE__;
-using size_t = usize;
+using nullptr_t = decltype(nullptr);
+using iptr      = __INTPTR_TYPE__;
+using uptr      = __UINTPTR_TYPE__;
+using usize     = __SIZE_TYPE__;
+using size_t    = usize;
 static_assert(sizeof(iptr) == 8, "iptr must be size of 8");
 static_assert(sizeof(uptr) == 8, "uptr must be size of 8");
 static_assert(sizeof(usize) == 8, "usize must be size of 8");

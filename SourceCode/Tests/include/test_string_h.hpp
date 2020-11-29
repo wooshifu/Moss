@@ -46,7 +46,7 @@ TEST(should_strchr_works) {
   char *b = strchr(msg, 'b');
   ASSERT_EQ(*b, 'b');
   char *non = strchr(msg, 'z');
-  ASSERT_EQ(non, 0);
+  ASSERT_EQ(non, nullptr);
 }
 
 TEST(should_strrchr_works) {
@@ -60,5 +60,5 @@ TEST(should_strrchr_works) {
   char *b = strrchr(msg, 'b');
   ASSERT_EQ(*b, 'b');
   char *non = strrchr(msg, 'z');
-  ASSERT_EQ(non, 0);
+  ASSERT_EQ(non, nullptr);
 }

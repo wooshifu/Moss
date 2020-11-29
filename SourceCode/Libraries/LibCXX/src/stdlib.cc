@@ -17,4 +17,3 @@ int atexit(void (*func)()) {
   return 0;
 }
 #endif
-

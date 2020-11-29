@@ -1,5 +1,4 @@
-#ifndef ASM_PGTABLE_H
-#define ASM_PGTABLE_H
+#pragma once
 
 #include "arm64/barrier.hpp"
 #include "arm64/mair.hpp"
@@ -9,7 +8,7 @@
 
 #if 0
 /* 查找PGD索引 */
-#define pgd_index(addr) (((addr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
+#define pgd_index(addr)           (((addr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
 
 /* 通过地址addr查找PGD的表项 */
 #define pgd_offset_raw(pgd, addr) ((pgd) + pgd_index(addr))
@@ -37,8 +36,8 @@
 #define pmd_none(pmd) (!pmd_val(pmd))
 #define ptd_none(ptd) (!ptd_val(ptd))
 
-#define pmd_sect(pmd) ((pmd_val(pmd) & PMD_TYPE_MASK) == PMD_TYPE_SECT)
-#define pud_sect(pud) ((pud_val(pud) & PUD_TYPE_MASK) == PUD_TYPE_SECT)
+#define pmd_sect(pmd)              ((pmd_val(pmd) & PMD_TYPE_MASK) == PMD_TYPE_SECT)
+#define pud_sect(pud)              ((pud_val(pud) & PUD_TYPE_MASK) == PUD_TYPE_SECT)
 
 static inline unsigned long pgd_page_paddr(l0_page_table_entry_t pgd) { return pgd_val(pgd) & PTE_ADDR_MASK; }
 
@@ -50,7 +49,7 @@ static inline unsigned long pud_page_paddr(pud_t pud) { return pud_val(pud) & PT
 //#define pmd_index(addr)            ((addr) >> PMD_SHIFT & (PTRS_PER_PMD - 1))
 #define pmd_offset_phys(pud, addr) ((pmd_t *)(pud_page_paddr(*(pud)) + pmd_index(addr) * sizeof(pmd_t)))
 
-#define pfn_pmd(pfn, prot) (__pmd(((pfn) << PMD_SHIFT) | (prot)))
+#define pfn_pmd(pfn, prot)         (__pmd(((pfn) << PMD_SHIFT) | (prot)))
 
 static inline unsigned long pmd_page_paddr(pmd_t pmd) { return pmd_val(pmd) & PTE_ADDR_MASK; }
 
@@ -83,7 +82,7 @@ static inline void set_pte(pte_t *ptep, pte_t pte) {
 }
 #endif
 
-static inline unsigned long mk_sect_prot(unsigned long prot) { return prot & ~PTE_TABLE_BIT; }
+static inline unsigned long make_section_property(unsigned long prot) { return prot & ~PTE_TABLE_BIT; }
 
 using page_table_4k = struct page_table_4k {
   u64 is_valid                                : 1;  /// bit 0
@@ -137,5 +136,3 @@ constexpr u64 PAGE_KERNEL_ROX = _page_kernel_rox.is_valid << 0
 static_assert(PAGE_KERNEL_ROX == 0x40000000000793, "page_kernel_rox must be 0x40000000000793");
 
 // const struct page_table_4k page_kernel = (page_table_4k)0xe8000000000713;
-
-#endif /*ASM_PGTABLE_H*/

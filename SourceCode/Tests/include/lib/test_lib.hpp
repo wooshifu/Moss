@@ -175,6 +175,7 @@ void assert_eq_size_t(size_t actual, size_t expected) { ASSERT_EQ_SIZE_T(actual,
            u64         : "%llu"                                                                                        \
   )
 #else
+constexpr const char *__format_specifier(nullptr_t /*unused*/) { return "%p"; }
 constexpr const char *__format_specifier(const char * /*unused*/) { return "%p"; }
 constexpr const char *__format_specifier(char * /*unused*/) { return "%p"; }
 constexpr const char *__format_specifier(void * /*unused*/) { return "%p"; }
