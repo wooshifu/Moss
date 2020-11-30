@@ -18,36 +18,25 @@
 #define LOG_LEVEL DEFAULT_LOG_LEVEL
 #endif
 
-#ifndef LOG_OUTPUT_COLORFUL
-#define LOG_OUTPUT_COLORFUL 1
+#ifndef LOG_OUTPUT_ENABLE_COLORFUL
+#define LOG_OUTPUT_ENABLE_COLORFUL 1
 #endif
 
 /// log filename, line number, function name or not
 /// enable log format like [DEBUG finename.c:25(function_name)] or not
-#ifndef LOG_OUTPUT_LABEL
-#define LOG_OUTPUT_LABEL 1
-/// enable log format like [DEBUG finename.c:25] or not
-#ifndef LOG_OUTPUT_FUNCTION_NAME
-#define LOG_OUTPUT_FUNCTION_NAME                    1
-#define LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER       "(%s)"
-#define LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER_VALUE __func__
-#endif
+#ifndef LOG_OUTPUT_ENABLE_LABEL
+#define LOG_OUTPUT_ENABLE_LABEL 1
 #endif
 
-#if LOG_OUTPUT_LABEL
-#ifndef LOG_OUTPUT_LABEL_VALUE
-#if LOG_OUTPUT_FUNCTION_NAME
-#define LOG_OUTPUT_LABEL_VALUE(value)                                                                                  \
-  "[" #value " " __CURRENT_FILE_NAME__ ":" __STRINGIFY__(__LINE__) LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER "] "
+#if LOG_OUTPUT_ENABLE_LABEL
+#define LOG_OUTPUT_LABEL_PLACEHOLDER(value) "[" #value " %s(%s)] "
+#define LOG_OUTPUT_LABEL_PLACEHOLDER_VALUE  __CURRENT_FILE_NAME__, __func__
 #else
-#define LOG_OUTPUT_LABEL_VALUE(value) "[" #value " " __CURRENT_FILE_NAME__ ":" __STRINGIFY__(__LINE__) "] "
-#endif
-#endif
-#else
-#define LOG_OUTPUT_LABEL_VALUE(value)
+#define LOG_OUTPUT_LABEL_PLACEHOLDER(value)
+#define LOG_OUTPUT_LABEL_PLACEHOLDER_VALUE
 #endif
 
-#if LOG_OUTPUT_COLORFUL
+#if LOG_OUTPUT_ENABLE_COLORFUL
 #define LOG_OUTPUT_COLOR_BLACK   "\033[30m"
 #define LOG_OUTPUT_COLOR_RED     "\033[31m"
 #define LOG_OUTPUT_COLOR_GREEN   "\033[32m"
@@ -89,23 +78,18 @@
 #define LOG_OUTPUT_COLOR_RESET
 #endif
 
-#ifndef __CURRENT_FILE_NAME__
-#define __CURRENT_FILE_NAME__ __FILE__
-#endif
-
 #ifndef _log_function
 #define _log_function(format, ...) printf(format, ##__VA_ARGS__)
 #endif
 
 /// log verbose
 #if LOG_LEVEL <= LOG_LEVEL_VERBOSE
-#if LOG_OUTPUT_LABEL && LOG_OUTPUT_FUNCTION_NAME
+#if LOG_OUTPUT_ENABLE_LABEL
 #define log_v(format, ...)                                                                                             \
-  _log_function(LOG_OUTPUT_COLOR_BLUE LOG_OUTPUT_LABEL_VALUE(VERBOSE) format LOG_OUTPUT_COLOR_RESET "\n",              \
-                LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER_VALUE, ##__VA_ARGS__)
+  _log_function(LOG_OUTPUT_COLOR_BLUE LOG_OUTPUT_LABEL_PLACEHOLDER(VERBOSE) format LOG_OUTPUT_COLOR_RESET "\n",        \
+                LOG_OUTPUT_LABEL_PLACEHOLDER_VALUE, ##__VA_ARGS__)
 #else
-#define log_v(format, ...)                                                                                             \
-  _log_function(LOG_OUTPUT_COLOR_BLUE LOG_OUTPUT_LABEL_VALUE(VERBOSE) format LOG_OUTPUT_COLOR_RESET "\n", ##__VA_ARGS__)
+#define log_v(format, ...) _log_function(LOG_OUTPUT_COLOR_BLUE format LOG_OUTPUT_COLOR_RESET "\n", ##__VA_ARGS__)
 #endif
 #else
 #define log_v(format, ...)
@@ -113,13 +97,12 @@
 
 /// log debug
 #if LOG_LEVEL <= LOG_LEVEL_DEBUG
-#if LOG_OUTPUT_LABEL && LOG_OUTPUT_FUNCTION_NAME
+#if LOG_OUTPUT_ENABLE_LABEL
 #define log_d(format, ...)                                                                                             \
-  _log_function(LOG_OUTPUT_COLOR_CYAN LOG_OUTPUT_LABEL_VALUE(DEBUG) format LOG_OUTPUT_COLOR_RESET "\n",                \
-                LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER_VALUE, ##__VA_ARGS__)
+  _log_function(LOG_OUTPUT_COLOR_CYAN LOG_OUTPUT_LABEL_PLACEHOLDER(DEBUG) format LOG_OUTPUT_COLOR_RESET "\n",          \
+                LOG_OUTPUT_LABEL_PLACEHOLDER_VALUE, ##__VA_ARGS__)
 #else
-#define log_d(format, ...)                                                                                             \
-  _log_function(LOG_OUTPUT_COLOR_CYAN LOG_OUTPUT_LABEL_VALUE(DEBUG) format LOG_OUTPUT_COLOR_RESET "\n", ##__VA_ARGS__)
+#define log_d(format, ...) _log_function(LOG_OUTPUT_COLOR_CYAN format LOG_OUTPUT_COLOR_RESET "\n", ##__VA_ARGS__)
 #endif
 /// log trace
 #define log_trace log_d("---TRACING LOG---")
@@ -130,13 +113,12 @@
 
 /// log info
 #if LOG_LEVEL <= LOG_LEVEL_INFO
-#if LOG_OUTPUT_LABEL && LOG_OUTPUT_FUNCTION_NAME
+#if LOG_OUTPUT_ENABLE_LABEL
 #define log_i(format, ...)                                                                                             \
-  _log_function(LOG_OUTPUT_COLOR_WHITE LOG_OUTPUT_LABEL_VALUE(INFO) format LOG_OUTPUT_COLOR_RESET "\n",                \
-                LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER_VALUE, ##__VA_ARGS__)
+  _log_function(LOG_OUTPUT_COLOR_WHITE LOG_OUTPUT_LABEL_PLACEHOLDER(INFO) format LOG_OUTPUT_COLOR_RESET "\n",          \
+                LOG_OUTPUT_LABEL_PLACEHOLDER_VALUE, ##__VA_ARGS__)
 #else
-#define log_i(format, ...)                                                                                             \
-  _log_function(LOG_OUTPUT_COLOR_WHITE LOG_OUTPUT_LABEL_VALUE(INFO) format LOG_OUTPUT_COLOR_RESET "\n", ##__VA_ARGS__)
+#define log_i(format, ...) _log_function(LOG_OUTPUT_COLOR_WHITE format LOG_OUTPUT_COLOR_RESET "\n", ##__VA_ARGS__)
 #endif
 #else
 #define log_i(format, ...)
@@ -144,13 +126,12 @@
 
 /// log warning
 #if LOG_LEVEL <= LOG_LEVEL_WARNING
-#if LOG_OUTPUT_LABEL && LOG_OUTPUT_FUNCTION_NAME
+#if LOG_OUTPUT_ENABLE_LABEL
 #define log_w(format, ...)                                                                                             \
-  _log_function(LOG_OUTPUT_COLOR_YELLOW LOG_OUTPUT_LABEL_VALUE(WARN) format LOG_OUTPUT_COLOR_RESET "\n",               \
-                LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER_VALUE, ##__VA_ARGS__)
+  _log_function(LOG_OUTPUT_COLOR_YELLOW LOG_OUTPUT_LABEL_PLACEHOLDER(WARN) format LOG_OUTPUT_COLOR_RESET "\n",         \
+                LOG_OUTPUT_LABEL_PLACEHOLDER_VALUE, ##__VA_ARGS__)
 #else
-#define log_w(format, ...)                                                                                             \
-  _log_function(LOG_OUTPUT_COLOR_YELLOW LOG_OUTPUT_LABEL_VALUE(WARN) format LOG_OUTPUT_COLOR_RESET "\n", ##__VA_ARGS__)
+#define log_w(format, ...) _log_function(LOG_OUTPUT_COLOR_YELLOW format LOG_OUTPUT_COLOR_RESET "\n", ##__VA_ARGS__)
 #endif
 #else
 #define log_w(format, ...)
@@ -158,13 +139,12 @@
 
 /// log error
 #if LOG_LEVEL <= LOG_LEVEL_ERROR
-#if LOG_OUTPUT_LABEL && LOG_OUTPUT_FUNCTION_NAME
+#if LOG_OUTPUT_ENABLE_LABEL
 #define log_e(format, ...)                                                                                             \
-  _log_function(LOG_OUTPUT_COLOR_RED LOG_OUTPUT_LABEL_VALUE(ERROR) format LOG_OUTPUT_COLOR_RESET "\n",                 \
-                LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER_VALUE, ##__VA_ARGS__)
+  _log_function(LOG_OUTPUT_COLOR_RED LOG_OUTPUT_LABEL_PLACEHOLDER(ERROR) format LOG_OUTPUT_COLOR_RESET "\n",           \
+                LOG_OUTPUT_LABEL_PLACEHOLDER_VALUE, ##__VA_ARGS__)
 #else
-#define log_e(format, ...)                                                                                             \
-  _log_function(LOG_OUTPUT_COLOR_RED LOG_OUTPUT_LABEL_VALUE(ERROR) format LOG_OUTPUT_COLOR_RESET "\n", ##__VA_ARGS__)
+#define log_e(format, ...) _log_function(LOG_OUTPUT_COLOR_RED format LOG_OUTPUT_COLOR_RESET "\n", ##__VA_ARGS__)
 #endif
 #else
 #define log_e(format, ...)
@@ -172,14 +152,12 @@
 
 /// log fatal
 #if LOG_LEVEL <= LOG_LEVEL_FATAL
-#if LOG_OUTPUT_LABEL && LOG_OUTPUT_FUNCTION_NAME
+#if LOG_OUTPUT_ENABLE_LABEL
 #define log_f(format, ...)                                                                                             \
-  _log_function(LOG_OUTPUT_COLOR_MAGENTA LOG_OUTPUT_LABEL_VALUE(FATAL) format LOG_OUTPUT_COLOR_RESET "\n",             \
-                LOG_OUTPUT_FUNCTION_NAME_PLACE_HOLDER_VALUE, ##__VA_ARGS__)
+  _log_function(LOG_OUTPUT_COLOR_MAGENTA LOG_OUTPUT_LABEL_PLACEHOLDER(FATAL) format LOG_OUTPUT_COLOR_RESET "\n",       \
+                LOG_OUTPUT_LABEL_PLACEHOLDER_VALUE, ##__VA_ARGS__)
 #else
-#define log_f(format, ...)                                                                                             \
-  _log_function(LOG_OUTPUT_COLOR_MAGENTA LOG_OUTPUT_LABEL_VALUE(FATAL) format LOG_OUTPUT_COLOR_RESET "\n",             \
-                ##__VA_ARGS__)
+#define log_f(format, ...) _log_function(LOG_OUTPUT_COLOR_MAGENTA format LOG_OUTPUT_COLOR_RESET "\n", ##__VA_ARGS__)
 #endif
 #else
 #define log_f(format, ...)

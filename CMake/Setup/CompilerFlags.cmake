@@ -71,22 +71,8 @@ macro(setup_compiler_flags)
             )
 
     string(JOIN " " CMAKE_C_FLAGS "${CMAKE_C_FLAGS}" "${COMMON_CMAKE_C_FLAGS}")
-
-    # define __CURRENT_FILE_NAME__, log function will use this macro to output the file name
-    # todo: refactor __CURRENT_FILE_NAME__, using constexpr impl
-    string(JOIN " " CMAKE_CXX_FLAGS
-            ${CMAKE_CXX_FLAGS}
-            "-std=c++20"
-            "${CMAKE_C_FLAGS}"
-            "-D__CURRENT_FILE_NAME__='\"$(notdir $(abspath $<))\"'"
-            )
-
-    string(JOIN " " CMAKE_C_FLAGS
-            "-std=c11"
-            "${CMAKE_C_FLAGS}"
-            "-D__CURRENT_FILE_NAME__='\"$(notdir $(abspath $<))\"'"
-            )
-
+    string(JOIN " " CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=c++20" "${CMAKE_C_FLAGS}")
+    string(JOIN " " CMAKE_C_FLAGS "-std=c11" "${CMAKE_C_FLAGS}")
     string(JOIN " " CMAKE_ASM_FLAGS ${CMAKE_ASM_FLAGS} "${CMAKE_C_FLAGS}")
 
     string(REPEAT "=" 300 COMPILER_FLAGS_SEPARATOR)
