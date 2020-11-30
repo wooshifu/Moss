@@ -1,6 +1,15 @@
 message(STATUS "detected c compiler id: ${CMAKE_C_COMPILER_ID}, version: ${CMAKE_C_COMPILER_VERSION}")
 message(STATUS "detected c++ compiler id: ${CMAKE_CXX_COMPILER_ID}, version: ${CMAKE_CXX_COMPILER_VERSION}")
 
+if (CMAKE_BUILD_TYPE MATCHES "Rel")
+    set(OPTIMIZATION_LEVEL 2)
+elseif (CMAKE_BUILD_TYPE MATCHES "Debug")
+    set(OPTIMIZATION_LEVEL 0)
+else ()
+    set(OPTIMIZATION_LEVEL 0)
+endif ()
+message(STATUS "OPTIMIZATION_LEVEL: ${OPTIMIZATION_LEVEL}")
+
 if (CMAKE_C_COMPILER_ID AND NOT CMAKE_C_COMPILER_ID STREQUAL "Clang")
     message(WARNING "clang will be the only supported compiler in the near future")
 endif ()
@@ -38,10 +47,9 @@ macro(setup_compiler_flags)
             "-Wno-unused-command-line-argument"
             )
 
-    # todo: optimization level at Release mode
     string(JOIN " " COMMON_CMAKE_C_FLAGS
-            "-v"
-            "-O0" #todo: fix clang must be O1
+            # "-v"
+            "-O${OPTIMIZATION_LEVEL}"
             "-g"
             "-save-temps"
             "-Wall"
