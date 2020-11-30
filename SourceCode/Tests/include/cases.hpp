@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lib/test_lib.hpp"
+#include "tests/test_lib.hpp"
 
 // --- TEST CASES BEGIN ---
 #include "test_memory_h.hpp"

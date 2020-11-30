@@ -155,6 +155,7 @@ static void create_l0_mapping(L0PageTableEntry *l0_page_table_address, u64 physi
 
 extern u64 get_free_page();
 static u64 early_allocate_page_table() {
+  log_d("early_allocate_page_table");
   u64 phys = get_free_page();
   memset((void *)phys, 0, PAGE_SIZE);
 

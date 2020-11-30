@@ -1,5 +1,7 @@
 #include "cases.hpp"
 #include "hal/halt.hpp"
+#include "libcxx/log.hpp"
+#include "libcxx/macro.hpp"
 
 void before_run_tests() {
   printf("\n\n");
@@ -15,7 +17,7 @@ void before_run_tests() {
   printf("\n\n");
 }
 
-extern_C void kernel_main_tests() {
+extern "C" void kernel_main_tests() {
   before_run_tests();
 
   run_tests();

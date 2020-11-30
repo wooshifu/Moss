@@ -11,9 +11,9 @@ TEST(should_mem_clean_works) {
 }
 
 TEST(should_memset_set_memory) {
-  i32 array[]      = {1, 2, 3};
+  i8 array[]      = {1, 2, 3};
   size_t count     = sizeof(array) / sizeof(array[0]);
-  i32 *destination = static_cast<i32 *>(memset(array, 0, count));
+  i8 *destination = static_cast<i8 *>(memset(array, 0, count));
   for (size_t index = 0; index < count; ++index) {
     ASSERT_EQ(array[index], 0);
     ASSERT_EQ(destination[index], 0);

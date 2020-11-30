@@ -14,7 +14,7 @@ void memzero(u8 *mem_start, const u8 *mem_end) {
 
 void *memset(void *destination, int character, size_t count) {
   for (size_t index = 0; index < count; ++index) {
-    ((int *)destination)[index] = character;
+    (reinterpret_cast<u8 *>(destination))[index] = character;
   }
   return destination;
 }

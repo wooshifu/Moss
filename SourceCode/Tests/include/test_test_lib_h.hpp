@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lib/test_lib.hpp"
+#include "tests/test_lib.hpp"
 
 TEST(should_test_lib_test_eq_works) {
   int x = 1;

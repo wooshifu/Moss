@@ -4,7 +4,7 @@
 
 void memzero(u8 *mem_start, const u8 *mem_end);
 
-void *memset(void *destination, int character, size_t count);
+extern_C void *memset(void *destination, int character, size_t count);
 
 size_t strlen(const char *str);
 

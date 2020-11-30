@@ -40,4 +40,14 @@ SECTIONS
     }
     . = ALIGN(8);
     __bss_end = .;
+
+    .interp :
+    {
+        *(.interp)
+    }
+
+    .note.gnu.build-id :
+    {
+        *(.note.gnu.build-id)
+    }
 }
