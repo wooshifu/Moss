@@ -18,6 +18,9 @@ set(MOSS_SOURCE_CODE_DIR ${Moss_SOURCE_DIR}/SourceCode)
 
 include(${Moss_SOURCE_DIR}/CMake/Setup.cmake)
 
+setup_board()
+message(STATUS "building board ${BOARD}")
+
 setup_compiler_flags()
 
 set(KernelName Kernel.elf)

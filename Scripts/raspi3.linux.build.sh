@@ -8,6 +8,6 @@ rm -rf "${BUILD_DIR}"
 mkdir -p "${BUILD_DIR}"
 
 cd "${BUILD_DIR}" || exit
-cmake -DCMAKE_TOOLCHAIN_FILE="${THIS_DIR}"/../CMake/Toolchain/ToolchainClang.cmake -DARCH=arm64 "${THIS_DIR}/.."
+cmake -DCMAKE_TOOLCHAIN_FILE="${THIS_DIR}"/../CMake/Toolchain/ToolchainClang.cmake "${THIS_DIR}/.."
 make
 cd - || exit

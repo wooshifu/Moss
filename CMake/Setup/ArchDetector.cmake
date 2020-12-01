@@ -3,7 +3,7 @@ if (ARCH STREQUAL arm)
 elseif (ARCH STREQUAL arm64)
     set(MossArch arm64)
 else ()
-    message("unexpected ARCH ${ARCH}, using default value \"arm64\"")
+    message(STATUS "unexpected ARCH ${ARCH}, using default value \"arm64\"")
     set(MossArch arm64)
 endif ()
 
