@@ -1,0 +1,9 @@
+# RaspberryPi3 board required compiler flags
+# compiler flags could be put in one line, or put it in separate line
+# "#" started line is comment
+# "-key=value # comment" is also valid comment
+
+# raspberry pi3 arm64 board
+--target=aarch64-unknown-linux-elf
+-march=armv8-a+crc
+-mcpu=cortex-a53

@@ -1,6 +1,20 @@
 message(STATUS "detected c compiler id: ${CMAKE_C_COMPILER_ID}, version: ${CMAKE_C_COMPILER_VERSION}")
 message(STATUS "detected c++ compiler id: ${CMAKE_CXX_COMPILER_ID}, version: ${CMAKE_CXX_COMPILER_VERSION}")
 
+
+macro(read_board_compiler_flags_from_file IN_FILE OUT_VAR)
+    file(STRINGS ${IN_FILE} LINES)
+
+    foreach (LINE IN LISTS LINES)
+        # "#" started line is comment line, remove it
+        string(REGEX REPLACE "\#.*" "" STRIPPED "${LINE}")
+        if (STRIPPED)
+            list(APPEND ${OUT_VAR} "${STRIPPED}")
+        endif ()
+    endforeach ()
+endmacro()
+
+
 if (CMAKE_BUILD_TYPE MATCHES "Rel")
     set(OPTIMIZATION_LEVEL 2)
 elseif (CMAKE_BUILD_TYPE MATCHES "Debug")
@@ -22,23 +36,10 @@ endif ()
 macro(setup_compiler_flags)
     set(CMAKE_CXX_LINK_FLAGS "")
 
-    if (MossArch STREQUAL arm)
-        string(JOIN " " CMAKE_C_FLAGS
-                "-mfpu=neon-vfpv4"
-                "-mfloat-abi=hard"
-                "-march=armv7-a"
-                "-mtune=cortex-a7"
-                )
-    elseif (MossArch STREQUAL arm64)
-        string(JOIN " " CMAKE_C_FLAGS
-                ${CMAKE_C_FLAGS}
-                "--target=aarch64-unknown-linux-elf"
-                "-march=armv8-a+crc"
-                "-mcpu=cortex-a53"
-                )
-    else ()
-        message(FATAL_ERROR "unexpected ARCH ${MossArch}")
-    endif ()
+    read_board_compiler_flags_from_file(${MOSS_SOURCE_CODE_DIR}/Board/${BOARD}/.flags BOARD_COMPILER_FLAGS)
+    message(STATUS "BOARD_COMPILER_FLAGS is: ${BOARD_COMPILER_FLAGS}")
+    # set BOARD_COMPILER_FLAGS here
+    string(JOIN " " CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${BOARD_COMPILER_FLAGS})
 
     string(JOIN " " IGNORE_SPECIFIC_WARNINGS
             "-Wno-unused-variable"
