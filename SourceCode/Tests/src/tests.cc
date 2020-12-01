@@ -2,6 +2,18 @@
 #include "hal/halt.hpp"
 #include "libcxx/log.hpp"
 #include "libcxx/macro.hpp"
+#include "tests/test_lib.hpp"
+
+void run_tests() {
+  size_t test_count = sizeof(test_cases) / sizeof(test_cases[0]);
+  for (unsigned int index = 0; index < test_count; ++index) {
+    test_case_func test_case = test_cases[index];
+    if (test_case != nullptr) {
+      test_case();
+    }
+  }
+  log_i("%d test cases, %d passed, %d failed", __test_all_asserts, __test_success_asserts, __test_failed_asserts);
+}
 
 void before_run_tests() {
   printf("\n\n");
