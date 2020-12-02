@@ -1,6 +1,6 @@
-#include "arm64/asm.hpp"
-#include "arm64/interrupt.hpp"
-#include "arm64/timer.hpp"
+#include "aarch64/asm.hpp"
+#include "aarch64/interrupt.hpp"
+#include "aarch64/timer.hpp"
 #include "hal/interrupt.hpp"
 #include "libcxx/log.hpp"
 

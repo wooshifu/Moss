@@ -1,11 +1,11 @@
-#include "arm64/asm.hpp"
-#include "arm64/barrier.hpp"
-#include "arm64/linker.hpp"
-#include "arm64/mair.hpp"
-#include "arm64/pgtable.hpp"
-#include "arm64/pgtable_hwdef.hpp"
-#include "arm64/pgtable_prot.hpp"
-#include "arm64/sysregs.hpp"
+#include "aarch64/asm.hpp"
+#include "aarch64/barrier.hpp"
+#include "aarch64/linker.hpp"
+#include "aarch64/mair.hpp"
+#include "aarch64/pgtable.hpp"
+#include "aarch64/pgtable_hwdef.hpp"
+#include "aarch64/pgtable_prot.hpp"
+#include "aarch64/sysregs.hpp"
 #include "libcxx/log.hpp"
 
 #define BIT(nr)           (1UL << (nr))
@@ -13,7 +13,8 @@
 #define NO_CONT_MAPPINGS  BIT(1)
 
 /// the l0 page table
-[[gnu::aligned(PAGE_SIZE)]] static L0PageTable l0_page_table_base_address /*__attribute__((aligned(PAGE_SIZE)))*/;
+[[gnu::aligned(PAGE_SIZE)]] static L0PageTable l0_page_table_base_address;
+
 /// &l0_page_table_base_address is in bss section, it's already be cleaned before, there's no need to clear it again.
 /// but just in case, still clear it again
 static void clear_l0_page_table() {

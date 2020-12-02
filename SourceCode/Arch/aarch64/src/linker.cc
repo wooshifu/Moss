@@ -1,4 +1,4 @@
-#include "arm64/linker.hpp"
+#include "aarch64/linker.hpp"
 #include "libcxx/log.hpp"
 
 extern_C void print_mem_stack() {

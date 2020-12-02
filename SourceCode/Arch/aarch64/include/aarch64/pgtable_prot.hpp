@@ -1,6 +1,6 @@
 #pragma once
 
-#include "arm64/pgtable_hwdef.hpp"
+#include "aarch64/pgtable_hwdef.hpp"
 
 /*
  * Software defined PTE bits definition.

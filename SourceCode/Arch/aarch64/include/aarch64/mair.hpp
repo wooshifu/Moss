@@ -1,6 +1,6 @@
 #pragma once
 
-#include "arm64/asm.hpp"
+#include "aarch64/asm.hpp"
 #include "libcxx/log.hpp"
 
 enum mair_field_value_index {
@@ -26,7 +26,7 @@ enum mair_field_value {
 };
 
 /// Memory Attribute Indirection Registers
-struct mair {
+struct [[gnu::packed]] mair {
   enum mair_field_value _0 : 8;
   enum mair_field_value _1 : 8;
   enum mair_field_value _2 : 8;
@@ -35,7 +35,7 @@ struct mair {
   enum mair_field_value _5 : 8;
   enum mair_field_value _6 : 8; /// not used
   enum mair_field_value _7 : 8; /// not used
-} __attribute__((packed));
+};
 static_assert(sizeof(struct mair) == 8, "sizeof mair must be 8");
 
 constexpr struct mair _mair_value = {._0 = device_nGnRnE,

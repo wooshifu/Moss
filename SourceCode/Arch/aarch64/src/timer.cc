@@ -1,5 +1,5 @@
-#include "arm64/asm.hpp"
-#include "arm64/timer.hpp"
+#include "aarch64/asm.hpp"
+#include "aarch64/timer.hpp"
 #include "libcxx/log.hpp"
 
 #include "libcxx/types.hpp"

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "arm64/barrier.hpp"
-#include "arm64/mair.hpp"
-#include "arm64/mm.hpp"
-#include "arm64/pgtable_hwdef.hpp"
-#include "arm64/pgtable_types.hpp"
+#include "aarch64/barrier.hpp"
+#include "aarch64/mair.hpp"
+#include "aarch64/mm.hpp"
+#include "aarch64/pgtable_hwdef.hpp"
+#include "aarch64/pgtable_types.hpp"
 
 #if 0
 /* 查找PGD索引 */
