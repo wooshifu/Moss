@@ -10,6 +10,7 @@
 
 #pragma once
 
+#if 0
 /*
  * CR1 bits (CP#15 CR1)
  */
@@ -72,3 +73,5 @@ void rt_hw_dcache_disable(void);
 void rt_hw_icache_enable(void);
 void rt_hw_icache_invalidate_all(void);
 void rt_hw_icache_disable(void);
+
+#endif

@@ -1,6 +1,4 @@
-#include "aarch64/mm.hpp"
-#include "aarch64/page.hpp"
-#include "aarch64/pgtable_hwdef.hpp"
+#include "aarch64/page_property.hpp"
 #include "libcxx/log.hpp"
 
 constexpr auto NR_PAGES = (TOTAL_MEMORY / PAGE_SIZE);

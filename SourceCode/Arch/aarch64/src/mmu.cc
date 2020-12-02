@@ -2,15 +2,9 @@
 #include "aarch64/barrier.hpp"
 #include "aarch64/linker.hpp"
 #include "aarch64/mair.hpp"
-#include "aarch64/pgtable.hpp"
-#include "aarch64/pgtable_hwdef.hpp"
-#include "aarch64/pgtable_prot.hpp"
-#include "aarch64/sysregs.hpp"
+#include "aarch64/page.hpp"
+#include "aarch64/page_property.hpp"
 #include "libcxx/log.hpp"
-
-#define BIT(nr)           (1UL << (nr))
-#define NO_BLOCK_MAPPINGS BIT(0)
-#define NO_CONT_MAPPINGS  BIT(1)
 
 /// the l0 page table
 [[gnu::aligned(PAGE_SIZE)]] static L0PageTable l0_page_table_base_address;
@@ -27,14 +21,13 @@ static void clear_l0_page_table() {
 /// pointer to function to allocate page table
 using func_allocate_page = u64 (*)();
 
-// static inline u64 locate_l3_entry_offset(u64 virtual_address) {
-//  return (((virtual_address) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1));
-//}
+constexpr auto PAGE_TABLE_TYPE_TABLE = 0b11UL;
+
 static void l3_mapping(L2PageTableEntry *l2_page_table_entry, u64 virtual_address, u64 end, u64 physical_address,
                        u64 property, func_allocate_page alloc_page, u64 flags) {
   if (*l2_page_table_entry == 0U) {
     u64 l3_physic_address = alloc_page();
-    *l2_page_table_entry  = l3_physic_address | PMD_TYPE_TABLE; // todo: rename pmd
+    *l2_page_table_entry  = l3_physic_address | PAGE_TABLE_TYPE_TABLE;
     dsb(ishst);
   }
 
@@ -52,9 +45,8 @@ static void l3_mapping(L2PageTableEntry *l2_page_table_entry, u64 virtual_addres
 }
 
 static void l2_set_section(L2PageTableEntry *l2_page_table_entry, u64 physic_address, u64 property) {
-  u64 section_property = PMD_TYPE_SECT | make_section_property(property);
-  // todo: rename pmd
-  L2PageTableEntry new_l2_page_table_entry = ((physic_address >> PMD_SHIFT) << PMD_SHIFT) | (section_property);
+  u64 section_property                     = (1UL << 0) | make_section_property(property);
+  L2PageTableEntry new_l2_page_table_entry = ((physic_address >> 21) << 21) | (section_property);
   *l2_page_table_entry                     = new_l2_page_table_entry;
 
   dsb(ishst);
@@ -64,12 +56,11 @@ static u64 l2_address_end(u64 addr, u64 end) {
   return boundary - 1 < end - 1 ? boundary : end;
 }
 
-// static u64 locate_l2_entry_offset(u64 addr) { return ((addr) >> PMD_SHIFT & (PTRS_PER_PMD - 1)); }
 static void l2_mapping(L1PageTableEntry *l1_page_table_entry, u64 virtual_address, u64 end, u64 physical_address,
                        u64 property, func_allocate_page alloc_page, u64 flags) {
   if (*l1_page_table_entry == 0U) {
     u64 l2_physic_address = alloc_page();
-    *l1_page_table_entry  = l2_physic_address | PUD_TYPE_TABLE; // todo: rename pud
+    *l1_page_table_entry  = l2_physic_address | PAGE_TABLE_TYPE_TABLE;
     dsb(ishst);
   }
 
@@ -80,8 +71,7 @@ static void l2_mapping(L1PageTableEntry *l1_page_table_entry, u64 virtual_addres
   do {
     next = l2_address_end(virtual_address, end);
 
-    // todo: rename
-    if (((virtual_address | next | physical_address) & ~SECTION_MASK) == 0 && (flags & NO_BLOCK_MAPPINGS) == 0) {
+    if (((virtual_address | next | physical_address) & ((1 << 21) - 1)) == 0 && (flags & 1UL) == 0) {
       l2_set_section(l2_page_table_entry, physical_address, property);
     } else {
       l3_mapping(l2_page_table_entry, virtual_address, next, physical_address, property, alloc_page, flags);
@@ -97,13 +87,18 @@ static u64 l1_address_end(u64 virtual_address, u64 end) {
   return boundary - 1 < end - 1 ? boundary : end;
 }
 
-// static u64 locate_l1_entry_offset(u64 virtual_address) { return ((virtual_address) >> PUD_SHIFT & (PTRS_PER_PUD -
-// 1)); }
 static void l1_mapping(L0PageTableEntry *l0_page_table_entry, u64 virtual_address, u64 end, u64 physical_address,
                        u64 property, func_allocate_page alloc_page, u64 flags) {
   if (*l0_page_table_entry == 0U) {
     u64 l1_physic_address = alloc_page();
-    *l0_page_table_entry  = l1_physic_address | PUD_TYPE_TABLE; // todo: rename
+    // Table:
+    // 63   62-61  60   59     58-52    51-48    47-(m-1)  (m-1)-2   11
+    // NST  APT    XNT  PXNT   Ignored  RES0     ADDR      Ignored   11
+    // NST - NSTable. For secure memory accesses, determines type of next level. Otherwise ignored.
+    // APT - APTable. Access permissions limit for next level lookup.
+    // XNT - XNTable. XN limit for subsequent lookups.
+    // PXNT - PXNTable. PXN limit for subsequent levels. SBZ for non-secure PL2 (hypervisor) level 1 translation tables.
+    *l0_page_table_entry = l1_physic_address | PAGE_TABLE_TYPE_TABLE;
     dsb(ishst);
   }
 
@@ -158,7 +153,7 @@ extern u64 get_free_page();
 static u64 early_allocate_page_table() {
   log_d("early_allocate_page_table");
   u64 phys = get_free_page();
-  memset((void *)phys, 0, PAGE_SIZE);
+  memset(reinterpret_cast<void *>(phys), 0, PAGE_SIZE);
 
   return phys;
 }
@@ -178,13 +173,13 @@ static void create_identical_mapping() {
   u64 memory_end   = TOTAL_MEMORY;
   u64 memory_size  = memory_end - memory_start;
   log_d("memory start => end: 0x%llx => 0x%llx, size: %lld", memory_start, memory_end, memory_size);
-  create_l0_mapping((L0PageTableEntry *)&l0_page_table_base_address, memory_start, memory_start, memory_size,
-                    PAGE_KERNEL, default_func_allocate_page, 0);
+  create_l0_mapping(reinterpret_cast<L0PageTableEntry *>(&l0_page_table_base_address), memory_start, memory_start,
+                    memory_size, PAGE_KERNEL, default_func_allocate_page, 0);
 }
 
 static void create_mmio_identical_mapping() {
   // NOTE: DEVICE_SIZE must be big enough to map all PERIPHERAL_BASE and LOCAL_PERIPHERALS_BASE
-  create_l0_mapping((L0PageTableEntry *)&l0_page_table_base_address, 0x3F00'0000, 0x3F00'0000,
+  create_l0_mapping(reinterpret_cast<L0PageTableEntry *>(&l0_page_table_base_address), 0x3F00'0000, 0x3F00'0000,
                     /*DEVICE_SIZE*/ 0x1000'0000, PROT_DEVICE_nGnRnE, default_func_allocate_page, 0);
 }
 
@@ -221,7 +216,7 @@ static int enable_mmu() {
   ARM64_WRITE_SYSREG(ttbr0_el1, &l0_page_table_base_address);
   isb();
 
-  ARM64_WRITE_SYSREG(sctlr_el1, SCTLR_ELx_M);
+  ARM64_WRITE_SYSREG(sctlr_el1, 1UL << 0);
   isb();
   asm volatile("ic iallu");
   dsb(nsh);
