@@ -34,6 +34,7 @@ endif ()
 
 
 macro(setup_compiler_flags)
+    set(CMAKE_CXX_STANDARD 20)
     set(CMAKE_CXX_LINK_FLAGS "")
 
     read_board_compiler_flags_from_file(${MOSS_SOURCE_CODE_DIR}/Board/${BOARD}/.flags BOARD_COMPILER_FLAGS)

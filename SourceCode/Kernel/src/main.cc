@@ -5,7 +5,7 @@
 
 extern_C void kernel_main() {
 #ifdef __GNUC__
-  log_d("gcc version: %s", __VERSION__);
+  log_d("compiler version: %s", __VERSION__);
 #endif
 
   log_d(">>>>>>>>> entered kernel_main <<<<<<<<<");
