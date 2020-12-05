@@ -1,7 +1,7 @@
-#include "hal/el.hpp"
-#include "hal/init.hpp"
-#include "kernel/logo.hpp"
-#include "libcxx/log.hpp"
+#include "hal/el.hh"
+#include "hal/init.hh"
+#include "kernel/logo.hh"
+#include "libcxx/log.hh"
 
 extern_C void kernel_main() {
   log_d("compiler info, %s", COMPILER_INFO);

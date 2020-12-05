@@ -1,5 +1,5 @@
-#include "libcxx/log.hpp"
-#include "libcxx/stdlib.hpp"
+#include "libcxx/log.hh"
+#include "libcxx/stdlib.hh"
 
 #if 0
 void abort() {

@@ -1,5 +1,5 @@
-#include "aarch64/page_property.hpp"
-#include "libcxx/log.hpp"
+#include "aarch64/page_property.hh"
+#include "libcxx/log.hh"
 
 constinit const auto NR_PAGES = (TOTAL_MEMORY / PAGE_SIZE);
 

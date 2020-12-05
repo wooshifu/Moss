@@ -1,6 +1,6 @@
-#include "aarch64/linker.hpp"
-#include "libcxx/log.hpp"
-#include "libcxx/string.hpp"
+#include "aarch64/linker.hh"
+#include "libcxx/log.hh"
+#include "libcxx/string.hh"
 
 extern_C void bss_clean() {
   u64 bss_start = get_bss_start_address();

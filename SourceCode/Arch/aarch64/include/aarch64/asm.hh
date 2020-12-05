@@ -1,6 +1,6 @@
 #pragma once
 
-#include "libcxx/types.hpp"
+#include "libcxx/types.hh"
 
 #ifndef ARM64_WRITE_SYSREG
 #define ARM64_WRITE_SYSREG(register_name, value) asm volatile("msr " #register_name ", %0" ::"r"(value))

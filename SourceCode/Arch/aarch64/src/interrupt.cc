@@ -1,8 +1,8 @@
-#include "aarch64/asm.hpp"
-#include "aarch64/interrupt.hpp"
-#include "aarch64/timer.hpp"
-#include "hal/interrupt.hpp"
-#include "libcxx/log.hpp"
+#include "aarch64/asm.hh"
+#include "aarch64/interrupt.hh"
+#include "aarch64/timer.hh"
+#include "hal/interrupt.hh"
+#include "libcxx/log.hh"
 
 constinit const char *entry_error_messages[] = {
     "SYNC_INVALID_EL1t",   "IRQ_INVALID_EL1t",   "FIQ_INVALID_EL1t",   "ERROR_INVALID_EL1T",

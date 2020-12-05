@@ -1,5 +1,5 @@
-#include "aarch64/linker.hpp"
-#include "libcxx/log.hpp"
+#include "aarch64/linker.hh"
+#include "libcxx/log.hh"
 
 extern_C void print_mem_stack() {
 #if 1

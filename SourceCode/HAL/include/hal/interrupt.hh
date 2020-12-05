@@ -1,6 +1,6 @@
 #pragma once
 
-#include "libcxx/types.hpp"
+#include "libcxx/types.hh"
 
 u32 read_core0_pending_interrupt();
 

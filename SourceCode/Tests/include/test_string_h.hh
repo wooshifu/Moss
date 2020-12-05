@@ -1,6 +1,6 @@
 #pragma once
 
-#include "libcxx/string.hpp"
+#include "libcxx/string.hh"
 
 TEST(should_mem_clean_works) {
   i32 array[5] = {0x12345678, 0x1abcdef1, 0x23456789, 0x1bcdef12, 0x3456789a};
@@ -12,7 +12,7 @@ TEST(should_mem_clean_works) {
 
 TEST(should_memset_set_memory) {
   i8 array[]      = {1, 2, 3};
-  size_t count     = sizeof(array) / sizeof(array[0]);
+  size_t count    = sizeof(array) / sizeof(array[0]);
   i8 *destination = static_cast<i8 *>(memset(array, 0, count));
   for (size_t index = 0; index < count; ++index) {
     ASSERT_EQ(array[index], 0);

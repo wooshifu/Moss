@@ -1,6 +1,6 @@
 #pragma once
 
-#include "libcxx/types.hpp"
+#include "libcxx/types.hh"
 
 /*
  * 暂时只4KB大小的页面和48位地址位宽
@@ -273,9 +273,11 @@ constinit const auto PROT_DEVICE_nGnRnE =
     (PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_ATTRINDX(MT_DEVICE_nGnRnE));
 constinit const auto PROT_DEVICE_nGnRE =
     (PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_ATTRINDX(MT_DEVICE_nGnRE));
-constinit const auto PROT_NORMAL_NC = (PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_ATTRINDX(MT_NORMAL_NC));
-constinit const auto PROT_NORMAL_WT = (PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_ATTRINDX(MT_NORMAL_WT));
-constinit const auto PROT_NORMAL    = (PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_ATTRINDX(MT_NORMAL));
+constinit const auto PROT_NORMAL_NC =
+    (PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_ATTRINDX(MT_NORMAL_NC));
+constinit const auto PROT_NORMAL_WT =
+    (PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_ATTRINDX(MT_NORMAL_WT));
+constinit const auto PROT_NORMAL = (PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_ATTRINDX(MT_NORMAL));
 
 constinit const auto PAGE_KERNEL = PROT_NORMAL;
 

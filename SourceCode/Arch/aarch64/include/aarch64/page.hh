@@ -1,8 +1,8 @@
 #pragma once
 
-#include "aarch64/barrier.hpp"
-#include "aarch64/mair.hpp"
-#include "aarch64/page_property.hpp"
+#include "aarch64/barrier.hh"
+#include "aarch64/mair.hh"
+#include "aarch64/page_property.hh"
 
 constexpr unsigned long make_section_property(const unsigned long prot) { return prot & ~PTE_TABLE_BIT; }
 
@@ -58,7 +58,6 @@ constinit const u64 PAGE_KERNEL_ROX = _page_kernel_rox.is_valid << 0
 static_assert(PAGE_KERNEL_ROX == 0x40000000000793, "page_kernel_rox must be 0x40000000000793");
 
 // const struct page_table_4k page_kernel = (page_table_4k)0xe8000000000713;
-
 
 using PageTableEntryType = u64;
 static_assert(sizeof(PageTableEntryType) == 8);

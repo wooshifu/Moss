@@ -1,6 +1,6 @@
 #pragma once
 
-#include "libcxx/constants.hpp"
+#include "libcxx/constants.hh"
 
 #ifdef __STDC_HOSTED__
 static_assert(__STDC_HOSTED__ == 0, "must be freestanding c++ mode");

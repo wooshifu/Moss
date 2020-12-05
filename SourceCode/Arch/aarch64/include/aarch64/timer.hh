@@ -1,6 +1,6 @@
 #pragma once
 
-#include "libcxx/types.hpp"
+#include "libcxx/types.hh"
 
 void enable_cntv();
 void disable_cntv();

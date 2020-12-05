@@ -1,10 +1,10 @@
 #pragma once
 
-#include "tests/test_lib.hpp"
+#include "tests/test_lib.hh"
 
-#include "test_memory_h.hpp"
-#include "test_string_h.hpp"
-#include "test_test_lib_h.hpp"
+#include "test_memory_h.hh"
+#include "test_string_h.hh"
+#include "test_test_lib_h.hh"
 
 using test_case_func = void (*)();
 

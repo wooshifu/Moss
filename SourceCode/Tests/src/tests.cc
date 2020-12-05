@@ -1,8 +1,8 @@
-#include "cases.hpp"
-#include "hal/halt.hpp"
-#include "libcxx/log.hpp"
-#include "libcxx/macro.hpp"
-#include "tests/test_lib.hpp"
+#include "cases.hh"
+#include "hal/halt.hh"
+#include "libcxx/log.hh"
+#include "libcxx/macro.hh"
+#include "tests/test_lib.hh"
 
 void run_tests() {
   size_t test_count = sizeof(test_cases) / sizeof(test_cases[0]);

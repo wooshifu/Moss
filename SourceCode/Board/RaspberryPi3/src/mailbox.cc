@@ -1,6 +1,6 @@
-#include "libcxx/types.hpp"
+#include "libcxx/types.hh"
 
-#include "rpi3/mailbox.hpp"
+#include "rpi3/mailbox.hh"
 
 void mailbox_call(u32 channel, void *data) {
   // wait until it's not full

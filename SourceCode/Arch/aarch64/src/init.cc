@@ -1,9 +1,9 @@
-#include "aarch64/exception.hpp"
-#include "aarch64/interrupt.hpp"
-#include "aarch64/timer.hpp"
-#include "config.hpp"
-#include "hal/init.hpp"
-#include "libcxx/log.hpp"
+#include "aarch64/exception.hh"
+#include "aarch64/interrupt.hh"
+#include "aarch64/timer.hh"
+#include "config.hh"
+#include "hal/init.hh"
+#include "libcxx/log.hh"
 
 static void init_generic_timer() {
 #if defined(TARGET_QEMU) and TARGET_QEMU == 1

@@ -1,5 +1,5 @@
-#include "rpi3/mmio.hpp"
-#include "rpi3/random.hpp"
+#include "rpi3/mmio.hh"
+#include "rpi3/random.hh"
 
 // c++20 deprecated volatile
 #define RANDOM_GEN_CTRL     ((unsigned int *)(MMIO_BASE + 0x00104000))

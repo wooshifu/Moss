@@ -1,9 +1,9 @@
 #pragma once
 
-#include "libcxx/log.hpp"
-#include "libcxx/stdio.hpp"
-#include "libcxx/string.hpp"
-#include "libcxx/types.hpp"
+#include "libcxx/log.hh"
+#include "libcxx/stdio.hh"
+#include "libcxx/string.hh"
+#include "libcxx/types.hh"
 
 u32 __test_all_asserts     = 0;
 u32 __test_success_asserts = 0;
@@ -78,7 +78,7 @@ constexpr const char *__format_specifier(u64 /*unused*/) { return "%llu"; }
 #define ASSERT_EQ(actual, expected)                                                                                    \
   do {                                                                                                                 \
     char __test_log_format[256];                                                                                       \
-    strcpy(__test_log_format, __FILE_AND_LINE__ " expected: %s == %s, actual: ");                                     \
+    strcpy(__test_log_format, __FILE_AND_LINE__ " expected: %s == %s, actual: ");                                      \
     strcat(__test_log_format, __format_specifier(actual));                                                             \
     strcat(__test_log_format, " == ");                                                                                 \
     strcat(__test_log_format, __format_specifier(expected));                                                           \

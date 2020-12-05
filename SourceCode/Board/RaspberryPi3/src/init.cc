@@ -1,8 +1,8 @@
-#include "hal/init.hpp"
-#include "libcxx/log.hpp"
-#include "rpi3/random.hpp"
-#include "rpi3/timer.hpp"
-#include "rpi3/uart0.hpp"
+#include "hal/init.hh"
+#include "libcxx/log.hh"
+#include "rpi3/random.hh"
+#include "rpi3/timer.hh"
+#include "rpi3/uart0.hh"
 
 int init_board() {
   init_mmu();

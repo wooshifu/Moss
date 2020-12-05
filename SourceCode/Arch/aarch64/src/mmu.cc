@@ -1,10 +1,10 @@
-#include "aarch64/asm.hpp"
-#include "aarch64/barrier.hpp"
-#include "aarch64/linker.hpp"
-#include "aarch64/mair.hpp"
-#include "aarch64/page.hpp"
-#include "aarch64/page_property.hpp"
-#include "libcxx/log.hpp"
+#include "aarch64/asm.hh"
+#include "aarch64/barrier.hh"
+#include "aarch64/linker.hh"
+#include "aarch64/mair.hh"
+#include "aarch64/page.hh"
+#include "aarch64/page_property.hh"
+#include "libcxx/log.hh"
 
 /// the l0 page table
 [[gnu::aligned(PAGE_SIZE)]] static L0PageTable l0_page_table_base_address;

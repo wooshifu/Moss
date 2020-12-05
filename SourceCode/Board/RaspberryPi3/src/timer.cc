@@ -1,7 +1,7 @@
-#include "libcxx/log.hpp"
-#include "libcxx/memory.hpp"
-#include "rpi3/mmio.hpp"
-#include "rpi3/timer.hpp"
+#include "libcxx/log.hh"
+#include "libcxx/memory.hh"
+#include "rpi3/mmio.hh"
+#include "rpi3/timer.hh"
 
 /* reload value, should be max 28 bits(268435455). 38.4MHz */
 // todo: change value

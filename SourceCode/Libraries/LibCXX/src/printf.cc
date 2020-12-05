@@ -30,8 +30,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "libcxx/printf.hpp"
-#include "libcxx/types.hpp"
+#include "libcxx/printf.hh"
+#include "libcxx/types.hh"
 
 // define this globally (e.g. gcc -DPRINTF_INCLUDE_CONFIG_H ...) to include the
 // printf_config.h header file
