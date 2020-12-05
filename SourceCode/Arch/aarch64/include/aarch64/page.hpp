@@ -4,7 +4,7 @@
 #include "aarch64/mair.hpp"
 #include "aarch64/page_property.hpp"
 
-static inline unsigned long make_section_property(unsigned long prot) { return prot & ~PTE_TABLE_BIT; }
+constexpr unsigned long make_section_property(const unsigned long prot) { return prot & ~PTE_TABLE_BIT; }
 
 using page_table_4k = struct page_table_4k {
   u64 is_valid                                : 1;  /// bit 0
@@ -40,7 +40,7 @@ constexpr page_table_4k _page_kernel_rox = {.is_valid                 = 1UL,
                                             .ignored                  = 0UL};
 // clang-format off
 /// NOTE: MUST be same with page_kernel_rox
-constexpr u64 PAGE_KERNEL_ROX = _page_kernel_rox.is_valid << 0
+constinit const u64 PAGE_KERNEL_ROX = _page_kernel_rox.is_valid << 0
                               | _page_kernel_rox.descriptor_type << 1
                               | _page_kernel_rox.mair_attr_index << 2
                               | _page_kernel_rox.non_secure << 5
@@ -68,7 +68,7 @@ using L2PageTableEntry = PageTableEntryType;
 using L3PageTableEntry = PageTableEntryType;
 
 /// 4k page
-constexpr int PAGE_TABLE_SIZE = PAGE_SIZE / sizeof(PageTableEntryType);
+constinit const int PAGE_TABLE_SIZE = PAGE_SIZE / sizeof(PageTableEntryType);
 static_assert(PAGE_TABLE_SIZE == 512);
 using L0PageTable = L0PageTableEntry[PAGE_TABLE_SIZE];
 using L1PageTable = L1PageTableEntry[PAGE_TABLE_SIZE];

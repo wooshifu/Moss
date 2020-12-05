@@ -4,9 +4,7 @@
 #include "libcxx/log.hpp"
 
 extern_C void kernel_main() {
-#ifdef __GNUC__
-  log_d("compiler version: %s", __VERSION__);
-#endif
+  log_d("compiler info, %s", COMPILER_INFO);
 
   log_d(">>>>>>>>> entered kernel_main <<<<<<<<<");
   init_board();

@@ -19,12 +19,12 @@ static_assert(__STDC_HOSTED__ == 0, "must be freestanding c++ mode");
 #endif
 #endif
 
-#ifndef __FILE_AND__LINE__
-#define __FILE_AND__LINE__ __FILE__ ":" __STRINGIFY__(__LINE__)
+#ifndef __CURRENT_FILE_LINE__
+#define __CURRENT_FILE_LINE__ __FILE__ ":" __STRINGIFY__(__LINE__)
 #endif
 
 #ifndef __CURRENT_FILE_NAME__
-#define __CURRENT_FILE_NAME__ compile_time_filename(__FILE_AND__LINE__, sizeof(__FILE_AND__LINE__) - 1)
+#define __CURRENT_FILE_NAME__ compile_time_filename(__CURRENT_FILE_LINE__, sizeof(__CURRENT_FILE_LINE__) - 1)
 #endif
 
 #ifndef likely

@@ -1,7 +1,6 @@
 #include "aarch64/asm.hpp"
 #include "aarch64/timer.hpp"
 #include "libcxx/log.hpp"
-
 #include "libcxx/types.hpp"
 
 void enable_cntv() {
@@ -22,8 +21,13 @@ void write_cntv_tval(u64 val) { ARM64_WRITE_SYSREG(cntv_tval_el0, val); }
 
 u64 read_cntfrq() { return ARM64_READ_SYSREG(cntfrq_el0); }
 
+static u64 count = 0;
 void handle_generic_timer_irq() {
   log_d("handle_generic_timer_irq");
   // todo: change value
+  ++count;
+  if(count%100000==0) {
+    log_d("count: %lld",count);
+  }
   write_cntv_tval(62500000);
 }

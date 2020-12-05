@@ -78,7 +78,7 @@ constexpr const char *__format_specifier(u64 /*unused*/) { return "%llu"; }
 #define ASSERT_EQ(actual, expected)                                                                                    \
   do {                                                                                                                 \
     char __test_log_format[256];                                                                                       \
-    strcpy(__test_log_format, __FILE_AND__LINE__ " expected: %s == %s, actual: ");                                     \
+    strcpy(__test_log_format, __FILE_AND_LINE__ " expected: %s == %s, actual: ");                                     \
     strcat(__test_log_format, __format_specifier(actual));                                                             \
     strcat(__test_log_format, " == ");                                                                                 \
     strcat(__test_log_format, __format_specifier(expected));                                                           \

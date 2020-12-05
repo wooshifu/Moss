@@ -11,5 +11,5 @@ void mailbox_call(u32 channel, void *data) {
 }
 
 bool is_valid_mailbox_response(u32 code, u32 tag_code) {
-  return code == MAILBOX_CODE_RESPONSE_SUCCESS && tag_code & MAILBOX_CODE_RESPONSE_SUCCESS;
+  return code == MAILBOX_CODE_RESPONSE_SUCCESS and tag_code & MAILBOX_CODE_RESPONSE_SUCCESS;
 }

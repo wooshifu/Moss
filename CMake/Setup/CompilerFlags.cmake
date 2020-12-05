@@ -33,8 +33,15 @@ if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 endif ()
 
 
+# todo: use c++20 module feature, but cmake currently have no support for this feature
+#"-emit-module-interface"
+#"-emit-module"
+#"-fmodules"
+#"-fsystem-module"
+#"-fbuiltin-module-map"
+#"-fimplicit-module-maps"
+
 macro(setup_compiler_flags)
-    set(CMAKE_CXX_STANDARD 20)
     set(CMAKE_CXX_LINK_FLAGS "")
 
     read_board_compiler_flags_from_file(${MOSS_SOURCE_CODE_DIR}/Board/${BOARD}/.flags BOARD_COMPILER_FLAGS)
@@ -63,9 +70,11 @@ macro(setup_compiler_flags)
             "-fpic"
             "-ffreestanding"
             "-fno-builtin"
+            "-fno-exceptions"
             "-nostdinc++"
             "-nostdlib"
             "-nostartfiles"
+            "-DCOMPILER_INFO='\"id: ${CMAKE_CXX_COMPILER_ID}, version: ${CMAKE_CXX_COMPILER_VERSION}\"'"
             "-Wl,--no-dynamic-linker"
             "-Wl,--nostdlib"
             "-Wl,-error-limit=0"

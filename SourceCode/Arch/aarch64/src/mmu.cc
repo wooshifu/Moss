@@ -21,7 +21,7 @@ static void clear_l0_page_table() {
 /// pointer to function to allocate page table
 using func_allocate_page = u64 (*)();
 
-constexpr auto PAGE_TABLE_TYPE_TABLE = 0b11UL;
+constinit auto PAGE_TABLE_TYPE_TABLE = 0b11UL;
 
 static void l3_mapping(L2PageTableEntry *l2_page_table_entry, u64 virtual_address, u64 end, u64 physical_address,
                        u64 property, func_allocate_page alloc_page, u64 flags) {
@@ -71,7 +71,7 @@ static void l2_mapping(L1PageTableEntry *l1_page_table_entry, u64 virtual_addres
   do {
     next = l2_address_end(virtual_address, end);
 
-    if (((virtual_address | next | physical_address) & ((1 << 21) - 1)) == 0 && (flags & 1UL) == 0) {
+    if (((virtual_address | next | physical_address) & ((1 << 21) - 1)) == 0 and (flags & 1UL) == 0) {
       l2_set_section(l2_page_table_entry, physical_address, property);
     } else {
       l3_mapping(l2_page_table_entry, virtual_address, next, physical_address, property, alloc_page, flags);
