@@ -1,7 +1,7 @@
 #include "hal/print.hh"
 #include "kernel/logo.hh"
 
-static const char *__moss_logo = "      ___           ___           ___           ___     \n"
+const static char *__moss_logo = "      ___           ___           ___           ___     \n"
                                  "     /__/\\         /  /\\         /  /\\         /  /\\    \n"
                                  "    |  |::\\       /  /::\\       /  /:/_       /  /:/_   \n"
                                  "    |  |:|:\\     /  /:/\\:\\     /  /:/ /\\     /  /:/ /\\  \n"
@@ -15,7 +15,7 @@ static const char *__moss_logo = "      ___           ___           ___         
                                  "                                                        \n";
 
 void print_moss_logo() {
-  while (*__moss_logo) {
+  while (*__moss_logo != '\0') {
     put_char(*__moss_logo++);
   }
 }

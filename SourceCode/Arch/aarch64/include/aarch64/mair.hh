@@ -26,7 +26,7 @@ enum mair_field_value {
 };
 
 /// Memory Attribute Indirection Registers
-struct [[gnu::packed]] mair {
+using mair = struct [[gnu::packed]] mair {
   enum mair_field_value _0 : 8;
   enum mair_field_value _1 : 8;
   enum mair_field_value _2 : 8;
@@ -38,17 +38,12 @@ struct [[gnu::packed]] mair {
 };
 static_assert(sizeof(struct mair) == 8, "sizeof mair must be 8");
 
-constexpr const struct mair _mair_value = {._0 = device_nGnRnE,
-                                           ._1 = device_nGnRE,
-                                           ._2 = device_GRE,
-                                           ._3 = normal_NC,
-                                           ._4 = normal,
-                                           ._5 = normal_WT,
-                                           ._6 = _6,
-                                           ._7 = _7};
-constinit const u64 mair_value          = _mair_value._0 << 0 | _mair_value._1 << 8 | _mair_value._2 << 16 |
-                                 _mair_value._3 << 24 | (u64)_mair_value._4 << 32 | (u64)_mair_value._5 << 40 |
-                                 (u64)_mair_value._6 << 48 | (u64)_mair_value._7 << 56;
+consteval u64 mair_to_u64(const mair mair) {
+  return mair._0 << 0 | mair._1 << 8 | mair._2 << 16 | mair._3 << 24 | (u64)mair._4 << 32 | (u64)mair._5 << 40 |
+         (u64)mair._6 << 48 | (u64)mair._7 << 56;
+}
+
+constexpr u64 mair_value = mair_to_u64({device_nGnRnE, device_nGnRE, device_GRE, normal_NC, normal, normal_WT, _6, _7});
 static_assert(mair_value == 0XBBFF'440C'0400);
 
 void setup_mair_el1() { ARM64_WRITE_SYSREG(mair_el1, mair_value); }

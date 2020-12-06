@@ -24,6 +24,15 @@ using page_table_4k = struct page_table_4k {
 };
 static_assert(sizeof(page_table_4k) == 8, "size of page_table_4k must be 8");
 
+consteval u64 page_table_4k_to_u64(const page_table_4k page_table) {
+  return page_table.is_valid << 0 | page_table.descriptor_type << 1 | page_table.mair_attr_index << 2 |
+         page_table.non_secure << 5 | page_table.data_access_permission << 6 | page_table.shareability << 8 |
+         page_table.access_flag << 10 | page_table.not_global << 11 | page_table.output_address << 12 |
+         (u64)(page_table.reserved0) << 48 | (u64)(page_table.contiguous) << 52 |
+         (u64)(page_table.privileged_execute_never) << 53 | (u64)(page_table.execute_never) << 54 |
+         (u64)(page_table.ignored) << 55;
+}
+
 constexpr page_table_4k _page_kernel_rox = {.is_valid                 = 1UL,
                                             .descriptor_type          = 1UL,
                                             .mair_attr_index          = mair_field_value_index::normal_index,
@@ -38,25 +47,8 @@ constexpr page_table_4k _page_kernel_rox = {.is_valid                 = 1UL,
                                             .privileged_execute_never = 0UL,
                                             .execute_never            = 1UL,
                                             .ignored                  = 0UL};
-// clang-format off
-/// NOTE: MUST be same with page_kernel_rox
-constinit const u64 PAGE_KERNEL_ROX = _page_kernel_rox.is_valid << 0
-                              | _page_kernel_rox.descriptor_type << 1
-                              | _page_kernel_rox.mair_attr_index << 2
-                              | _page_kernel_rox.non_secure << 5
-                              | _page_kernel_rox.data_access_permission << 6
-                              | _page_kernel_rox.shareability << 8
-                              | _page_kernel_rox.access_flag << 10
-                              | _page_kernel_rox.not_global << 11
-                              | _page_kernel_rox.output_address << 12
-                              | (u64)(_page_kernel_rox.reserved0) << 48
-                              | (u64)(_page_kernel_rox.contiguous) << 52
-                              | (u64)(_page_kernel_rox.privileged_execute_never) << 53
-                              | (u64)(_page_kernel_rox.execute_never) << 54
-                              | (u64)(_page_kernel_rox.ignored) << 55 ;
-// clang-format on
+constexpr u64 PAGE_KERNEL_ROX            = page_table_4k_to_u64(_page_kernel_rox);
 static_assert(PAGE_KERNEL_ROX == 0x40000000000793, "page_kernel_rox must be 0x40000000000793");
-
 // const struct page_table_4k page_kernel = (page_table_4k)0xe8000000000713;
 
 using PageTableEntryType = u64;
@@ -67,7 +59,7 @@ using L2PageTableEntry = PageTableEntryType;
 using L3PageTableEntry = PageTableEntryType;
 
 /// 4k page
-constinit const int PAGE_TABLE_SIZE = PAGE_SIZE / sizeof(PageTableEntryType);
+constexpr int PAGE_TABLE_SIZE = PAGE_SIZE / sizeof(PageTableEntryType);
 static_assert(PAGE_TABLE_SIZE == 512);
 using L0PageTable = L0PageTableEntry[PAGE_TABLE_SIZE];
 using L1PageTable = L1PageTableEntry[PAGE_TABLE_SIZE];

@@ -1,7 +1,7 @@
 #include "aarch64/page_property.hh"
 #include "libcxx/log.hh"
 
-constinit const auto NR_PAGES = (TOTAL_MEMORY / PAGE_SIZE);
+constexpr auto NR_PAGES = (TOTAL_MEMORY / PAGE_SIZE);
 
 static unsigned short mem_map[NR_PAGES] = {
     0,
@@ -25,7 +25,7 @@ void mem_init(unsigned long start_mem, unsigned long end_mem) {
   log_i("Memory: %uKB available, %u free pages\n", free / 1024, nr_free_pages);
 }
 
-constinit const auto LOW_MEMORY = (2 * SECTION_SIZE);
+constexpr auto LOW_MEMORY = (2 * SECTION_SIZE);
 unsigned long get_free_page() {
   for (size_t i = 0; i < NR_PAGES; i++) {
     if (mem_map[i] == 0) {

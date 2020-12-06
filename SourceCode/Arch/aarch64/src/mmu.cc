@@ -21,7 +21,7 @@ static void clear_l0_page_table() {
 /// pointer to function to allocate page table
 using func_allocate_page = u64 (*)();
 
-constinit auto PAGE_TABLE_TYPE_TABLE = 0b11UL;
+constexpr auto PAGE_TABLE_TYPE_TABLE = 0b11UL;
 
 static void l3_mapping(L2PageTableEntry *l2_page_table_entry, u64 virtual_address, u64 end, u64 physical_address,
                        u64 property, func_allocate_page alloc_page, u64 flags) {

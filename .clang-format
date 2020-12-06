@@ -5,6 +5,7 @@ BasedOnStyle: LLVM
 ColumnLimit: 120
 SortIncludes: false # SortInclude will mess up the order, maybe it's bug of clang-format tool?
 IncludeBlocks: Regroup
+AlignOperands: AlignAfterOperator
 AlignConsecutiveMacros: true
 AlignConsecutiveBitFields: true
 AlignConsecutiveAssignments: true

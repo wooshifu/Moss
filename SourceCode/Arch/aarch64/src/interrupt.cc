@@ -4,7 +4,7 @@
 #include "hal/interrupt.hh"
 #include "libcxx/log.hh"
 
-constinit const char *entry_error_messages[] = {
+constexpr const char *entry_error_messages[] = {
     "SYNC_INVALID_EL1t",   "IRQ_INVALID_EL1t",   "FIQ_INVALID_EL1t",   "ERROR_INVALID_EL1T",
 
     "SYNC_INVALID_EL1h",   "IRQ_INVALID_EL1h",   "FIQ_INVALID_EL1h",   "ERROR_INVALID_EL1h",
