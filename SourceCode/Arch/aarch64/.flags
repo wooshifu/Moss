@@ -3,7 +3,7 @@
 # "#" started line is comment
 # "-key=value # comment" is also valid comment
 
-# raspberry pi3 arm64 board
+# aarch64 specific compiler flags
 --target=aarch64-unknown-linux-elf
 -march=armv8-a+crc
 -mcpu=cortex-a53

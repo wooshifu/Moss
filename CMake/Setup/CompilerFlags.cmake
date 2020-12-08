@@ -14,7 +14,7 @@ if (CMAKE_C_COMPILER_ID AND CMAKE_C_COMPILER_VERSION VERSION_LESS ${CLANG_MIN_VE
     message(FATAL_ERROR "Clang version must be greater than ${CLANG_MIN_VERSION_REQUIRED}")
 endif ()
 
-macro(read_board_compiler_flags_from_file IN_FILE OUT_VAR)
+macro(read_arch_compiler_flags_from_file IN_FILE OUT_VAR)
     file(STRINGS ${IN_FILE} LINES)
 
     foreach (LINE IN LISTS LINES)
@@ -48,10 +48,10 @@ message(STATUS "OPTIMIZATION_LEVEL: ${OPTIMIZATION_LEVEL}")
 macro(setup_compiler_flags)
     set(CMAKE_CXX_LINK_FLAGS "")
 
-    read_board_compiler_flags_from_file(${MOSS_SOURCE_CODE_DIR}/Board/${BOARD}/.flags BOARD_COMPILER_FLAGS)
-    message(STATUS "BOARD_COMPILER_FLAGS is: ${BOARD_COMPILER_FLAGS}")
-    # set BOARD_COMPILER_FLAGS here
-    string(JOIN " " CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${BOARD_COMPILER_FLAGS})
+    read_arch_compiler_flags_from_file(${MOSS_SOURCE_CODE_DIR}/Arch/${ARCH}/.flags ARCH_COMPILER_FLAGS)
+    message(STATUS "ARCH_COMPILER_FLAGS is: ${ARCH_COMPILER_FLAGS}")
+    # set ARCH_COMPILER_FLAGS here
+    string(JOIN " " CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${ARCH_COMPILER_FLAGS})
 
     string(JOIN " " IGNORE_SPECIFIC_WARNINGS
             "-Wno-unused-variable"
