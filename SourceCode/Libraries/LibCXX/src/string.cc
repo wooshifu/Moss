@@ -31,11 +31,6 @@ size_t strlen(const char *str) {
   return len;
 }
 
-int strcmp(const char *left, const char *right) {
-  // todo: not implemented
-  return 0;
-}
-
 char *strchr(const char *str, int character) {
   if (str == nullptr) {
     return nullptr;
@@ -113,4 +108,18 @@ char *strncat(char *destination, const char *source, usize count) {
   }
 
   return tmp;
+}
+
+int strcmp(const char *left, const char *right) {
+  while (true) {
+    auto c1 = *left++;
+    auto c2 = *right++;
+    if (c1 != c2) {
+      return c1 < c2 ? -1 : 1;
+    }
+    if (!c1) {
+      break;
+    }
+  }
+  return 0;
 }

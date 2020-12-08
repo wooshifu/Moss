@@ -11,35 +11,39 @@ Checks: '
         portability-*,
         readability-*,
         -llvm-header-guard,
-        -modernize-use-trailing-return-type,
+        -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+        -cppcoreguidelines-pro-bounds-constant-array-index,
         -cppcoreguidelines-pro-bounds-pointer-arithmetic,
         -cppcoreguidelines-pro-type-cstyle-cast,
         -cppcoreguidelines-pro-type-vararg,
-        -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
-        -cppcoreguidelines-pro-bounds-constant-array-index,
-        -cppcoreguidelines-avoid-c-arrays,
-        -modernize-avoid-c-arrays,
-        -cppcoreguidelines-avoid-non-const-global-variables,
-        -cppcoreguidelines-macro-usage,
+        -cppcoreguidelines-pro-type-union-access,
         -cppcoreguidelines-pro-type-reinterpret-cast,
+        -cppcoreguidelines-avoid-c-arrays,
+        -cppcoreguidelines-avoid-non-const-global-variables,
+        -cppcoreguidelines-avoid-magic-numbers,
+        -cppcoreguidelines-macro-usage,
+        -modernize-avoid-c-arrays,
         -modernize-use-auto,
+        -modernize-use-trailing-return-type,
+        -readability-implicit-bool-conversion,
+        -readability-magic-numbers,
         '
-WarningsAsErrors: ''
+WarningsAsErrors: '*'
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
 FormatStyle: none
 User: moss
 CheckOptions:
-  #  - key: cppcoreguidelines-macro-usage.CheckCapsOnly
-  #    value: true
-  #  - key: cppcoreguidelines-macro-usage.AllowedRegexp
-  #    value: 'va_start|va_end|va_arg'
+#  - key: cppcoreguidelines-macro-usage.CheckCapsOnly
+#    value: true
+#  - key: cppcoreguidelines-macro-usage.AllowedRegexp
+#    value: 'va_start|va_end|va_arg'
 
-  - key: readability-magic-numbers.IgnorePowersOf2IntegerValues
-    value: true
-  - key: readability-magic-numbers.IgnoreBitFieldsWidths
-    value: true
-  - key: cppcoreguidelines-avoid-magic-numbers.IgnorePowersOf2IntegerValues
-    value: true
-  - key: cppcoreguidelines-avoid-magic-numbers.IgnoreBitFieldsWidths
-    value: true
+#  - key: readability-magic-numbers.IgnorePowersOf2IntegerValues
+#    value: true
+#  - key: readability-magic-numbers.IgnoreBitFieldsWidths
+#    value: true
+#  - key: cppcoreguidelines-avoid-magic-numbers.IgnorePowersOf2IntegerValues
+#    value: true
+#  - key: cppcoreguidelines-avoid-magic-numbers.IgnoreBitFieldsWidths
+#    value: true
