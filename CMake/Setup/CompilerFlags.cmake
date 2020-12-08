@@ -1,6 +1,18 @@
 message(STATUS "detected c compiler id: ${CMAKE_C_COMPILER_ID}, version: ${CMAKE_C_COMPILER_VERSION}")
 message(STATUS "detected c++ compiler id: ${CMAKE_CXX_COMPILER_ID}, version: ${CMAKE_CXX_COMPILER_VERSION}")
 
+if (CMAKE_C_COMPILER_ID AND NOT CMAKE_C_COMPILER_ID STREQUAL "Clang")
+    message(FATAL_ERROR "clang is the only supported compiler")
+endif ()
+
+if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    message(FATAL_ERROR "clang is the only supported compiler")
+endif ()
+
+set(CLANG_MIN_VERSION_REQUIRED 10.0.0)
+if (CMAKE_C_COMPILER_ID AND CMAKE_C_COMPILER_VERSION VERSION_LESS ${CLANG_MIN_VERSION_REQUIRED} OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${CLANG_MIN_VERSION_REQUIRED})
+    message(FATAL_ERROR "Clang version must be greater than ${CLANG_MIN_VERSION_REQUIRED}")
+endif ()
 
 macro(read_board_compiler_flags_from_file IN_FILE OUT_VAR)
     file(STRINGS ${IN_FILE} LINES)
@@ -23,14 +35,6 @@ else ()
     set(OPTIMIZATION_LEVEL 0)
 endif ()
 message(STATUS "OPTIMIZATION_LEVEL: ${OPTIMIZATION_LEVEL}")
-
-if (CMAKE_C_COMPILER_ID AND NOT CMAKE_C_COMPILER_ID STREQUAL "Clang")
-    message(WARNING "clang will be the only supported compiler in the near future")
-endif ()
-
-if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    message(WARNING "clang will be the only supported compiler in the near future")
-endif ()
 
 
 # todo: use c++20 module feature, but cmake currently have no support for this feature
