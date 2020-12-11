@@ -2,11 +2,11 @@ project(Config LANGUAGES CXX DESCRIPTION "Configurations of this project")
 
 
 #######################################################################
-option(TARGET_QEMU "run os on qemu" ON)
-message(STATUS "option TARGET_QEMU is: ${TARGET_QEMU}")
+option(CONFIG_TARGET_QEMU "run os on qemu" ON)
+message(STATUS "option TARGET_QEMU is: ${CONFIG_TARGET_QEMU}")
 
-option(TARGET_RASPBERRY_PI3 "run os on raspberry pi3")
-message(STATUS "option TARGET_RASPBERRY_PI3 is: ${TARGET_RASPBERRY_PI3}")
+option(CONFIG_TARGET_QEMU "run os on raspberry pi3")
+message(STATUS "option TARGET_RASPBERRY_PI3 is: ${CONFIG_TARGET_QEMU}")
 #######################################################################
 
 

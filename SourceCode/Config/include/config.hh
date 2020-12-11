@@ -4,7 +4,7 @@
 #pragma once
 
 /// target is qemu or not
-#define TARGET_QEMU 1
+#define CONFIG_TARGET_QEMU 1
 
 /// target is physical RaspberryPi3
-#define TARGET_RASPBERRY_PI3 0
+#define CONFIG_TARGET_RASPBERRY_PI3 0

@@ -6,14 +6,14 @@
 #include "libcxx/log.hh"
 
 static void init_generic_timer() {
-#if defined(TARGET_QEMU) and TARGET_QEMU == 1
+#if CONFIG_TARGET_QEMU
   u64 counter_frequency = read_cntfrq();
   log_d("counter frq: %llu", counter_frequency);
   write_cntv_tval(counter_frequency);
   enable_cntv();
   log_d("generic timer enabled");
 
-#elif defined(TARGET_RASPBERRY_PI3) and TARGET_RASPBERRY_PI3 == 1
+#elif CONFIG_TARGET_RASPBERRY_PI3
 #error "not implemented yet";
 #else
 #error "unsupported";
