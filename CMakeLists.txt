@@ -19,10 +19,10 @@ set(MOSS_SOURCE_CODE_DIR ${Moss_SOURCE_DIR}/SourceCode)
 include(${Moss_SOURCE_DIR}/CMake/Setup.cmake)
 
 setup_board()
-message(STATUS ">>> building board ${BOARD}")
+message(STATUS ">>> building board: ${BOARD}")
 
 setup_arch(ARCH)
-message(STATUS ">>> building arch is: ${ARCH}")
+message(STATUS ">>> building arch: ${ARCH}")
 
 setup_compiler_flags()
 

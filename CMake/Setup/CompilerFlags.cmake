@@ -75,6 +75,7 @@ macro(setup_compiler_flags)
             "-ffreestanding"
             "-fno-builtin"
             "-fno-exceptions"
+            "-nostdinc"
             "-nostdinc++"
             "-nostdlib"
             "-nostartfiles"

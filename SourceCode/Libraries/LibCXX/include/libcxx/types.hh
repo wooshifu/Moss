@@ -53,7 +53,7 @@ static_assert(FLT_MAX == 3.40282346638528859811704183484516925e+38F, "unexpected
 #endif
 
 #else
-#error "put ypur own int types header here. currently only gcc is supported"
+#error "put ypur own int types header here. currently only clang is supported"
 #endif
 
 #ifndef __cplusplus
