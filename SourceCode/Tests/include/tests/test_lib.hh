@@ -5,9 +5,11 @@
 #include "libcxx/string.hh"
 #include "libcxx/types.hh"
 
+namespace test {
 u32 __test_all_asserts     = 0;
 u32 __test_success_asserts = 0;
 u32 __test_failed_asserts  = 0;
+} // namespace test
 
 #ifndef __TEST_NAME_CONCAT
 #define __TEST_NAME_CONCAT(a, b) a##b
@@ -66,11 +68,11 @@ constexpr const char *__format_specifier(u64 /*unused*/) { return "%llu"; }
     strcat(__test_log_format, "\n");                                                                                   \
     /*printf("format is %s", __test_log_format);*/                                                                     \
                                                                                                                        \
-    ++__test_all_asserts;                                                                                              \
+    ++test::__test_all_asserts;                                                                                        \
     if ((actual) == (expected)) {                                                                                      \
-      ++__test_success_asserts;                                                                                        \
+      ++test::__test_success_asserts;                                                                                  \
     } else {                                                                                                           \
-      ++__test_failed_asserts;                                                                                         \
+      ++test::__test_failed_asserts;                                                                                   \
     }                                                                                                                  \
     printf(__test_log_format, LOG_OUTPUT_LABEL_PLACEHOLDER_VALUE, #actual, #expected, (actual), (expected));           \
   } while (0)

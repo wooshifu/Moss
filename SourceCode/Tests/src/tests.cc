@@ -12,7 +12,8 @@ void run_tests() {
       test_case();
     }
   }
-  log_i("%d test cases, %d passed, %d failed", __test_all_asserts, __test_success_asserts, __test_failed_asserts);
+  log_i("%d test cases, %d passed, %d failed", test::__test_all_asserts, test::__test_success_asserts,
+        test::__test_failed_asserts);
 }
 
 void before_run_tests() {
