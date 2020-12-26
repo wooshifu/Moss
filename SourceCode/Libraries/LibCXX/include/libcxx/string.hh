@@ -15,6 +15,6 @@ char *strchr(const char *str, int character);
 char *strrchr(const char *str, int character);
 
 char *strcpy(char *destination, const char *source);
-char *strncpy(char *destination, const char *source, usize count);
+char *strncpy(char *destination, const char *source, size_t count);
 char *strcat(char *destination, const char *source);
-char *strncat(char *destination, const char *source, usize count);
+char *strncat(char *destination, const char *source, size_t count);

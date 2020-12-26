@@ -62,7 +62,7 @@ char *strrchr(const char *str, int character) {
 }
 
 char *strcpy(char *destination, const char *source) { return strncpy(destination, source, strlen(source) + 1); }
-char *strncpy(char *destination, const char *source, usize count) {
+char *strncpy(char *destination, const char *source, size_t count) {
   if (count != 0) {
     char *d       = destination;
     const char *s = source;
@@ -92,7 +92,7 @@ char *strcat(char *destination, const char *source) {
 
   return tmp;
 }
-char *strncat(char *destination, const char *source, usize count) {
+char *strncat(char *destination, const char *source, size_t count) {
   char *tmp = destination;
 
   if (count) {
