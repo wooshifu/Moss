@@ -5,3 +5,15 @@ foreach (CMakeFile ${CMakeFiles})
     message(STATUS "include ${CMakeFile}")
     include(${CMakeFile})
 endforeach ()
+
+message(STATUS "********** setup began **********")
+
+setup_board()
+message(STATUS ">>> building board: ${BOARD}")
+
+setup_arch(ARCH)
+message(STATUS ">>> building arch: ${ARCH}")
+
+setup_compiler_flags()
+
+message(STATUS "********** setup ended **********")

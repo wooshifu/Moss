@@ -16,17 +16,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # compile commands can be used to help cla
 
 set(MOSS_SOURCE_CODE_DIR ${Moss_SOURCE_DIR}/SourceCode)
 
-include(${Moss_SOURCE_DIR}/CMake/Setup.cmake)
-
-setup_board()
-message(STATUS ">>> building board: ${BOARD}")
-
-setup_arch(ARCH)
-message(STATUS ">>> building arch: ${ARCH}")
-
-setup_compiler_flags()
-
 set(KernelName Kernel.elf)
+
+include(${Moss_SOURCE_DIR}/CMake/Setup.cmake)
 
 # make config.h to be available
 include_directories(${MOSS_SOURCE_CODE_DIR}/Config/include)
