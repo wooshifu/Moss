@@ -2,7 +2,7 @@
 
 #include "rpi3/mailbox.hh"
 
-void mailbox_call(u32 channel, void *data) {
+void mailbox_call(u32 channel, void* data) {
   // wait until it's not full
   while (*MAILBOX0_STATUS & MAILBOX_FULL) {
   }

@@ -1,7 +1,7 @@
 #include "hal/print.hh"
 #include "kernel/logo.hh"
 
-const static char *__moss_logo = "      ___           ___           ___           ___     \n"
+const static char* __moss_logo = "      ___           ___           ___           ___     \n"
                                  "     /__/\\         /  /\\         /  /\\         /  /\\    \n"
                                  "    |  |::\\       /  /::\\       /  /:/_       /  /:/_   \n"
                                  "    |  |:|:\\     /  /:/\\:\\     /  /:/ /\\     /  /:/ /\\  \n"

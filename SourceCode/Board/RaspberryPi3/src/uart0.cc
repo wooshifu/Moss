@@ -3,14 +3,14 @@
 #include "rpi3/mmio.hh"
 
 /* PL011 UART registers */
-#define UART0_DATA_REGISTER                     ((volatile unsigned int *)(MMIO_BASE + 0x00201000))
-#define UART0_FLAG_REGISTER                     ((volatile unsigned int *)(MMIO_BASE + 0x00201018))
-#define UART0_INTEGER_BAUD_RATE_DIVISOR         ((volatile unsigned int *)(MMIO_BASE + 0x00201024))
-#define UART0_FRACTIONAL_BAUD_RATE_DIVISOR      ((volatile unsigned int *)(MMIO_BASE + 0x00201028))
-#define UART0_LINE_CONTROL_REGISTER             ((volatile unsigned int *)(MMIO_BASE + 0x0020102C))
-#define UART0_CONTROL_REGISTER                  ((volatile unsigned int *)(MMIO_BASE + 0x00201030))
-#define UART0_INTERRUPT_MASK_SET_CLEAR_REGISTER ((volatile unsigned int *)(MMIO_BASE + 0x00201038))
-#define UART0_INTERRUPT_CLEAR_REGISTER          ((volatile unsigned int *)(MMIO_BASE + 0x00201044))
+#define UART0_DATA_REGISTER                     ((volatile unsigned int*)(MMIO_BASE + 0x00201000))
+#define UART0_FLAG_REGISTER                     ((volatile unsigned int*)(MMIO_BASE + 0x00201018))
+#define UART0_INTEGER_BAUD_RATE_DIVISOR         ((volatile unsigned int*)(MMIO_BASE + 0x00201024))
+#define UART0_FRACTIONAL_BAUD_RATE_DIVISOR      ((volatile unsigned int*)(MMIO_BASE + 0x00201028))
+#define UART0_LINE_CONTROL_REGISTER             ((volatile unsigned int*)(MMIO_BASE + 0x0020102C))
+#define UART0_CONTROL_REGISTER                  ((volatile unsigned int*)(MMIO_BASE + 0x00201030))
+#define UART0_INTERRUPT_MASK_SET_CLEAR_REGISTER ((volatile unsigned int*)(MMIO_BASE + 0x00201038))
+#define UART0_INTERRUPT_CLEAR_REGISTER          ((volatile unsigned int*)(MMIO_BASE + 0x00201044))
 
 /**
  * Set baud rate and characteristics (115200 8N1) and map to GPIO
@@ -92,7 +92,7 @@ char uart0_getc() {
 /**
  * Display a string
  */
-void uart0_puts(char *string) {
+void uart0_puts(char* string) {
   while (*string) {
     /* convert newline to carriage return + newline */
     if (*string == '\n') {

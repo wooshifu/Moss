@@ -9,3 +9,4 @@ AlignOperands: AlignAfterOperator
 AlignConsecutiveMacros: true
 AlignConsecutiveBitFields: true
 AlignConsecutiveAssignments: true
+PointerAlignment: Left

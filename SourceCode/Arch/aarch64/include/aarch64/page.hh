@@ -4,7 +4,7 @@
 #include "aarch64/mair.hh"
 #include "aarch64/page_property.hh"
 
-constexpr unsigned long make_section_property(const unsigned long prot) { return prot & ~PTE_TABLE_BIT; }
+constexpr unsigned long make_section_property(const unsigned long property) { return property & ~PTE_TABLE_BIT; }
 
 using page_table_4k = struct page_table_4k {
   u64 is_valid                                : 1;  /// bit 0

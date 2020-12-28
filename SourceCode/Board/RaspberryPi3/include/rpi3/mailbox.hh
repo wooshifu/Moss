@@ -38,13 +38,13 @@
  * found it sufficient to read only from this address) 0-3(channel):	The mailbox channel number from which the data
  * originated 4-31(data):	The 28 bits of data sent to the CPU
  */
-#define MAILBOX0_READ ((volatile u32 *)(VIDEOCORE_MBOX + 0x0))
+#define MAILBOX0_READ ((volatile u32*)(VIDEOCORE_MBOX + 0x0))
 
 // Read from the mailbox without removing data from it.
-#define MAILBOX0_PEAK ((volatile u32 *)(VIDEOCORE_MBOX + 0x10))
+#define MAILBOX0_PEAK ((volatile u32*)(VIDEOCORE_MBOX + 0x10))
 
 // Sender ID (bottom 2 bits only)
-#define MAILBOX0_SENDER ((volatile u32 *)(VIDEOCORE_MBOX + 0x14))
+#define MAILBOX0_SENDER ((volatile u32*)(VIDEOCORE_MBOX + 0x14))
 
 /**
  * The status register for mailbox 0
@@ -52,17 +52,17 @@
  * 30:	MAIL_EMPTY	Set if the mailbox is empty, and thus no more data is available to be read from it.
  * 31:	MAIL_FULL	Set if the mailbox is full, and thus no more data can be written to it.
  */
-#define MAILBOX0_STATUS ((volatile u32 *)(VIDEOCORE_MBOX + 0x18))
+#define MAILBOX0_STATUS ((volatile u32*)(VIDEOCORE_MBOX + 0x18))
 
 // The configuration register for mailbox 0
-#define MAILBOX0_CONFIG ((volatile u32 *)(VIDEOCORE_MBOX + 0x1C))
+#define MAILBOX0_CONFIG ((volatile u32*)(VIDEOCORE_MBOX + 0x1C))
 
 /**
  *  The write register for mailbox 0 (this is actually the read register for mailbox 1).
  *  0-3:	channel	The mailbox channel number to which the data is to be sent
  *  4-31:	data	The 28 bits of data to be sent to the destination
  */
-#define MAILBOX0_WRITE ((volatile u32 *)(VIDEOCORE_MBOX + 0x20))
+#define MAILBOX0_WRITE ((volatile u32*)(VIDEOCORE_MBOX + 0x20))
 
 #define MAILBOX_CODE_REQUEST          0x00000000
 #define MAILBOX_CODE_RESPONSE_SUCCESS 0x80000000
@@ -158,7 +158,7 @@ static_assert(sizeof(mailbox_property_set_clock_rate_t) == 48);
  * @param channel which channel to send
  * @param data message data
  */
-void mailbox_call(u32 channel, void *data);
+void mailbox_call(u32 channel, void* data);
 
 /**
  * after mailbox_call, we should detect the response is successful or not

@@ -13,7 +13,7 @@
 /// but just in case, still clear it again
 static void clear_l0_page_table() {
   log_d("address of l0 page table: 0x%p", &l0_page_table_base_address);
-  for (auto &address : l0_page_table_base_address) {
+  for (auto& address : l0_page_table_base_address) {
     address = 0;
   }
 }
@@ -23,7 +23,7 @@ using func_allocate_page = u64 (*)();
 
 constexpr auto PAGE_TABLE_TYPE_TABLE = 0b11UL;
 
-static void l3_mapping(L2PageTableEntry *l2_page_table_entry, u64 virtual_address, u64 end, u64 physical_address,
+static void l3_mapping(L2PageTableEntry* l2_page_table_entry, u64 virtual_address, u64 end, u64 physical_address,
                        u64 property, func_allocate_page alloc_page, u64 flags) {
   if (*l2_page_table_entry == 0U) {
     u64 l3_physic_address = alloc_page();
@@ -32,7 +32,7 @@ static void l3_mapping(L2PageTableEntry *l2_page_table_entry, u64 virtual_addres
   }
 
   /// [20:12]
-  L3PageTableEntry *l3_page_table_entry = reinterpret_cast<L3PageTableEntry *>(
+  L3PageTableEntry* l3_page_table_entry = reinterpret_cast<L3PageTableEntry*>(
       ((*l2_page_table_entry & 0xffff'ffff'f000) + ((virtual_address >> 12) & 0x1ff) * sizeof(L3PageTableEntry)));
   do {
     *l3_page_table_entry = (physical_address & 0xFFFF'FFFF'FFFF'F000) | property;
@@ -44,7 +44,7 @@ static void l3_mapping(L2PageTableEntry *l2_page_table_entry, u64 virtual_addres
   } while (virtual_address != end);
 }
 
-static void l2_set_section(L2PageTableEntry *l2_page_table_entry, u64 physic_address, u64 property) {
+static void l2_set_section(L2PageTableEntry* l2_page_table_entry, u64 physic_address, u64 property) {
   u64 section_property                     = (1UL << 0) | make_section_property(property);
   L2PageTableEntry new_l2_page_table_entry = ((physic_address >> 21) << 21) | (section_property);
   *l2_page_table_entry                     = new_l2_page_table_entry;
@@ -56,7 +56,7 @@ static u64 l2_address_end(u64 addr, u64 end) {
   return boundary - 1 < end - 1 ? boundary : end;
 }
 
-static void l2_mapping(L1PageTableEntry *l1_page_table_entry, u64 virtual_address, u64 end, u64 physical_address,
+static void l2_mapping(L1PageTableEntry* l1_page_table_entry, u64 virtual_address, u64 end, u64 physical_address,
                        u64 property, func_allocate_page alloc_page, u64 flags) {
   if (*l1_page_table_entry == 0U) {
     u64 l2_physic_address = alloc_page();
@@ -65,7 +65,7 @@ static void l2_mapping(L1PageTableEntry *l1_page_table_entry, u64 virtual_addres
   }
 
   /// [29:21]
-  L2PageTableEntry *l2_page_table_entry = reinterpret_cast<L2PageTableEntry *>(
+  L2PageTableEntry* l2_page_table_entry = reinterpret_cast<L2PageTableEntry*>(
       (*l1_page_table_entry & 0xffff'ffff'f000) + (((virtual_address >> 21) & 0x1ff) * sizeof(l2_page_table_entry)));
   u64 next = 0;
   do {
@@ -87,7 +87,7 @@ static u64 l1_address_end(u64 virtual_address, u64 end) {
   return boundary - 1 < end - 1 ? boundary : end;
 }
 
-static void l1_mapping(L0PageTableEntry *l0_page_table_entry, u64 virtual_address, u64 end, u64 physical_address,
+static void l1_mapping(L0PageTableEntry* l0_page_table_entry, u64 virtual_address, u64 end, u64 physical_address,
                        u64 property, func_allocate_page alloc_page, u64 flags) {
   if (*l0_page_table_entry == 0U) {
     u64 l1_physic_address = alloc_page();
@@ -103,7 +103,7 @@ static void l1_mapping(L0PageTableEntry *l0_page_table_entry, u64 virtual_addres
   }
 
   /// [38:30]
-  L1PageTableEntry *l1_page_table_entry = reinterpret_cast<L1PageTableEntry *>(
+  L1PageTableEntry* l1_page_table_entry = reinterpret_cast<L1PageTableEntry*>(
       (*l0_page_table_entry & 0xffff'ffff'f000) + ((virtual_address >> 30) & 0x1ff) * sizeof(L1PageTableEntry));
 
   u64 next = 0;
@@ -123,7 +123,7 @@ static inline u64 l0_page_table_index(u64 virtual_address) {
   return virtual_address & 0x0000'FF80'0000'0000;
 }
 
-static inline L0PageTableEntry *locate_l0_entry_offset(L0PageTableEntry *l0_page_table_address, u64 virtual_addr) {
+static inline L0PageTableEntry* locate_l0_entry_offset(L0PageTableEntry* l0_page_table_address, u64 virtual_addr) {
   return (l0_page_table_address + l0_page_table_index(virtual_addr));
 }
 static u64 l0_address_end(u64 virtual_address, u64 end) {
@@ -131,9 +131,9 @@ static u64 l0_address_end(u64 virtual_address, u64 end) {
   return boundary - 1 < end - 1 ? boundary : end;
 };
 
-static void create_l0_mapping(L0PageTableEntry *l0_page_table_address, u64 physical_address, u64 virtual_address,
+static void create_l0_mapping(L0PageTableEntry* l0_page_table_address, u64 physical_address, u64 virtual_address,
                               u64 size, u64 property, func_allocate_page alloc_page, u64 flags) {
-  L0PageTableEntry *l0_page_table_entry = locate_l0_entry_offset(l0_page_table_address, virtual_address);
+  L0PageTableEntry* l0_page_table_entry = locate_l0_entry_offset(l0_page_table_address, virtual_address);
 
   physical_address &= 0xffff'ffff'ffff'f000;
   u64 end = PAGE_ALIGN(virtual_address + size);
@@ -153,7 +153,7 @@ extern u64 get_free_page();
 static u64 early_allocate_page_table() {
   log_d("early_allocate_page_table");
   u64 phys = get_free_page();
-  memset(reinterpret_cast<void *>(phys), 0, PAGE_SIZE);
+  memset(reinterpret_cast<void*>(phys), 0, PAGE_SIZE);
 
   return phys;
 }
@@ -165,7 +165,7 @@ static void create_identical_mapping() {
   u64 text_end   = get_text_end_address();
   u64 text_size  = get_text_size();
   log_d("text start => end: 0x%llx => 0x%llx, size: %lld", text_start, text_end, text_size);
-  create_l0_mapping((L0PageTableEntry *)&l0_page_table_base_address, text_start, text_start, text_size, PAGE_KERNEL_ROX,
+  create_l0_mapping((L0PageTableEntry*)&l0_page_table_base_address, text_start, text_start, text_size, PAGE_KERNEL_ROX,
                     default_func_allocate_page, 0);
 
   // map memory
@@ -173,13 +173,13 @@ static void create_identical_mapping() {
   u64 memory_end   = TOTAL_MEMORY;
   u64 memory_size  = memory_end - memory_start;
   log_d("memory start => end: 0x%llx => 0x%llx, size: %lld", memory_start, memory_end, memory_size);
-  create_l0_mapping(reinterpret_cast<L0PageTableEntry *>(&l0_page_table_base_address), memory_start, memory_start,
+  create_l0_mapping(reinterpret_cast<L0PageTableEntry*>(&l0_page_table_base_address), memory_start, memory_start,
                     memory_size, PAGE_KERNEL, default_func_allocate_page, 0);
 }
 
 static void create_mmio_identical_mapping() {
   // NOTE: DEVICE_SIZE must be big enough to map all PERIPHERAL_BASE and LOCAL_PERIPHERALS_BASE
-  create_l0_mapping(reinterpret_cast<L0PageTableEntry *>(&l0_page_table_base_address), 0x3F00'0000, 0x3F00'0000,
+  create_l0_mapping(reinterpret_cast<L0PageTableEntry*>(&l0_page_table_base_address), 0x3F00'0000, 0x3F00'0000,
                     /*DEVICE_SIZE*/ 0x1000'0000, PROT_DEVICE_nGnRnE, default_func_allocate_page, 0);
 }
 

@@ -36,19 +36,19 @@ u32 __test_failed_asserts  = 0;
            u64         : "%llu"                                                                                        \
   )
 #else
-constexpr const char *__format_specifier(nullptr_t /*unused*/) { return "%p"; }
-constexpr const char *__format_specifier(const char * /*unused*/) { return "%p"; }
-constexpr const char *__format_specifier(char * /*unused*/) { return "%p"; }
-constexpr const char *__format_specifier(void * /*unused*/) { return "%p"; }
-constexpr const char *__format_specifier(char /*unused*/) { return "%c"; }
-constexpr const char *__format_specifier(i8 /*unused*/) { return "%hhi"; }
-constexpr const char *__format_specifier(u8 /*unused*/) { return "%hhu"; }
-constexpr const char *__format_specifier(i16 /*unused*/) { return "%hi"; }
-constexpr const char *__format_specifier(u16 /*unused*/) { return "%hu"; }
-constexpr const char *__format_specifier(i32 /*unused*/) { return "%li"; }
-constexpr const char *__format_specifier(u32 /*unused*/) { return "%lu"; }
-constexpr const char *__format_specifier(i64 /*unused*/) { return "%lli"; }
-constexpr const char *__format_specifier(u64 /*unused*/) { return "%llu"; }
+constexpr const char* __format_specifier(nullptr_t /*unused*/) { return "%p"; }
+constexpr const char* __format_specifier(const char* /*unused*/) { return "%p"; }
+constexpr const char* __format_specifier(char* /*unused*/) { return "%p"; }
+constexpr const char* __format_specifier(void* /*unused*/) { return "%p"; }
+constexpr const char* __format_specifier(char /*unused*/) { return "%c"; }
+constexpr const char* __format_specifier(i8 /*unused*/) { return "%hhi"; }
+constexpr const char* __format_specifier(u8 /*unused*/) { return "%hhu"; }
+constexpr const char* __format_specifier(i16 /*unused*/) { return "%hi"; }
+constexpr const char* __format_specifier(u16 /*unused*/) { return "%hu"; }
+constexpr const char* __format_specifier(i32 /*unused*/) { return "%li"; }
+constexpr const char* __format_specifier(u32 /*unused*/) { return "%lu"; }
+constexpr const char* __format_specifier(i64 /*unused*/) { return "%lli"; }
+constexpr const char* __format_specifier(u64 /*unused*/) { return "%llu"; }
 #endif
 
 #if LOG_OUTPUT_ENABLE_LABEL

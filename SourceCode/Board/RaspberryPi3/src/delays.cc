@@ -1,8 +1,8 @@
 #include "libcxx/types.hh"
 #include "rpi3/mmio.hh"
 
-#define SYSTMR_LO ((volatile unsigned int *)(MMIO_BASE + 0x00003004))
-#define SYSTMR_HI ((volatile unsigned int *)(MMIO_BASE + 0x00003008))
+#define SYSTMR_LO ((volatile unsigned int*)(MMIO_BASE + 0x00003004))
+#define SYSTMR_HI ((volatile unsigned int*)(MMIO_BASE + 0x00003008))
 
 #if 0
 /**

@@ -9,10 +9,10 @@ extern_C void bss_clean() {
   if (likely(bss_start % 8 == 0 and bss_end % 8 == 0)) {
     log_d("fast bss clean");
     for (u64 index = 0; index < bss_size; ++index) {
-      reinterpret_cast<u64 *>(bss_start)[index] = 0;
+      reinterpret_cast<u64*>(bss_start)[index] = 0;
     }
     return;
   }
 
-  memzero((u8 *)get_bss_start_address(), (u8 *)get_bss_end_address());
+  memzero((u8*)get_bss_start_address(), (u8*)get_bss_end_address());
 }
