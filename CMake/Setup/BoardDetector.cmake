@@ -33,6 +33,7 @@ macro(setup_board)
         message(STATUS "detected supported board list: ${SUPPORTED_BOARD}")
     endforeach ()
 
+    # read BOARD from cmake command line parameter
     if (DEFINED BOARD)
         message(STATUS "DEFINED BOARD: ${BOARD}")
     else ()
