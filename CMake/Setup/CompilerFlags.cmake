@@ -79,7 +79,6 @@ macro(setup_compiler_flags)
             "-nostdinc++"
             "-nostdlib"
             "-nostartfiles"
-            "-DCOMPILER_INFO='\"id: ${CMAKE_CXX_COMPILER_ID}, version: ${CMAKE_CXX_COMPILER_VERSION}\"'"
             "-Wl,--no-dynamic-linker"
             "-Wl,--nostdlib"
             "-Wl,-error-limit=0"
