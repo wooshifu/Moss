@@ -1,3 +1,4 @@
+#include "hal/stdio.hh"
 #include "libcxx/log.hh"
 #include "rpi3/mailbox.hh"
 #include "rpi3/mmio.hh"
@@ -66,13 +67,14 @@ void init_uart0() {
 /**
  * Send a character
  */
-void uart0_send(unsigned int character) {
+int uart0_send(int character) {
   /* wait until we can send */
   do {
     asm volatile("nop");
   } while (*UART0_FLAG_REGISTER & 0x20);
   /* write the character to the buffer */
   *UART0_DATA_REGISTER = character;
+  return character;
 }
 
 /**
@@ -80,13 +82,14 @@ void uart0_send(unsigned int character) {
  */
 char uart0_getc() {
   /* wait until something is in the buffer */
+  // todo: don't use while loop, use uart0 triggered event
   do {
     asm volatile("nop");
   } while (*UART0_FLAG_REGISTER & 0x10);
   /* read it and return */
   char r = (char)(*UART0_DATA_REGISTER);
   /* convert carriage return to newline */
-  return r == '\r' ? '\n' : r;
+  return r /*== '\r' ? '\n' : r*/;
 }
 
 /**
@@ -103,7 +106,9 @@ void uart0_puts(char* string) {
 }
 
 /**
- * hal put_char implementation
+ * hal putchar implementation
  * @param character the character
  */
-void put_char(char character) { uart0_send(character); }
+int putchar(int character) { return uart0_send(character); }
+
+int getchar() { return uart0_getc(); }

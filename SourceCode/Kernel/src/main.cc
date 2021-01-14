@@ -2,8 +2,9 @@
 #include "hal/init.hh"
 #include "kernel/logo.hh"
 #include "libcxx/log.hh"
+#include "libcxx/stdio.hh"
 
-extern_C void kernel_main() {
+[[noreturn]] extern_C void kernel_main() {
   log_d("compiler info, %s", COMPILER_INFO);
 
   log_d(">>>>>>>>> entered kernel_main <<<<<<<<<");
@@ -23,4 +24,14 @@ extern_C void kernel_main() {
   //   u64 v = *(u64*)0x16;
   log_d(">>>>>>>>> exited kernel_main <<<<<<<<<");
   log_e("this line of code should never be executed");
+
+  printf("> ");
+  while (true) {
+    auto ch = getchar();
+    if (ch == '\r' or ch == '\n') {
+      printf("\n> ");
+      continue;
+    }
+    printf("got %c", ch);
+  }
 }
