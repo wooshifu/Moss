@@ -131,5 +131,5 @@ typedef _Bool bool;
 #endif
 
 #ifndef force_cast
-#define force_cast(value, type) reinterpret_cast<type>(value)
+#define force_cast(type, value) reinterpret_cast<type>(value)
 #endif

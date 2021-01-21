@@ -26,7 +26,7 @@ target_link_options(${KernelName} PRIVATE "LINKER:SHELL:-T ${ObjArch_SOURCE_DIR}
 add_custom_command(TARGET ${KernelName} POST_BUILD
         COMMENT "making Kernel8.img, wait a moment"
         WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-        COMMAND ${CMAKE_OBJCOPY} ${KernelName} -O binary Kernel8.img)
+        COMMAND ${CMAKE_OBJCOPY} ${KernelName} -O binary kernel8.img)
 
 add_custom_target(run
         COMMENT "run kernel"

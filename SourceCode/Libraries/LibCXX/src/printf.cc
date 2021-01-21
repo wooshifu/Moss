@@ -862,13 +862,17 @@ static int _vsnprintf(out_fct_type out, char* buffer, const size_t maxlen, const
 
 void _putchar(char character) { putchar(character); }
 
+void uart_puts(char* s);
 int printf_(const char* format, ...) {
+  // todo: printf bug
   va_list va;
   va_start(va, format);
   char buffer[1];
   const int ret = _vsnprintf(_out_char, buffer, (size_t)-1, format, va);
   va_end(va);
   return ret;
+//  uart_puts((char*)format);
+//  return 0;
 }
 
 int sprintf_(char* buffer, const char* format, ...) {

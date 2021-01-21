@@ -4,15 +4,18 @@
 #include "rpi3/timer.hh"
 #include "rpi3/uart0.hh"
 
+extern void uart_init();
 int init_board() {
-  init_mmu();
-  log_i("MMU ENABLED!!!");
+  uart_init();
+//  init_uart0();
+
+//  init_mmu();
+//  log_i("MMU ENABLED!!!");
   //  *(u64 *)(104857500 + 8) = 0x1234;
   //  for (u64 i = 104857500; i < 104857600 - 8; ++i) {
   //    log_i("%llx: mmu read: %llx", i, *(u64 *)(i));
   //  }
 
-  init_uart0();
 
   init_random_generator();
 

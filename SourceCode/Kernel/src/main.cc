@@ -4,32 +4,37 @@
 #include "libcxx/log.hh"
 #include "libcxx/stdio.hh"
 
+void uart_puts(const char* s);
+
 [[noreturn]] extern_C void kernel_main() {
-  log_d(">>>>>>>>> entered kernel_main <<<<<<<<<");
   init_board();
+  uart_puts("kernel main\n");
+  uart_puts(">>>>>>>>> entered kernel_main <<<<<<<<<\n");
 
-  print_moss_logo();
 
+//  print_moss_logo();
+
+  uart_puts((char*)"init cpu\n");
   init_cpu();
 
-  log_i("current el: %llu", get_current_el());
+//  uart_puts((char*)"current el: %llu", get_current_el());
   double x = 5.0;
   double y = 3.0;
   double z = x / y;
-  log_d("5/3=%f", z);
+//  log_d("5/3=%f", z);
 
   //   unmapped virtual memory invalid access test
   //   u64 v = *(u64*)0x16;
-  log_d(">>>>>>>>> exited kernel_main <<<<<<<<<");
-  log_e("this line of code should never be executed");
+  uart_puts(">>>>>>>>> exited kernel_main <<<<<<<<<\n");
+  uart_puts("this line of code should never be executed\n");
 
-  printf("> ");
+  uart_puts("> \n");
   while (true) {
     auto ch = getchar();
     if (ch == '\r' or ch == '\n') {
-      printf("\n> ");
+      uart_puts("\n> ");
       continue;
     }
-    printf("got %c", ch);
+    uart_puts("got %c");
   }
 }
