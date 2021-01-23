@@ -1,0 +1,6 @@
+# RaspberryPi3 required compiler flags
+# compiler flags could be put in one line, or put it in separate line
+# "#" started line is comment
+# "-key=value # comment" is also valid comment
+
+# RaspberryPi3 specific compiler flags, currently no specific compiler flags is required

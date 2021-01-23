@@ -22,5 +22,3 @@ function(dump_cmake_variables)
     file(WRITE ${cmake_variables_dump_file} ${cmake_variables_list})
     message(STATUS "cmake variables have been saved to ${cmake_variables_dump_file}")
 endfunction()
-
-dump_cmake_variables()

@@ -2,11 +2,11 @@ message(STATUS "detected c compiler id: ${CMAKE_C_COMPILER_ID}, version: ${CMAKE
 message(STATUS "detected c++ compiler id: ${CMAKE_CXX_COMPILER_ID}, version: ${CMAKE_CXX_COMPILER_VERSION}")
 
 if (CMAKE_C_COMPILER_ID AND NOT CMAKE_C_COMPILER_ID STREQUAL "Clang")
-    message(FATAL_ERROR "clang is the only supported compiler")
+    message(FATAL_ERROR "[compiler] only clang is supported")
 endif ()
 
 if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    message(FATAL_ERROR "clang is the only supported compiler")
+    message(FATAL_ERROR "[compiler] only clang++ is supported")
 endif ()
 
 set(CLANG_MIN_VERSION_REQUIRED 10.0.0)
@@ -14,53 +14,65 @@ if (CMAKE_C_COMPILER_ID AND CMAKE_C_COMPILER_VERSION VERSION_LESS ${CLANG_MIN_VE
     message(FATAL_ERROR "Clang version must be greater than ${CLANG_MIN_VERSION_REQUIRED}")
 endif ()
 
-macro(read_arch_compiler_flags_from_file IN_FILE OUT_VAR)
-    file(STRINGS ${IN_FILE} LINES)
+function(read_arch_compiler_flags_from_file IN_file OUT_flag)
+    file(STRINGS ${IN_file} lines)
 
-    foreach (LINE IN LISTS LINES)
+    foreach (line IN LISTS lines)
         # "#" started line is comment line, remove it
-        string(REGEX REPLACE "\#.*" "" STRIPPED "${LINE}")
-        if (STRIPPED)
-            list(APPEND ${OUT_VAR} "${STRIPPED}")
+        string(REGEX REPLACE "\#.*" "" stripped "${line}")
+        if (stripped)
+            list(APPEND flag "${stripped}")
         endif ()
     endforeach ()
-endmacro()
+    message(STATUS ".flag: ${flag}")
+    set(${OUT_flag} ${flag} PARENT_SCOPE)
+endfunction()
 
 
-if (CMAKE_BUILD_TYPE MATCHES "Rel")
-    set(OPTIMIZATION_LEVEL 2)
-elseif (CMAKE_BUILD_TYPE MATCHES "Debug")
-    set(OPTIMIZATION_LEVEL 0)
-else ()
-    set(OPTIMIZATION_LEVEL 0)
+if (NOT DEFINED OPTIMIZATION_LEVEL)
+    if (CMAKE_BUILD_TYPE MATCHES "Rel")
+        set(OPTIMIZATION_LEVEL 2)
+    elseif (CMAKE_BUILD_TYPE MATCHES "Debug")
+        set(OPTIMIZATION_LEVEL 0)
+    else ()
+        set(OPTIMIZATION_LEVEL 0)
+    endif ()
 endif ()
 message(STATUS "OPTIMIZATION_LEVEL: ${OPTIMIZATION_LEVEL}")
 
-
-# todo: use c++20 module feature, but cmake currently have no support for this feature
-#"-emit-module-interface"
-#"-emit-module"
-#"-fmodules"
-#"-fsystem-module"
-#"-fbuiltin-module-map"
-#"-fimplicit-module-maps"
-
-macro(setup_compiler_flags)
+macro(disable_compiler_link_flags)
+    set(CMAKE_C_LINK_FLAGS "")
     set(CMAKE_CXX_LINK_FLAGS "")
+endmacro()
 
-    read_arch_compiler_flags_from_file(${MOSS_SOURCE_CODE_DIR}/Arch/${ARCH}/.flags ARCH_COMPILER_FLAGS)
-    message(STATUS "ARCH_COMPILER_FLAGS is: ${ARCH_COMPILER_FLAGS}")
-    # set ARCH_COMPILER_FLAGS here
-    string(JOIN " " CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${ARCH_COMPILER_FLAGS})
+function(setup_compiler_flags IN_board IN_arch)
+    set(arch_flag_file ${MOSS_SOURCE_CODE_DIR}/Arch/${ARCH}/.flags)
+    if (NOT EXISTS ${arch_flag_file})
+        message(FATAL_ERROR "${arch_flag_file} must exist")
+    endif ()
 
-    string(JOIN " " IGNORE_SPECIFIC_WARNINGS
+    message(STATUS "[arch] .flag file: ${arch_flag_file}")
+    read_arch_compiler_flags_from_file(${arch_flag_file} arch_compiler_flags)
+    message(STATUS "[arch] arch_compiler_flags is: ${arch_compiler_flags}")
+
+    set(board_flag_file ${MOSS_SOURCE_CODE_DIR}/Board/${IN_board}/.flags)
+    if (EXISTS ${board_flag_file})
+        message(STATUS "[board] .flag file: ${board_flag_file}")
+        read_arch_compiler_flags_from_file(${board_flag_file} board_compiler_flags)
+        message(STATUS "[board] board_compiler_flags is: ${board_compiler_flags}")
+    endif ()
+
+
+    set(ignore_specific_warnings
             "-Wno-unused-variable"
             "-Wno-unused-parameter"
             "-Wno-unused-function"
             "-Wno-unused-command-line-argument"
             )
 
-    string(JOIN " " COMMON_CMAKE_C_FLAGS
+    string(JOIN " " common_cmake_c_flags
+            ${arch_compiler_flags}
+            ${board_compiler_flags}
             # "-v"
             "-O${OPTIMIZATION_LEVEL}"
             "-g"
@@ -68,7 +80,7 @@ macro(setup_compiler_flags)
             "-Wall"
             "-Wextra"
             "-Werror"
-            "${IGNORE_SPECIFIC_WARNINGS}"
+            ${ignore_specific_warnings}
             "-MD"
             "-fuse-ld=lld"
             "-fpic"
@@ -85,18 +97,19 @@ macro(setup_compiler_flags)
             "-Wl,-v"
             )
 
-    string(JOIN " " CMAKE_C_FLAGS "${CMAKE_C_FLAGS}" "${COMMON_CMAKE_C_FLAGS}")
-    string(JOIN " " CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=c++20" "${CMAKE_C_FLAGS}")
-    string(JOIN " " CMAKE_C_FLAGS "-std=c11" "${CMAKE_C_FLAGS}")
-    string(JOIN " " CMAKE_ASM_FLAGS ${CMAKE_ASM_FLAGS} "${CMAKE_C_FLAGS}")
+    set(CMAKE_C_FLAGS "-std=c11 ${common_cmake_c_flags}" PARENT_SCOPE)
+    set(CMAKE_CXX_FLAGS "-std=c++20 ${common_cmake_c_flags}" PARENT_SCOPE)
+    set(CMAKE_ASM_FLAGS "-std=c11 ${common_cmake_c_flags}" PARENT_SCOPE)
+endfunction()
 
-    string(REPEAT "=" 300 COMPILER_FLAGS_SEPARATOR)
-    message(STATUS "${COMPILER_FLAGS_SEPARATOR}")
-    message(STATUS "${COMPILER_FLAGS_SEPARATOR}")
+macro(print_compiler_flags)
+    string(REPEAT "=" 300 compiler_flags_separator)
+    message(STATUS "${compiler_flags_separator}")
+    message(STATUS "${compiler_flags_separator}")
+    message(STATUS "CMAKE_ASM_FLAGS:  ${CMAKE_ASM_FLAGS}")
     message(STATUS "CMAKE_C_FLAGS:    ${CMAKE_C_FLAGS}")
     message(STATUS "CMAKE_CXX_FLAGS:  ${CMAKE_CXX_FLAGS}")
-    message(STATUS "CMAKE_ASM_FLAGS:  ${CMAKE_ASM_FLAGS}")
     message(STATUS "CMAKE_OBJCOPY:    ${CMAKE_OBJCOPY}")
-    message(STATUS "${COMPILER_FLAGS_SEPARATOR}")
-    message(STATUS "${COMPILER_FLAGS_SEPARATOR}")
+    message(STATUS "${compiler_flags_separator}")
+    message(STATUS "${compiler_flags_separator}")
 endmacro()
