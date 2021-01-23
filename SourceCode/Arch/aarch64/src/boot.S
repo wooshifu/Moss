@@ -146,7 +146,7 @@ _goto_kernel_main:
     __macro_get_current_core
     mov  x1, x0
     ldr  x0, =__message_core_hung
-    bl   printf_
+//    bl   printf_
     b    _hang_core /* kernel_main should never come here */
 ///////////////////////////////////////////////////////////////////
 

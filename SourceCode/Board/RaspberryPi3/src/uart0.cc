@@ -2,6 +2,7 @@
 #include "libcxx/log.hh"
 #include "rpi3/mailbox.hh"
 #include "rpi3/mmio.hh"
+#include "rpi3/uart0.hh"
 
 /* PL011 UART registers */
 #define UART0_DATA_REGISTER                     ((volatile unsigned int*)(MMIO_BASE + 0x00201000))
@@ -32,13 +33,13 @@ void init_uart0() {
 
                                             .end = MAILBOX_PROPERTY_TAG_END};
   mailbox_call(MAILBOX_CHANNEL_PROPERTY_TAGS_ARM_TO_VIDEO_CORE, &data);
-//  log_d("response code: %x, tag code: %x", data.code, data.tag_code);
+  //  log_d("response code: %x, tag code: %x", data.code, data.tag_code);
   if (!is_valid_mailbox_response(data.code, data.tag_code)) {
     // NOTE: uart0 not initialized, could we log this message to uart0???
     log_f("failed to set clock uart rate, code: %u, tag_code: %u", data.code, data.tag_code);
     return;
   }
-//  log_d("uart0(id:%u) clock rate initialized to rate:%u", data.clock_id, data.rate);
+  //  log_d("uart0(id:%u) clock rate initialized to rate:%u", data.clock_id, data.rate);
 
   /* map UART0 to GPIO pins */
   unsigned int r = *GPFSEL1;
@@ -61,7 +62,7 @@ void init_uart0() {
   *UART0_FRACTIONAL_BAUD_RATE_DIVISOR = 0xB;       // BAUDDIV = (FUARTCLK/(16 * Baud rate))
   *UART0_LINE_CONTROL_REGISTER        = 0b11 << 5; // 8n1, b11 = 8 bits
   *UART0_CONTROL_REGISTER             = 0x301;     // enable Tx, Rx, FIFO
-//  log_d("uart0 successfully initialized");
+  //  log_d("uart0 successfully initialized");
 }
 
 /**
@@ -128,10 +129,15 @@ int getchar() { return uart0_getc(); }
 #define UART0_IMSC ((volatile unsigned int*)(MMIO_BASE + 0x00201038))
 #define UART0_ICR  ((volatile unsigned int*)(MMIO_BASE + 0x00201044))
 
+//static bool uart_initialized = false;
 /**
  * Set baud rate and characteristics (115200 8N1) and map to GPIO
  */
 void uart_init() {
+//  if (uart_initialized) {
+//    return;
+//  }
+
   unsigned int r;
 
   /* initialize UART */
@@ -166,12 +172,15 @@ void uart_init() {
   }
   *GPPUDCLK0 = 0; // flush GPIO setup
 
-  *UART0_ICR  = 0x7FF; // clear interrupts
-  *UART0_IBRD = 2;     // 115200 baud
-  *UART0_FBRD = 0xB;
-  *UART0_LCRH = 0b11 << 5; // 8n1
-  *UART0_CR   = 0x301;     // enable Tx, Rx, FIFO
+  *UART0_ICR       = 0x7FF; // clear interrupts
+  *UART0_IBRD      = 2;     // 115200 baud
+  *UART0_FBRD      = 0xB;
+  *UART0_LCRH      = 0b11 << 5; // 8n1
+  *UART0_CR        = 0x301;     // enable Tx, Rx, FIFO
+//  uart_initialized = true;
 }
+
+//bool is_uart_initialized() { return uart_initialized; }
 
 /**
  * Send a character
@@ -244,7 +253,7 @@ extern_C void print_current_el(unsigned int current_el) {
 static int debug_count = 0;
 extern_C void debug() {
   uart_puts("debug count: ");
-  uart_send(debug_count +0x30);
+  uart_send(debug_count + 0x30);
   uart_send('\n');
   ++debug_count;
 }

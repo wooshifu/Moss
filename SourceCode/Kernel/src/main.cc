@@ -11,6 +11,8 @@ void uart_puts(const char* s);
   uart_puts("kernel main\n");
   uart_puts(">>>>>>>>> entered kernel_main <<<<<<<<<\n");
 
+  printf("hello world %s\n", "xxx");
+  printf("hello world %d\n", 1234);
 
 //  print_moss_logo();
 

@@ -31,6 +31,8 @@
 
 #pragma once
 
+#if 0
+
 #include "hal/stdio.hh"
 #include "libcxx/macro.hh"
 #include "libcxx/stdarg.hh"
@@ -105,3 +107,9 @@ extern_C {
 #ifdef __cplusplus
 }
 #endif
+
+#endif
+
+#include "libcxx/macro.hh"
+#include "libcxx/types.hh"
+extern_C int32_t printf(const char *fmt, ...);
