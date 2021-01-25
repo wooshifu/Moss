@@ -22,7 +22,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # compile commands can be used to help cla
 
 set(MOSS_SOURCE_CODE_DIR ${Moss_SOURCE_DIR}/SourceCode)
 
-set(KernelName Kernel.elf)
+set(KernelName kernel.elf)
 
 include(${Moss_SOURCE_DIR}/CMake/Setup.cmake)
 

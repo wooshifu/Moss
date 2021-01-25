@@ -26,6 +26,6 @@ add_custom_command(TARGET ${KernelName} POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} ${KernelName} -O binary Kernel7.img)
 
 add_custom_target(RunQemuRaspi2
-        COMMAND qemu-system-arm -M raspi2 -kernel Kernel.elf -nographic -serial mon:stdio
+        COMMAND qemu-system-arm -M raspi2 -kernel kernel.elf -nographic -serial mon:stdio
         WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 add_dependencies(RunQemuRaspi3 ${KernelName})

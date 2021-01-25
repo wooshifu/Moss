@@ -8,6 +8,6 @@ echo "current dir: ${THIS_DIR}"
 BUILD_DIR="${THIS_DIR}"/output/Raspi3/mac
 
 echo ">>>>>>>>>>>>>>>> RUNNING KERNEL <<<<<<<<<<<<<<<<"
-cmd="qemu-system-aarch64 -M raspi3 -kernel ${BUILD_DIR}/bin/Kernel.elf -serial mon:stdio -nographic"
+cmd="qemu-system-aarch64 -M raspi3 -kernel ${BUILD_DIR}/bin/kernel.elf -serial mon:stdio -nographic"
 echo "$cmd"
 ${cmd}
