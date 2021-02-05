@@ -1,8 +1,8 @@
 #include "hal/el.hh"
 #include "hal/init.hh"
+#include "hal/stdio.hh"
 #include "kernel/logo.hh"
 #include "libcxx/log.hh"
-#include "hal/stdio.hh"
 #include "libcxx/macro.hh"
 #include "libcxx/printf.hh"
 

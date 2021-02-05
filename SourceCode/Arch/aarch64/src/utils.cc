@@ -1,7 +1,7 @@
 #include "aarch64/linker.hh"
 #include "libcxx/log.hh"
-#include "libcxx/string.hh"
 #include "libcxx/macro.hh"
+#include "libcxx/string.hh"
 #include "libcxx/types.hh"
 
 extern_C void bss_clean() {
