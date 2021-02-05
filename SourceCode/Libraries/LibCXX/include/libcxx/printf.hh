@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "hal/stdio.hh"
 #include "libcxx/macro.hh"
 #include "libcxx/stdarg.hh"
 #include "libcxx/types.hh"

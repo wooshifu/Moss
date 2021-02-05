@@ -1,5 +1,6 @@
 #include "libcxx/log.hh"
 #include "libcxx/string.hh"
+#include "libcxx/types.hh"
 
 void memzero(u8* mem_start, const u8* mem_end) {
   log_d("mem start is: %p, mem end is: %p", mem_start, mem_end);

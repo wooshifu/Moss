@@ -10,6 +10,7 @@ target_include_kernel_header_files(${PROJECT_NAME})
 target_include_libcxx_header_files(${PROJECT_NAME})
 target_include_raspberry_pi3_header_files(${PROJECT_NAME})
 
+target_enable_iwyu(${PROJECT_NAME})
 
 add_executable(${KernelName}
         $<TARGET_OBJECTS:ObjArch>

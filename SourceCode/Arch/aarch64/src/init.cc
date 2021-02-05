@@ -4,6 +4,7 @@
 #include "config.hh"
 #include "hal/init.hh"
 #include "libcxx/log.hh"
+#include "libcxx/types.hh"
 
 static void init_generic_timer() {
 #if CONFIG_TARGET_QEMU

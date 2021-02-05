@@ -5,6 +5,8 @@
 #include "aarch64/page.hh"
 #include "aarch64/page_property.hh"
 #include "libcxx/log.hh"
+#include "libcxx/string.hh"
+#include "libcxx/types.hh"
 
 /// the l0 page table
 [[gnu::aligned(PAGE_SIZE)]] static L0PageTable l0_page_table_base_address;

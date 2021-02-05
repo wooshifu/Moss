@@ -9,7 +9,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
     && apt-get install --fix-missing -y build-essential binutils qemu-system-aarch64 \
-       gdb-multiarch make cmake clang-11 llvm-11 lld-11 clang-format-11 clang-tidy-11 ssh rsync less vim \
+       gdb-multiarch make cmake clang-11 llvm-11 lld-11 clang-format-11 clang-tidy-11 ssh rsync less vim iwyu \
     && update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-11 100 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-11 100 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-11 100 \

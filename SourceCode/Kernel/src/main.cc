@@ -2,7 +2,9 @@
 #include "hal/init.hh"
 #include "kernel/logo.hh"
 #include "libcxx/log.hh"
-#include "libcxx/stdio.hh"
+#include "hal/stdio.hh"
+#include "libcxx/macro.hh"
+#include "libcxx/printf.hh"
 
 [[noreturn]] extern_C void kernel_main() {
   log_d(">>>>>>>>> entered kernel_main <<<<<<<<<");

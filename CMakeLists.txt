@@ -21,6 +21,7 @@ endif ()
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # compile commands can be used to help clang-tidy code analysis
 
 set(MOSS_SOURCE_CODE_DIR ${Moss_SOURCE_DIR}/SourceCode)
+set(MOSS_SCRIPTS_DIR ${Moss_SOURCE_DIR}/Scripts)
 
 set(KernelName kernel.elf)
 

@@ -1,5 +1,6 @@
 #include "libcxx/log.hh"
 #include "libcxx/memory.hh"
+#include "libcxx/types.hh"
 #include "rpi3/mmio.hh"
 #include "rpi3/timer.hh"
 

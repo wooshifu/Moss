@@ -1,8 +1,8 @@
 #include "aarch64/linker.hh"
-#include "libcxx/log.hh"
+#include "libcxx/macro.hh"  // for extern_C
 
 extern_C void print_mem_stack() {
-#if 1
+#if 0
   log_d("__text_start is %p", &__text_start);
   log_d("__text_end is %p", &__text_end);
   log_d("__rodata_start is %p", &__rodata_start);

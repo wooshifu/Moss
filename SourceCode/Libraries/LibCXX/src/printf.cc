@@ -30,8 +30,10 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "libcxx/printf.hh"
-#include "libcxx/types.hh"
+#include "hal/stdio.hh"      // for putchar
+#include "libcxx/printf.hh"  // for _putchar, fctprintf, printf_, snprintf_
+#include "libcxx/stdarg.hh"  // for va_arg, va_list, va_end, va_start
+#include "libcxx/types.hh"   // for size_t, DBL_MAX, uintptr_t, u64, intmax_t
 
 // define this globally (e.g. gcc -DPRINTF_INCLUDE_CONFIG_H ...) to include the
 // printf_config.h header file
@@ -106,11 +108,6 @@
 #define FLAGS_LONG_LONG (1U << 9U)
 #define FLAGS_PRECISION (1U << 10U)
 #define FLAGS_ADAPT_EXP (1U << 11U)
-
-// import float.h for DBL_MAX
-#if defined(PRINTF_SUPPORT_FLOAT)
-//#include <float.h>
-#endif
 
 // output function type
 using out_fct_type = void (*)(char, void*, size_t, size_t);

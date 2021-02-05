@@ -1,7 +1,8 @@
 #include "cases.hh"
 #include "hal/halt.hh"
 #include "libcxx/log.hh"
-#include "libcxx/macro.hh"
+#include "libcxx/printf.hh"
+#include "libcxx/types.hh"
 #include "tests/test_lib.hh"
 
 void run_tests() {

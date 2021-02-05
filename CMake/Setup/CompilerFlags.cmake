@@ -76,7 +76,7 @@ function(setup_compiler_flags IN_board IN_arch)
             # "-v"
             "-O${OPTIMIZATION_LEVEL}"
             "-g"
-            "-save-temps"
+            # "-save-temps" # this flag will broke iwyu
             "-Wall"
             "-Wextra"
             "-Werror"
@@ -113,3 +113,5 @@ macro(print_compiler_flags)
     message(STATUS "${compiler_flags_separator}")
     message(STATUS "${compiler_flags_separator}")
 endmacro()
+
+#todo: lto(-flto) link time optimization ???

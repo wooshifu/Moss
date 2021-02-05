@@ -1,5 +1,6 @@
 #include "aarch64/page_property.hh"
 #include "libcxx/log.hh"
+#include "libcxx/types.hh"
 
 constexpr auto NR_PAGES = (TOTAL_MEMORY / PAGE_SIZE);
 
