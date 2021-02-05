@@ -26,7 +26,7 @@ else ()
             COMMENT "iwyu fixing includes, wait a moment"
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
             DEPENDS ${CMAKE_BINARY_DIR}/compile_commands.json
-            COMMAND ${Python3_EXECUTABLE} ${MOSS_SCRIPTS_DIR}/iwyu/iwyu_tool.py -p ${CMAKE_BINARY_DIR} -- ${__iwyu_options} > ${CMAKE_BINARY_DIR}/.iwyu_fix_includes || (exit 0)
-            COMMAND ${Python3_EXECUTABLE} ${MOSS_SCRIPTS_DIR}/iwyu/fix_includes.py --reorder --comments < ${CMAKE_BINARY_DIR}/.iwyu_fix_includes || (exit 0)
+            COMMAND ${Python3_EXECUTABLE} ${MOSS_SCRIPTS_DIR}/IWYU/iwyu_tool.py -p ${CMAKE_BINARY_DIR} -- ${__iwyu_options} > ${CMAKE_BINARY_DIR}/.iwyu_fix_includes || (exit 0)
+            COMMAND ${Python3_EXECUTABLE} ${MOSS_SCRIPTS_DIR}/IWYU/fix_includes.py --reorder --comments < ${CMAKE_BINARY_DIR}/.iwyu_fix_includes || (exit 0)
             )
 endif ()
