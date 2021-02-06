@@ -54,9 +54,14 @@ _init_core0:
     ldr  x0, =0x400000
     mov  sp, x0
 
+    //bl test_output
+
     /* TODO: check whether we are now in el3 or not. In this case, we assume we are in el3, because qemu raspi3 boot into el3 */
     /* try drop from el3 to el1 secure */
-    __macro_print_current_el /* NOTE: before we can use bl instruction, sp must be set */
+    //__macro_print_current_el /* NOTE: before we can use bl instruction, sp must be set */
+    mrs x0, CurrentEL
+    lsr x0, x0, #2
+    //bl print_current_el
 
     /*=============================================================*/
     /*      Enable FP/SIMD at EL1                                  */
@@ -64,8 +69,9 @@ _init_core0:
     /* IMPORTANT, el1 FP/SIMD should be enabled, because we will use fp somewhere */
     mov x0, #(0b11 << 20) /* FPEN, bits [21:20] */
     msr cpacr_el1, x0 /* Architectural Feature Access Control Register, Enable FP/SIMD at EL1 */
+//    bl debug
 
-    /*=============================================================*/
+/*=============================================================*/
     /*      Initialize sctlr_el1                                   */
     /*=============================================================*/
     /* Bits 29,28,23,22,20,11 should be 1 (res1 on documentation) */
@@ -81,22 +87,26 @@ _init_core0:
     // todo: i,d cache enable; mmu enable
     #define __SCTLR_VALUE (__SCTLR_RESERVED | __SCTLR_EE_LITTLE_ENDIAN | __SCTLR_I_CACHE_DISABLED | __SCTLR_D_CACHE_DISABLED | __SCTLR_MMU_DISABLED)
 
+//    bl debug
     mov x0, xzr /* clear x0 */
+//    bl debug
     ldr x0, =__SCTLR_VALUE
     msr sctlr_el1, x0 /* System Control Register (EL1) */
 
+//    bl debug
     mrs x1, sctlr_el1
     ldr x0, =__message_sctlr_el1_value
-    bl printf_
+    //bl printf_
 
-    /*=============================================================*/
+/*=============================================================*/
     /*      Initialize scr_el3                                     */
     /*=============================================================*/
     mrs x0, scr_el3
     orr x0, x0, #(1<<10)        /* Lower EL is 64bits */
     msr scr_el3, x0 /* Secure Configuration Register */
+//    bl debug
 
-    /*=============================================================*/
+/*=============================================================*/
     /*      Initialize spsr_el3                                    */
     /*=============================================================*/
     mov x0, xzr
@@ -105,14 +115,16 @@ _init_core0:
     orr x0, x0, #(1 << 7)       /* IRQ interrupt Process state mask. */
     orr x0, x0, #(1 << 6)       /* FIQ interrupt Process state mask. */
     msr spsr_el3, x0 /* Saved Program Status Register (EL3) */
+//    bl debug
 
-    /*=============================================================*/
+/*=============================================================*/
     /*      Initialize elr_el3                                     */
     /*=============================================================*/
     adr x0, _goto_kernel_main
     msr elr_el3, x0 /* Exception Link Register (EL3) */
+//    bl debug
 
-    /* Returns from an exception. It restores the processor state based on SPSR_ELn and branches to ELR_ELn, where n is the current exception level */
+/* Returns from an exception. It restores the processor state based on SPSR_ELn and branches to ELR_ELn, where n is the current exception level */
     eret
 
 _goto_kernel_main:
@@ -120,11 +132,12 @@ _goto_kernel_main:
     // sp 栈空间必须在 mmu 映射范围内
     ldr  x0, =0x400000
     mov  sp, x0
-
-    bl   print_mem_stack
+//    //bl debug
+    //bl   print_mem_stack
+//    bl debug
     bl   bss_clean
 
-    __macro_print_current_el
+    //__macro_print_current_el
 #ifndef ENV_KERNEL_UNIT_TESTS
     bl   kernel_main
 #else
@@ -133,7 +146,7 @@ _goto_kernel_main:
     __macro_get_current_core
     mov  x1, x0
     ldr  x0, =__message_core_hung
-    bl   printf_
+//    bl   printf_
     b    _hang_core /* kernel_main should never come here */
 ///////////////////////////////////////////////////////////////////
 
