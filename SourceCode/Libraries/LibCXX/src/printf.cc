@@ -1,39 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-// \author (c) Marco Paland (info@paland.com)
-//             2014-2019, PALANDesign Hannover, Germany
-//
-// \license The MIT License (MIT)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-//
-// \brief Tiny printf, sprintf and (v)snprintf implementation, optimized for speed on
-//        embedded systems with a very limited resources. These routines are thread
-//        safe and reentrant!
-//        Use this instead of the bloated standard/newlib printf cause these use
-//        malloc for printf (and may not be thread safe).
-//
-///////////////////////////////////////////////////////////////////////////////
-
-#include "hal/stdio.hh"      // for putchar
-#include "libcxx/printf.hh"  // for _putchar, fctprintf, printf_, snprintf_
-#include "libcxx/stdarg.hh"  // for va_arg, va_list, va_end, va_start
-#include "libcxx/types.hh"   // for size_t, DBL_MAX, uintptr_t, u64, intmax_t
+#include "libcxx/macro.hh"  // for extern_C
+#include "libcxx/printf.hh" // for printf
+#include "libcxx/stdarg.hh" // for va_arg, va_list, va_end, va_start
+#include "libcxx/string.hh" // for strlen
+#include "libcxx/types.hh"  // for int32_t, uint32_t, uint8_t
 
 #if 0
 
@@ -910,47 +879,35 @@ int fctprintf(void (*out)(char character, void* arg), void* arg, const char* for
 
 #endif
 
-
-#include "libcxx/stdarg.hh"
-#include "libcxx/string.hh"
-
-extern void uart_puts(const char* s);
-
 #define is_digit(c) ((c) >= '0' && (c) <= '9')
 
-static int skip_atoi(const char **s) {
+static int skip_atoi(const char** s) {
   int i = 0;
-  while (is_digit(**s))
+  while (is_digit(**s)) {
     i = i * 10 + *((*s)++) - '0';
+  }
   return i;
 }
 
-#define ZEROPAD 1
-#define SIGN 2
-#define PLUS 4
-#define SPACE 8
-#define LEFT 16
-#define SPECIAL 32
-#define SMALL 64
+constexpr int ZEROPAD = 1;
+constexpr int SIGN    = 2;
+constexpr int PLUS    = 4;
+constexpr int SPACE   = 8;
+constexpr int LEFT    = 16;
+constexpr int SPECIAL = 32;
+constexpr int SMALL   = 64;
 
-extern_C void debug();
 void uart_puts(const char* s);
 
-extern_C int32_t do_div(int *n, int base) {
-  int32_t res;
-  uart_puts("do_div %%%\n");
-  debug();
-  res = *n % base;
-  debug();
-  uart_puts("do_div /\n");
-  *n = *n / base;
+extern_C int32_t do_div(int* n, int base) {
+  int32_t res = *n % base;
+  *n          = *n / base;
   return res;
 }
 
-extern_C char *number(char *str, int num, int base, int size, int precision,
-                    int type) {
+extern_C char* number(char* str, int num, int base, int size, int precision, int type) {
   char c, sign, tmp[36];
-  const char *digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const char* digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   int i;
   if (type & SMALL)
     digits = "0123456789abcdefghijklmnopqrstuvwxyz";
@@ -991,7 +948,7 @@ extern_C char *number(char *str, int num, int base, int size, int precision,
       *str++ = '0';
     else if (base == 16) {
       *str++ = '0';
-      *str++ = digits[33];// 'X' 或 'x'
+      *str++ = digits[33]; // 'X' 或 'x'
     }
   }
   if (!(type & LEFT))
@@ -1009,32 +966,26 @@ extern_C char *number(char *str, int num, int base, int size, int precision,
   }
   return str;
 }
-extern_C void debug();
-extern_C int32_t vsprintf(char *buf, const char *fmt, va_list args) {
-  uart_puts("vsprintf\n");
+
+extern_C int32_t vsprintf(char* buf, const char* fmt, va_list args) {
   int32_t len;
   int32_t i;
-  char *str;
-  char *s;
-  int32_t *ip;
+  char* str;
+  char* s;
+  int32_t* ip;
   uint32_t flags;
   int32_t field_width;
   int32_t precision;
-  int32_t qualifier
-      __attribute__((unused));
-  uart_puts("before for loop\n");
+  int32_t qualifier __attribute__((unused));
 
   for (str = buf; *fmt; ++fmt) {
-    uart_puts("for loop\n");
     if (*fmt != '%') {
       *str++ = *fmt;
       continue;
     }
     flags = 0;
-    repeat:
-      uart_puts("repeat\n");
+  repeat:
     ++fmt;
-    uart_puts("switch case\n");
     switch (*fmt) {
     case '-':
       flags |= LEFT;
@@ -1084,12 +1035,12 @@ extern_C int32_t vsprintf(char *buf, const char *fmt, va_list args) {
       if (!(flags & LEFT))
         while (--field_width > 0)
           *str++ = ' ';
-      *str++ = (uint8_t) va_arg(args, int);
+      *str++ = (uint8_t)va_arg(args, int);
       while (--field_width > 0)
         *str++ = ' ';
       break;
     case 's':
-      s = va_arg(args, char *);
+      s   = va_arg(args, char*);
       len = strlen(s);
       if (precision < 0)
         precision = len;
@@ -1104,34 +1055,36 @@ extern_C int32_t vsprintf(char *buf, const char *fmt, va_list args) {
         *str++ = ' ';
       break;
     case 'o':
-      str = number(str, va_arg(args, uint32_t), 8, field_width, precision,
-                   flags);
+      str = number(str, va_arg(args, uint32_t), 8, field_width, precision, flags);
       break;
     case 'p':
       if (field_width == -1) {
         field_width = 8;
         flags |= ZEROPAD;
       }
-//      str = number(str, reinterpret_cast<uint32_t> (va_arg(args, void *)), 16, field_width,
-//                   precision, flags);
+#if __SIZEOF_POINTER__ == 8
+      str = number(str, (uint64_t)(va_arg(args, void*)), 16, field_width, precision, flags);
+#elif __SIZEOF_POINTER__ == 4
+      str = number(str, (uint64_t)(va_arg(args, void*)), 16, field_width, precision, flags);
+#else
+#error "unexpected __SIZEOF_POINTER__"
+#endif
       break;
     case 'x':
       flags |= SMALL;
-          __attribute__((fallthrough));
+      __attribute__((fallthrough));
     case 'X':
-      str = number(str, va_arg(args, uint32_t), 16, field_width,
-                   precision, flags);
+      str = number(str, va_arg(args, uint32_t), 16, field_width, precision, flags);
       break;
     case 'd':
     case 'i':
       flags |= SIGN;
-          __attribute__((fallthrough));
+      __attribute__((fallthrough));
     case 'u':
-      str = number(str, va_arg(args, uint32_t), 10, field_width,
-                   precision, flags);
+      str = number(str, va_arg(args, uint32_t), 10, field_width, precision, flags);
       break;
     case 'n':
-      ip = va_arg(args, int *);
+      ip  = va_arg(args, int*);
       *ip = (str - buf);
       break;
     default:
@@ -1148,29 +1101,23 @@ extern_C int32_t vsprintf(char *buf, const char *fmt, va_list args) {
   return str - buf;
 }
 
-int32_t sprintf(char*buffer, char *fmt, ...) {
+int32_t sprintf(char* buffer, char* fmt, ...) {
   va_list args;
-  int32_t i;
   va_start(args, fmt);
-  i = vsprintf(buffer, fmt, args);
+  int32_t i = vsprintf(buffer, fmt, args);
   va_end(args);
   return i;
 }
 
-extern_C void debug();
-extern_C int32_t printf(const char *fmt, ...) {
-  char buf[1024] = {0};
+extern_C int32_t printf(const char* fmt, ...) {
+  constexpr int printf_buf_length = 1024;
+  char buf[printf_buf_length]     = {0};
 
   va_list args;
-  int32_t i = 0;
-  uart_puts("va_start(args, fmt)\n");
   va_start(args, fmt);
-  uart_puts("i = vsprintf(buf, fmt, args)\n");
-  i = vsprintf(buf, fmt, args);
-  uart_puts("va_end(args);\n");
+  int32_t i = vsprintf(buf, fmt, args);
   va_end(args);
-  uart_puts("uart_puts(buf);\n");
   uart_puts(buf);
-  uart_puts("return i;\n");
+  memset(buf, '\0', printf_buf_length);
   return i;
 }

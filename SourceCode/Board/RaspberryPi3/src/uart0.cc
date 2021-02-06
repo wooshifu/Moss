@@ -1,8 +1,9 @@
-#include "hal/stdio.hh"
-#include "libcxx/log.hh"
-#include "rpi3/mailbox.hh"
-#include "rpi3/mmio.hh"
-#include "rpi3/uart0.hh"
+#include "hal/stdio.hh"    // for getchar, putchar
+#include "libcxx/log.hh"   // for log_f
+#include "libcxx/macro.hh" // for extern_C
+#include "rpi3/mailbox.hh" // for mbox, mailbox_property_set_clock_rate_t
+#include "rpi3/mmio.hh"    // for MMIO_BASE, GPFSEL1, GPPUDCLK0, GPPUD
+#include "rpi3/uart0.hh"   // for init_uart0
 
 /* PL011 UART registers */
 #define UART0_DATA_REGISTER                     ((volatile unsigned int*)(MMIO_BASE + 0x00201000))
@@ -129,17 +130,11 @@ int getchar() { return uart0_getc(); }
 #define UART0_IMSC ((volatile unsigned int*)(MMIO_BASE + 0x00201038))
 #define UART0_ICR  ((volatile unsigned int*)(MMIO_BASE + 0x00201044))
 
-//static bool uart_initialized = false;
+// static bool uart_initialized = false;
 /**
  * Set baud rate and characteristics (115200 8N1) and map to GPIO
  */
 void uart_init() {
-//  if (uart_initialized) {
-//    return;
-//  }
-
-  unsigned int r;
-
   /* initialize UART */
   *UART0_CR = 0; // turn off UART0
 
@@ -156,7 +151,7 @@ void uart_init() {
   mbox_call(MBOX_CH_PROP);
 
   /* map UART0 to GPIO pins */
-  r = *GPFSEL1;
+  unsigned int r = *GPFSEL1;
   r &= ~((7 << 12) | (7 << 15)); // gpio14, gpio15
   r |= (4 << 12) | (4 << 15);    // alt0
   *GPFSEL1 = r;
@@ -172,15 +167,12 @@ void uart_init() {
   }
   *GPPUDCLK0 = 0; // flush GPIO setup
 
-  *UART0_ICR       = 0x7FF; // clear interrupts
-  *UART0_IBRD      = 2;     // 115200 baud
-  *UART0_FBRD      = 0xB;
-  *UART0_LCRH      = 0b11 << 5; // 8n1
-  *UART0_CR        = 0x301;     // enable Tx, Rx, FIFO
-//  uart_initialized = true;
+  *UART0_ICR  = 0x7FF;     // clear interrupts
+  *UART0_IBRD = 2;         // 115200 baud
+  *UART0_FBRD = 0xB;       // fbrd
+  *UART0_LCRH = 0b11 << 5; // 8n1
+  *UART0_CR   = 0x301;     // enable Tx, Rx, FIFO
 }
-
-//bool is_uart_initialized() { return uart_initialized; }
 
 /**
  * Send a character
@@ -214,17 +206,12 @@ char uart_getc() {
  */
 void uart_puts(const char* s) {
   while (*s) {
-    /* convert newline to carrige return + newline */
-    if (*s == '\n')
+    /* convert newline to carriage return + newline */
+    if (*s == '\n') {
       uart_send('\r');
+    }
     uart_send(*s++);
   }
-}
-
-extern_C void test_output() {
-  uart_init();
-  uart_send(65);
-  uart_send('\n');
 }
 
 extern_C void print_current_el(unsigned int current_el) {
@@ -248,14 +235,6 @@ extern_C void print_current_el(unsigned int current_el) {
   uart_puts("current el: ");
   uart_send(current_el + 0x30);
   uart_send('\n');
-}
-
-static int debug_count = 0;
-extern_C void debug() {
-  uart_puts("debug count: ");
-  uart_send(debug_count + 0x30);
-  uart_send('\n');
-  ++debug_count;
 }
 
 /**

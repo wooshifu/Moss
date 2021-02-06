@@ -1,10 +1,7 @@
-#include "hal/el.hh"
-#include "hal/init.hh"
-#include "hal/stdio.hh"
-#include "kernel/logo.hh"
-#include "libcxx/log.hh"
-#include "libcxx/macro.hh"
-#include "libcxx/printf.hh"
+#include "hal/init.hh"       // for init_board, init_cpu
+#include "hal/stdio.hh"      // for getchar
+#include "libcxx/macro.hh"   // for extern_C
+#include "libcxx/printf.hh"  // for printf
 
 void uart_puts(const char* s);
 

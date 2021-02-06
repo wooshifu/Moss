@@ -1,8 +1,6 @@
 #include "hal/init.hh"
-#include "libcxx/log.hh"
-#include "rpi3/random.hh"
-#include "rpi3/timer.hh"
-#include "rpi3/uart0.hh"
+#include "rpi3/random.hh"  // for init_random_generator
+#include "rpi3/timer.hh"   // for routing_core0_cntv_to_core0_irq, routing_l...
 
 extern void uart_init();
 int init_board() {
