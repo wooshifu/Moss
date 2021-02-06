@@ -1,6 +1,6 @@
 #pragma once
 
-#if 0
+#if 1
 #ifndef va_start
 #define va_start(v, l) __builtin_va_start(v, l)
 #endif
@@ -29,7 +29,7 @@ static_assert(sizeof(va_list) == 32);
 #endif
 #endif
 
-#if 1
+#if 0
 using va_list = char*;
 #define va_start(ap, parmn) (void)((ap) = (char*)(&(parmn) + 1))
 #define va_end(ap)          (void)((ap) = 0)
