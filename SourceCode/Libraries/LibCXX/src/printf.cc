@@ -1,10 +1,11 @@
+#include "hal/stdio.hh"
 #include "libcxx/macro.hh"  // for extern_C
 #include "libcxx/printf.hh" // for printf
 #include "libcxx/stdarg.hh" // for va_arg, va_list, va_end, va_start
 #include "libcxx/string.hh" // for strlen
 #include "libcxx/types.hh"  // for int32_t, uint32_t, uint8_t
 
-#if 0
+#if 1
 
 // define this globally (e.g. gcc -DPRINTF_INCLUDE_CONFIG_H ...) to include the
 // printf_config.h header file
@@ -702,11 +703,12 @@ static int _vsnprintf(out_fct_type out, char* buffer, const size_t maxlen, const
         // unsigned
         if (flags & FLAGS_LONG_LONG) {
 #if defined(PRINTF_SUPPORT_LONG_LONG)
-          idx = _ntoa_long_long(out, buffer, idx, maxlen, va_arg(va, unsigned long long), false, base, precision, width,
-                                flags);
+          unsigned long long vv = va_arg(va, unsigned long long);
+          idx                   = _ntoa_long_long(out, buffer, idx, maxlen, vv, false, base, precision, width, flags);
 #endif
         } else if (flags & FLAGS_LONG) {
-          idx = _ntoa_long(out, buffer, idx, maxlen, va_arg(va, unsigned long), false, base, precision, width, flags);
+          unsigned long vv = va_arg(va, unsigned long);
+          idx              = _ntoa_long(out, buffer, idx, maxlen, vv, false, base, precision, width, flags);
         } else {
           const unsigned int value = (flags & FLAGS_CHAR)  ? (unsigned char)va_arg(va, unsigned int)
                                    : (flags & FLAGS_SHORT) ? (unsigned short int)va_arg(va, unsigned int)
@@ -830,17 +832,28 @@ static int _vsnprintf(out_fct_type out, char* buffer, const size_t maxlen, const
 
 void _putchar(char character) { putchar(character); }
 
-void uart_puts(char* s);
+void uart_puts(const char* s);
+
 int printf_(const char* format, ...) {
   // todo: printf bug
+#if 0
+  char buffer[1];
   va_list va;
   va_start(va, format);
-  char buffer[1];
   const int ret = _vsnprintf(_out_char, buffer, (size_t)-1, format, va);
   va_end(va);
   return ret;
-//  uart_puts((char*)format);
-//  return 0;
+#endif
+#if 1
+  // remove the following line will generate assembly code `ldr q0 [x8]`, it will crash, why????
+  char p_buffer[256]{};
+  va_list va;
+  va_start(va, format);
+  int ret = vsnprintf_(p_buffer, 256, format, va);
+  va_end(va);
+  uart_puts(p_buffer);
+  return ret;
+#endif
 }
 
 int sprintf_(char* buffer, const char* format, ...) {
@@ -879,6 +892,7 @@ int fctprintf(void (*out)(char character, void* arg), void* arg, const char* for
 
 #endif
 
+#if 0
 #define is_digit(c) ((c) >= '0' && (c) <= '9')
 
 static int skip_atoi(const char** s) {
@@ -1121,3 +1135,7 @@ extern_C int32_t printf(const char* fmt, ...) {
   memset(buf, '\0', printf_buf_length);
   return i;
 }
+
+#endif
+
+// todo: copy printf impl from rtt kservice.c:1190 void rt_kprintf(const char *fmt, ...)

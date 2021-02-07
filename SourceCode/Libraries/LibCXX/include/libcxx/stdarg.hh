@@ -13,6 +13,10 @@
 #define va_arg(v, l) __builtin_va_arg(v, l)
 #endif
 
+#ifndef va_copy
+#define va_copy(destination, source) __builtin_va_copy(destination, source)
+#endif
+
 #ifndef __va_list__
 using va_list = __builtin_va_list;
 // aarch64 va_list impl
