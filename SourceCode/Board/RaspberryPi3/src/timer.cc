@@ -44,7 +44,7 @@ void routing_local_timer_to_core0_irq() {
 static u64 elapsed_seconds = 0;
 void handle_local_timer_irq() {
   ++elapsed_seconds;
-  log_d("current elapsed seconds:%llu", elapsed_seconds);
+  log_d("current elapsed seconds:%lu", elapsed_seconds);
   memory_write_32bits((u32*)LOCAL_TIMER_CLEAR, LOCAL_TIMER_CLEAR_ACK);
 }
 

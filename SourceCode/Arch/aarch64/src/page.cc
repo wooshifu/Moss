@@ -23,7 +23,7 @@ void mem_init(unsigned long start_mem, unsigned long end_mem) {
     start_mem += PAGE_SIZE;
   }
 
-  log_i("Memory: %uKB available, %u free pages\n", free / 1024, nr_free_pages);
+  log_i("Memory: %luKB available, %lu free pages\n", free / 1024, nr_free_pages);
 }
 
 constexpr auto LOW_MEMORY = (2 * SECTION_SIZE);

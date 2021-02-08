@@ -166,7 +166,7 @@ static void create_identical_mapping() {
   u64 text_start = get_text_start_address();
   u64 text_end   = get_text_end_address();
   u64 text_size  = get_text_size();
-  log_d("text start => end: 0x%llx => 0x%llx, size: %lld", text_start, text_end, text_size);
+  log_d("text start => end: 0x%lx => 0x%lx, size: %lu", text_start, text_end, text_size);
   create_l0_mapping((L0PageTableEntry*)&l0_page_table_base_address, text_start, text_start, text_size, PAGE_KERNEL_ROX,
                     default_func_allocate_page, 0);
 
@@ -174,7 +174,7 @@ static void create_identical_mapping() {
   u64 memory_start = PAGE_ALIGN(text_end);
   u64 memory_end   = TOTAL_MEMORY;
   u64 memory_size  = memory_end - memory_start;
-  log_d("memory start => end: 0x%llx => 0x%llx, size: %lld", memory_start, memory_end, memory_size);
+  log_d("memory start => end: 0x%lx => 0x%lx, size: %lu", memory_start, memory_end, memory_size);
   create_l0_mapping(reinterpret_cast<L0PageTableEntry*>(&l0_page_table_base_address), memory_start, memory_start,
                     memory_size, PAGE_KERNEL, default_func_allocate_page, 0);
 }
@@ -211,7 +211,7 @@ static int enable_mmu() {
   u64 tmp    = ARM64_READ_SYSREG(ID_AA64MMFR0_EL1);
   u64 tgran4 = (tmp >> ID_AA64MMFR0_TGRAN4_SHIFT) & 0xf;
   if (tgran4 != ID_AA64MMFR0_TGRAN4_SUPPORTED) {
-    log_e("tgran4 is not supported, tgran4 is: %ll", tgran4);
+    log_e("tgran4 is not supported, tgran4 is: %lu", tgran4);
     return -1;
   }
 

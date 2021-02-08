@@ -27,7 +27,7 @@ void handle_generic_timer_irq() {
   // todo: change value
   ++count;
   if (count % 100000 == 0) {
-    log_d("count: %lld", count);
+    log_d("count: %lu", count);
   }
   write_cntv_tval(62500000);
 }

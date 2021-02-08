@@ -15,7 +15,7 @@ constexpr const char* entry_error_messages[] = {
     "SYNC_INVALID_EL0_32", "IRQ_INVALID_EL0_32", "FIQ_INVALID_EL0_32", "ERROR_INVALID_EL0_32"};
 
 extern_C void show_invalid_entry_message(int type, u64 esr, u64 address) {
-  log_e("%s, ESR: %x, address: %x", entry_error_messages[type], esr, address);
+  log_e("%s, ESR: %lx, address: %lx", entry_error_messages[type], esr, address);
 }
 
 /**
