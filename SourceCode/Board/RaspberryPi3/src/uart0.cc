@@ -190,7 +190,7 @@ void uart_send(unsigned int c) {
  * Receive a character
  */
 char uart_getc() {
-  char r;
+  char r = 0;
   /* wait until something is in the buffer */
   do {
     asm volatile("nop");
@@ -241,8 +241,8 @@ extern_C void print_current_el(unsigned int current_el) {
  * Display a binary value in hexadecimal
  */
 void uart_hex(unsigned int d) {
-  unsigned int n;
-  int c;
+  unsigned int n = 0;
+  int c          = 0;
   for (c = 28; c >= 0; c -= 4) {
     // get highest tetrad
     n = (d >> c) & 0xF;

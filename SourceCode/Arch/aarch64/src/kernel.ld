@@ -50,4 +50,10 @@ SECTIONS
     {
         *(.note.gnu.build-id)
     }
+
+    . = ALIGN(8);
+    __stack_begin = .;
+    . += 40960;
+    . = ALIGN(8);
+    __stack_end = .;
 }

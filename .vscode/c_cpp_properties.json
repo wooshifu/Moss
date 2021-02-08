@@ -7,9 +7,9 @@
             ],
             "defines": [],
             "macFrameworkPath": [],
-            "compilerPath": "${HOME}/aarch64-unknown-linux-gnu/bin/aarch64-unknown-linux-gnu-g++",
+            "compilerPath": "${HOME}/aarch64-unknown-elf/bin/aarch64-unknown-elf-g++",
             "cStandard": "gnu11",
-            "cppStandard": "c++17",
+            "cppStandard": "c++20",
             "intelliSenseMode": "gcc-arm64",
             "compileCommands": "${workspaceFolder}/build/compile_commands.json",
             "configurationProvider": "ms-vscode.cmake-tools"

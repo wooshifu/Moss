@@ -1,5 +1,6 @@
 #pragma once
 
+#include "libcxx/linux_string.hh"
 #include "libcxx/log.hh"
 #include "libcxx/stdio.hh"
 #include "libcxx/string.hh"
@@ -52,6 +53,11 @@ constexpr const char* __format_specifier(u64 /*unused*/) { return "%llu"; }
 #endif
 
 #if LOG_OUTPUT_ENABLE_LABEL
+#if LOG_OUTPUT_ENABLE_COLORFUL
+#define __append_LOG_OUTPUT_COLOR_RESET_to__test_log_format strcat(__test_log_format, LOG_OUTPUT_COLOR_RESET);
+#else
+#define __append_LOG_OUTPUT_COLOR_RESET_to__test_log_format
+#endif
 #define ASSERT_EQ(actual, expected)                                                                                    \
   do {                                                                                                                 \
     char __test_log_format[256];                                                                                       \
@@ -64,8 +70,7 @@ constexpr const char* __format_specifier(u64 /*unused*/) { return "%llu"; }
     strcat(__test_log_format, __format_specifier(actual));                                                             \
     strcat(__test_log_format, " == ");                                                                                 \
     strcat(__test_log_format, __format_specifier(expected));                                                           \
-    strcat(__test_log_format, LOG_OUTPUT_COLOR_RESET);                                                                 \
-    strcat(__test_log_format, "\n");                                                                                   \
+    __append_LOG_OUTPUT_COLOR_RESET_to__test_log_format strcat(__test_log_format, "\n");                               \
     /*printf("format is %s", __test_log_format);*/                                                                     \
                                                                                                                        \
     ++test::__test_all_asserts;                                                                                        \

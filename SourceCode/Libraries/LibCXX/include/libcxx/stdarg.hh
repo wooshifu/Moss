@@ -20,7 +20,7 @@
 #ifndef __va_list__
 using va_list = __builtin_va_list;
 // aarch64 va_list impl
-static_assert(sizeof(va_list) == 32);
+// static_assert(sizeof(va_list) == 32);
 // see https://developer.arm.com/documentation/ihi0055/latest/
 // typedef struct  va_list {
 //  void * stack; // next stack param

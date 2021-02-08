@@ -1,17 +1,17 @@
 message(STATUS "detected c compiler id: ${CMAKE_C_COMPILER_ID}, version: ${CMAKE_C_COMPILER_VERSION}")
 message(STATUS "detected c++ compiler id: ${CMAKE_CXX_COMPILER_ID}, version: ${CMAKE_CXX_COMPILER_VERSION}")
 
-if (CMAKE_C_COMPILER_ID AND NOT CMAKE_C_COMPILER_ID STREQUAL "Clang")
-    message(FATAL_ERROR "[compiler] only clang is supported")
+if (CMAKE_C_COMPILER_ID AND NOT CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    message(FATAL_ERROR "[compiler] only gcc is supported")
 endif ()
 
-if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    message(FATAL_ERROR "[compiler] only clang++ is supported")
+if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    message(FATAL_ERROR "[compiler] only g++ is supported")
 endif ()
 
-set(CLANG_MIN_VERSION_REQUIRED 10.0.0)
-if (CMAKE_C_COMPILER_ID AND CMAKE_C_COMPILER_VERSION VERSION_LESS ${CLANG_MIN_VERSION_REQUIRED} OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${CLANG_MIN_VERSION_REQUIRED})
-    message(FATAL_ERROR "Clang version must be greater than ${CLANG_MIN_VERSION_REQUIRED}")
+set(GCC_MIN_VERSION_REQUIRED 10.0.0)
+if (CMAKE_C_COMPILER_ID AND CMAKE_C_COMPILER_VERSION VERSION_LESS ${GCC_MIN_VERSION_REQUIRED} OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${GCC_MIN_VERSION_REQUIRED})
+    message(FATAL_ERROR "gcc version must be greater than ${GCC_MIN_VERSION_REQUIRED}")
 endif ()
 
 function(read_arch_compiler_flags_from_file IN_file OUT_flag)
@@ -76,13 +76,12 @@ function(setup_compiler_flags IN_board IN_arch)
             # "-v"
             "-O${OPTIMIZATION_LEVEL}"
             "-g"
-            # "-save-temps" # this flag will broke iwyu
+             "-save-temps" # this flag will broke iwyu
             "-Wall"
             "-Wextra"
             "-Werror"
             ${ignore_specific_warnings}
             "-MD"
-            "-fuse-ld=lld"
             "-fpic"
             "-ffreestanding"
             "-fno-builtin"
@@ -91,10 +90,6 @@ function(setup_compiler_flags IN_board IN_arch)
             "-nostdinc++"
             "-nostdlib"
             "-nostartfiles"
-            "-Wl,--no-dynamic-linker"
-            "-Wl,--nostdlib"
-            "-Wl,-error-limit=0"
-            "-Wl,-v"
             )
 
     set(CMAKE_C_FLAGS "-std=c11 ${common_cmake_c_flags}" PARENT_SCOPE)
@@ -113,5 +108,3 @@ macro(print_compiler_flags)
     message(STATUS "${compiler_flags_separator}")
     message(STATUS "${compiler_flags_separator}")
 endmacro()
-
-#todo: lto(-flto) link time optimization ???

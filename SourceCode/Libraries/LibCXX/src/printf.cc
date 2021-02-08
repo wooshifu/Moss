@@ -1,9 +1,8 @@
-#include "hal/stdio.hh"
-#include "libcxx/macro.hh"  // for extern_C
-#include "libcxx/printf.hh" // for printf
+#include "hal/stdio.hh"     // for putchar
+#include "libcxx/limits.hh" // for DBL_MAX
+#include "libcxx/printf.hh" // for _putchar, fctprintf, printf_, snprintf_
 #include "libcxx/stdarg.hh" // for va_arg, va_list, va_end, va_start
-#include "libcxx/string.hh" // for strlen
-#include "libcxx/types.hh"  // for int32_t, uint32_t, uint8_t
+#include "libcxx/types.hh"  // for size_t, uintptr_t, u64, intmax_t, ptrdiff_t
 
 #if 1
 
@@ -239,7 +238,8 @@ static size_t _ntoa_long(out_fct_type out, char* buffer, size_t idx, size_t maxl
   if (!(flags & FLAGS_PRECISION) or value) {
     do {
       const char digit = (char)(value % base);
-      buf[len++]       = digit < 10 ? '0' + digit : (flags & FLAGS_UPPERCASE ? 'A' : 'a') + digit - 10;
+      // NOLINTNEXTLINE
+      buf[len++] = digit < 10 ? '0' + digit : (flags & FLAGS_UPPERCASE ? 'A' : 'a') + digit - 10;
       value /= base;
     } while (value && (len < PRINTF_NTOA_BUFFER_SIZE));
   }
@@ -264,7 +264,8 @@ static size_t _ntoa_long_long(out_fct_type out, char* buffer, size_t idx, size_t
   if (!(flags & FLAGS_PRECISION) or value) {
     do {
       const char digit = (char)(value % base);
-      buf[len++]       = digit < 10 ? '0' + digit : (flags & FLAGS_UPPERCASE ? 'A' : 'a') + digit - 10;
+      // NOLINTNEXTLINE
+      buf[len++] = digit < 10 ? '0' + digit : (flags & FLAGS_UPPERCASE ? 'A' : 'a') + digit - 10;
       value /= base;
     } while (value && (len < PRINTF_NTOA_BUFFER_SIZE));
   }
@@ -836,24 +837,20 @@ void uart_puts(const char* s);
 
 int printf_(const char* format, ...) {
   // todo: printf bug
-#if 0
   char buffer[1];
   va_list va;
   va_start(va, format);
   const int ret = _vsnprintf(_out_char, buffer, (size_t)-1, format, va);
   va_end(va);
   return ret;
-#endif
-#if 1
-  // remove the following line will generate assembly code `ldr q0 [x8]`, it will crash, why????
-  char p_buffer[256]{};
-  va_list va;
-  va_start(va, format);
-  int ret = vsnprintf_(p_buffer, 256, format, va);
-  va_end(va);
-  uart_puts(p_buffer);
-  return ret;
-#endif
+  //  // remove the following line will generate assembly code `ldr q0 [x8]`, it will crash, why????
+  //  char p_buffer[256]{};
+  //  va_list va;
+  //  va_start(va, format);
+  //  int ret = vsnprintf_(p_buffer, 256, format, va);
+  //  va_end(va);
+  //  uart_puts(p_buffer);
+  //  return ret;
 }
 
 int sprintf_(char* buffer, const char* format, ...) {

@@ -1,12 +1,12 @@
-#include "aarch64/asm.hh"
-#include "aarch64/barrier.hh"
-#include "aarch64/linker.hh"
-#include "aarch64/mair.hh"
-#include "aarch64/page.hh"
-#include "aarch64/page_property.hh"
-#include "libcxx/log.hh"
-#include "libcxx/string.hh"
-#include "libcxx/types.hh"
+#include "aarch64/asm.hh"           // for ARM64_WRITE_SYSREG, ARM64_READ_S...
+#include "aarch64/barrier.hh"       // for dsb, isb
+#include "aarch64/linker.hh"        // for get_text_end_address, get_text_size
+#include "aarch64/mair.hh"          // for setup_mair_el1
+#include "aarch64/page.hh"          // for L0PageTableEntry, L2PageTableEntry
+#include "aarch64/page_property.hh" // for PAGE_ALIGN, PAGE_SIZE, TCR_TxSZ
+#include "libcxx/linux_string.hh"   // for memset
+#include "libcxx/log.hh"            // for log_d, log_e
+#include "libcxx/types.hh"          // for u64
 
 /// the l0 page table
 [[gnu::aligned(PAGE_SIZE)]] static L0PageTable l0_page_table_base_address;

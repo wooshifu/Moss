@@ -1,5 +1,5 @@
 #include "aarch64/linker.hh"
-#include "libcxx/macro.hh"  // for extern_C
+#include "libcxx/macro.hh" // for extern_C
 
 extern_C void print_mem_stack() {
 #if 0
