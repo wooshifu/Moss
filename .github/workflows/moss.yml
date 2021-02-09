@@ -56,9 +56,6 @@ jobs:
       - name: Install Dependencies
         shell: bash
         run: brew install iwyu llvm
-      - name: find clang tidy location
-        shell: bash
-        run: ls -al $(brew --prefix llvm)/bin
 
       - name: Create Build Environment
         # Some projects don't allow in-source building, so create a separate build directory
@@ -73,10 +70,10 @@ jobs:
         # Note the current convention is to use the -S and -B options here to specify source
         # and build directories, but this is only available with CMake 3.13 and higher.
         # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-        run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/CMake/Toolchain/ToolchainMacAarch64.cmake ..
+        run: export PATH="/usr/local/opt/llvm/bin:$PATH" && cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/CMake/Toolchain/ToolchainMacAarch64.cmake ..
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
         shell: bash
         # Execute the build.  You can specify a specific target with "--target <NAME>"
-        run: cmake --build . --config $BUILD_TYPE
+        run: export PATH="/usr/local/opt/llvm/bin:$PATH" && cmake --build . --config $BUILD_TYPE

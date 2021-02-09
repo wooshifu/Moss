@@ -2,6 +2,7 @@
 ---
 Checks: >
   clang-diagnostic-*,
+  -clang-diagnostic-format,
 
   clang-analyzer-*,
 

@@ -76,7 +76,7 @@ function(setup_compiler_flags IN_board IN_arch)
             # "-v"
             "-O${OPTIMIZATION_LEVEL}"
             "-g"
-             "-save-temps" # this flag will broke iwyu
+            "-save-temps" # this flag will broke iwyu
             "-Wall"
             "-Wextra"
             "-Werror"

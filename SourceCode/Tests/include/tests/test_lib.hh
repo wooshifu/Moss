@@ -37,6 +37,7 @@ u32 __test_failed_asserts  = 0;
            u64         : "%llu"                                                                                        \
   )
 #else
+template <typename T> constexpr const char* __format_specifier(T /*unused*/);
 constexpr const char* __format_specifier(nullptr_t /*unused*/) { return "%p"; }
 constexpr const char* __format_specifier(const char* /*unused*/) { return "%p"; }
 constexpr const char* __format_specifier(char* /*unused*/) { return "%p"; }
