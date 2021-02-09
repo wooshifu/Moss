@@ -9,5 +9,5 @@ mkdir -p "${BUILD_DIR}"
 
 cd "${BUILD_DIR}" || exit
 cmake -DCMAKE_TOOLCHAIN_FILE="${THIS_DIR}"/../../CMake/Toolchain/ToolchainMacAarch64.cmake "${THIS_DIR}/../.."
-make -j"$(nproc)"
+cmake --build . -j"$(nproc)"
 cd - || exit

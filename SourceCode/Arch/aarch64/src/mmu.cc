@@ -4,8 +4,8 @@
 #include "aarch64/mair.hh"          // for setup_mair_el1
 #include "aarch64/page.hh"          // for L0PageTableEntry, L2PageTableEntry
 #include "aarch64/page_property.hh" // for PAGE_ALIGN, PAGE_SIZE, TCR_TxSZ
-#include "libcxx/linux_string.hh"   // for memset
 #include "libcxx/log.hh"            // for log_d, log_e
+#include "libcxx/string.hh"         // for memset
 #include "libcxx/types.hh"          // for u64
 
 /// the l0 page table

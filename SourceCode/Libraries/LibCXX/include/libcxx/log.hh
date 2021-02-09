@@ -17,7 +17,7 @@
 #endif
 
 #ifndef LOG_OUTPUT_ENABLE_COLORFUL
-#define LOG_OUTPUT_ENABLE_COLORFUL 0
+#define LOG_OUTPUT_ENABLE_COLORFUL 1
 #endif
 
 /// log filename, line number, function name or not

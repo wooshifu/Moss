@@ -1,5 +1,5 @@
-#include "libcxx/linux_string.hh" // for memset, memzero, strcat, strchr
 #include "libcxx/log.hh"          // for log_d, log_e
+#include "libcxx/string.hh"       // for memset, memzero, strcat, strchr
 #include "libcxx/types.hh"        // for size_t, u8
 
 void memzero(u8* mem_start, const u8* mem_end) {
