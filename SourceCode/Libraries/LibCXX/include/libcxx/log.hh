@@ -2,8 +2,6 @@
 
 #include "libcxx/macro.hh"
 #include "libcxx/printf.hh"
-#include "libcxx/stdio.hh"
-#include "libcxx/string.hh"
 
 #define LOG_LEVEL_VERBOSE 1
 #define LOG_LEVEL_DEBUG   2
