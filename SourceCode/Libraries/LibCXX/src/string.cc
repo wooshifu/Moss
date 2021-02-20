@@ -1,6 +1,6 @@
-#include "libcxx/log.hh"          // for log_d, log_e
-#include "libcxx/string.hh"       // for memset, memzero, strcat, strchr
-#include "libcxx/types.hh"        // for size_t, u8
+#include "libcxx/log.hh"    // for log_d, log_e
+#include "libcxx/string.hh" // for memset, memzero, strcat, strchr
+#include "libcxx/types.hh"  // for size_t, u8
 
 void memzero(u8* mem_start, const u8* mem_end) {
   log_d("mem start is: %p, mem end is: %p", mem_start, mem_end);

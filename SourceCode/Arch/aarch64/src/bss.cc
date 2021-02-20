@@ -1,7 +1,7 @@
-#include "aarch64/linker.hh"      // for get_bss_end_address, get_bss_start...
-#include "libcxx/macro.hh"        // for extern_C, likely
-#include "libcxx/string.hh"       // for memzero
-#include "libcxx/types.hh"        // for u64, u8
+#include "aarch64/linker.hh" // for get_bss_end_address, get_bss_start...
+#include "libcxx/macro.hh"   // for extern_C, likely
+#include "libcxx/string.hh"  // for memzero
+#include "libcxx/types.hh"   // for u64, u8
 
 extern_C void bss_clean() {
   u64 bss_start = get_bss_start_address();

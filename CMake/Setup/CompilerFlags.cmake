@@ -64,10 +64,8 @@ function(setup_compiler_flags IN_board IN_arch)
 
 
     set(ignore_specific_warnings
-            "-Wno-unused-variable"
             "-Wno-unused-parameter"
             "-Wno-unused-function"
-            "-Wno-unused-command-line-argument"
             )
 
     string(JOIN " " common_cmake_c_flags
@@ -76,7 +74,7 @@ function(setup_compiler_flags IN_board IN_arch)
             # "-v"
             "-O${OPTIMIZATION_LEVEL}"
             "-g"
-            "-save-temps" # this flag will broke iwyu
+            # "-save-temps" # this flag will broke iwyu
             "-Wall"
             "-Wextra"
             "-Werror"
