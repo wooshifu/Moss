@@ -8,6 +8,9 @@ endforeach ()
 
 message(STATUS "********** setup began **********")
 
+message(STATUS ">>> setting up kconfig")
+setup_kconfig()
+
 setup_board(BOARD)
 message(STATUS ">>> building board: ${BOARD}")
 
