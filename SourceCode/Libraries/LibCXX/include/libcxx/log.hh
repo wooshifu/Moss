@@ -1,7 +1,9 @@
 #pragma once
 
+#ifndef __ASSEMBLER__
 #include "libcxx/macro.hh"
 #include "libcxx/printf.hh"
+#endif // __ASSEMBLER__
 
 #define LOG_LEVEL_VERBOSE 1
 #define LOG_LEVEL_DEBUG   2
@@ -15,6 +17,8 @@
 #ifndef LOG_LEVEL
 #define LOG_LEVEL DEFAULT_LOG_LEVEL
 #endif
+
+#ifndef __ASSEMBLER__
 
 #ifndef LOG_OUTPUT_ENABLE_COLORFUL
 #define LOG_OUTPUT_ENABLE_COLORFUL 1
@@ -160,3 +164,5 @@
 #else
 #define log_f(format, ...)
 #endif
+
+#endif // __ASSEMBLER__
