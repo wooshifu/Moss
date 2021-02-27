@@ -10,3 +10,4 @@ AlignConsecutiveMacros: true
 AlignConsecutiveBitFields: true
 AlignConsecutiveAssignments: true
 PointerAlignment: Left
+NamespaceIndentation: All
