@@ -1,15 +1,11 @@
 #include "hal/halt.hh"      // for never_return
 #include "hal/init.hh"      // for init_board, init_cpu
-#include "kconfig.hh"       // for CONFIG_BOARD_USIN...
 #include "kernel/logo.hh"   // for print_moss_logo
 #include "libcxx/log.hh"    // for log_i
 #include "libcxx/macro.hh"  // for extern_C
 #include "libcxx/printf.hh" // for printf
 
 extern_C [[noreturn]] void kernel_main() {
-#if CONFIG_BOARD_USING_RaspberryPi3
-  log_i("CONFIG_BOARD_USING_RaspberryPi3");
-#endif
   init_board();
 
   printf(">>>>>>>>> entered kernel_main <<<<<<<<<\n");

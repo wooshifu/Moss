@@ -1,7 +1,5 @@
 #include "hal/stdio.hh"    // for getchar, putchar
-#include "libcxx/log.hh"   // for log_f
-#include "libcxx/macro.hh" // for extern_C
-#include "rpi3/mailbox.hh" // for mbox, mailbox_property_set_clock_rate_t
+#include "rpi3/mailbox.hh" // for mailbox_call, MAILBOX_CODE_REQUEST, MAILB...
 #include "rpi3/mmio.hh"    // for MMIO_BASE, GPFSEL1, GPPUDCLK0, GPPUD
 #include "rpi3/uart0.hh"   // for init_uart0
 
@@ -22,24 +20,33 @@ void init_uart0() {
   /* initialize UART */
   *UART0_CONTROL_REGISTER = 0; // turn off UART0
 
-  mailbox_property_set_clock_rate_t data = {.size = sizeof(mailbox_property_set_clock_rate_t),
-                                            .code = MAILBOX_CODE_REQUEST,
+  /*
+    mailbox_property_set_clock_rate_t data = {.size = 36,
+                                              .code = MAILBOX_CODE_REQUEST,
 
-                                            .tag                = MAILBOX_PROPERTY_TAG_SET_CLOCK_RATE,
-                                            .buffer_size        = 12, // 12 bytes, clock_id,rate,skip_setting_turbo
-                                            .tag_code           = MAILBOX_CODE_REQUEST,
-                                            .clock_id           = MAILBOX_CLOCK_ID_UART,
-                                            .rate               = 4000000,
-                                            .skip_setting_turbo = 0,
+                                              .tag                = MAILBOX_PROPERTY_TAG_SET_CLOCK_RATE,
+                                              .buffer_size        = 12, // 12 bytes, clock_id,rate,skip_setting_turbo
+                                              .tag_code           = MAILBOX_CODE_REQUEST,
+                                              .clock_id           = MAILBOX_CLOCK_ID_UART,
+                                              .rate               = 4'000'000,
+                                              .skip_setting_turbo = 0,
 
-                                            .end = MAILBOX_PROPERTY_TAG_END};
-  mailbox_call(MAILBOX_CHANNEL_PROPERTY_TAGS_ARM_TO_VIDEO_CORE, &data);
-  //  log_d("response code: %x, tag code: %x", data.code, data.tag_code);
-  if (!is_valid_mailbox_response(data.code, data.tag_code)) {
-    // NOTE: uart0 not initialized, could we log this message to uart0???
-    log_f("failed to set clock uart rate, code: %u, tag_code: %u", data.code, data.tag_code);
-    return;
+                                              .end = MAILBOX_PROPERTY_TAG_END};
+    mailbox_call(MAILBOX_CHANNEL_PROPERTY_TAGS_ARM_TO_VIDEO_CORE, &data);
+  */
+
+  [[gnu::aligned(16)]] auto set_clock_rate = mailbox::property::SetClockRate(4'000'000, 0);
+  bool success = mailbox::call(mailbox::Channel::PROPERTY_TAGS_ARM_TO_VIDEO_CORE, set_clock_rate);
+  if (not success) {
+    // todo: what should we do if success
   }
+  //  log_d("response code: %x, tag code: %x", data.code, data.tag_code);
+  // todo: uncomment following line will cause print to stuck
+  //  if (!is_valid_mailbox_response(data.code, data.tag_code)) {
+  //     NOTE: uart0 not initialized, could we log this message to uart0???
+  //    log_f("failed to set clock uart rate, code: %u, tag_code: %u", data.code, data.tag_code);
+  //    return;
+  //  }
   //  log_d("uart0(id:%u) clock rate initialized to rate:%u", data.clock_id, data.rate);
 
   /* map UART0 to GPIO pins */
@@ -107,19 +114,21 @@ void uart0_puts(char* string) {
   }
 }
 
-void uart_send(unsigned int c);
+// void uart_send(unsigned int c);
 
 /**
  * hal putchar implementation
  * @param character the character
  */
 int putchar(int character) {
-  uart_send(character);
+  uart0_send(character);
+  //  uart_send(character);
   return 0;
 }
 
 int getchar() { return uart0_getc(); }
 
+#if 0
 /* PL011 UART registers */
 #define UART0_DR   ((volatile unsigned int*)(MMIO_BASE + 0x00201000))
 #define UART0_FR   ((volatile unsigned int*)(MMIO_BASE + 0x00201018))
@@ -145,7 +154,7 @@ void uart_init() {
   mbox[3] = 12;
   mbox[4] = 8;
   mbox[5] = 2;       // UART clock
-  mbox[6] = 4000000; // 4Mhz
+  mbox[6] = 4'000'000; // 4Mhz
   mbox[7] = 0;       // clear turbo
   mbox[8] = MBOX_TAG_LAST;
   mbox_call(MBOX_CH_PROP);
@@ -214,30 +223,7 @@ void uart_puts(const char* s) {
   }
 }
 
-extern_C void print_current_el(unsigned int current_el) {
-  switch (current_el) {
-  case 1:
-    uart_puts("el 1");
-    break;
-  case 2:
-    uart_puts("el 2");
-    break;
-  case 3:
-    uart_puts("el 3");
-    break;
-  case 0:
-    uart_puts("el 0");
-    break;
-  case 4:
-    uart_puts("el 4");
-    break;
-  }
-  uart_puts("current el: ");
-  uart_send(current_el + 0x30);
-  uart_send('\n');
-}
-
-/**
+    /**
  * Display a binary value in hexadecimal
  */
 void uart_hex(unsigned int d) {
@@ -251,3 +237,4 @@ void uart_hex(unsigned int d) {
     uart_send(n);
   }
 }
+#endif

@@ -1,11 +1,10 @@
-#include "libcxx/log.hh"    // for log_d, log_e
-#include "libcxx/string.hh" // for memset, memzero, strcat, strchr
+#include "libcxx/string.hh" // for memset, memzero, strcat, strchr, strcmp
 #include "libcxx/types.hh"  // for size_t, u8
 
 void memzero(u8* mem_start, const u8* mem_end) {
-  log_d("mem start is: %p, mem end is: %p", mem_start, mem_end);
+  //  log_d("mem start is: %p, mem end is: %p", mem_start, mem_end);
   if (mem_start > mem_end) {
-    log_e("mem start: %p greater than mem end: %p, mem not cleaned", mem_start, mem_end);
+    //    log_e("mem start: %p greater than mem end: %p, mem not cleaned", mem_start, mem_end);
     return;
   }
   for (size_t i = 0; mem_start + i < mem_end; i++) {
