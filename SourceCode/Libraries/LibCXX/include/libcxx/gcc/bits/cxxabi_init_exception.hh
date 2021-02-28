@@ -36,8 +36,7 @@
 #pragma GCC visibility push(default)
 
 //#include "stddef.h"
-// NOTE: not using stddef.h, using types.hh
-#include "libcxx/types.hh"
+// NOTE: not using stddef.h, use definition from std
 #include "libcxx/gcc/bits/c++config.hh"
 
 #ifndef _GLIBCXX_CDTOR_CALLABI
@@ -58,7 +57,7 @@ namespace __cxxabiv1 {
 
   extern "C" {
   // Allocate memory for the primary exception plus the thrown object.
-  void* __cxa_allocate_exception(size_t) _GLIBCXX_NOTHROW;
+  void* __cxa_allocate_exception(std::size_t) _GLIBCXX_NOTHROW;
 
   void __cxa_free_exception(void*) _GLIBCXX_NOTHROW;
 
