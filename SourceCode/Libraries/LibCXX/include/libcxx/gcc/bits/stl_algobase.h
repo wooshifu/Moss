@@ -2067,7 +2067,7 @@ _GLIBCXX_END_NAMESPACE_VERSION
 // of getting the base algorithms. So, make sure that parallel bits
 // come in too if requested.
 #ifdef _GLIBCXX_PARALLEL
-# include <parallel/algobase.h>
+# include "parallel/algobase.h"
 #endif
 
 #endif

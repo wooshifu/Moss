@@ -53,7 +53,7 @@
 
 #else // the checks are on
 
-#include <bits/boost_concept_check.h>
+#include "bits/boost_concept_check.h"
 
 // Note that the obvious and elegant approach of
 //

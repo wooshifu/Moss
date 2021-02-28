@@ -33,10 +33,10 @@
 #pragma GCC system_header
 
 #if __cplusplus < 201103L
-# include <bits/c++0x_warning.h>
+# include "libcxx/gcc/bits/c++0x_warning.hh"
 #else
 
-#include <libcxx/gcc/type_traits.hh>
+#include "libcxx/gcc/type_traits.hh"
 
 namespace std _GLIBCXX_VISIBILITY(default)
 {

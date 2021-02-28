@@ -41,7 +41,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   struct __is_transparent; // not defined
 
   // Define std::identity here so that <iterator> and <ranges>
-  // don't need to include <bits/stl_function.h> to get it.
+  // don't need to include "bits/stl_function.h" to get it.
 
   /// [func.identity] The identity function.
   struct identity

@@ -87,7 +87,7 @@ namespace __gnu_debug
 
 #else
 
-# include <debug/macros.h>
+# include "debug/macros.h"
 
 # define __glibcxx_requires_cond(_Cond,_Msg) _GLIBCXX_DEBUG_VERIFY(_Cond,_Msg)
 # define __glibcxx_requires_valid_range(_First,_Last)	\
@@ -130,7 +130,7 @@ namespace __gnu_debug
 # define __glibcxx_requires_irreflexive_pred2(_First,_Last,_Pred)	\
   __glibcxx_check_irreflexive_pred2(_First,_Last,_Pred)
 
-# include <debug/functions.h>
+# include "debug/functions.h"
 
 #endif
 
