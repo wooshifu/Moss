@@ -4,9 +4,10 @@
 #include "libcxx/gcc/type_traits.hh"
 #include "libcxx/types.hh"
 #include "libcxx/utils.hh"
-
 #include "rpi3/mmio.hh"
+#include "rpi3/namespaces.hh"
 
+namespace NS_RPI3 {
 /**
  *        0       4       8      12      16      20      24      28      32
  *        +-------+-------------------------------------------------------+
@@ -24,19 +25,6 @@
  *        +-----------------------------------------------------------+-+-+
  */
 #define VIDEOCORE_MBOX (MMIO_BASE + 0x0000B880)
-
-/*
-#define MAILBOX_CHANNEL_POWER_MANAGEMENT                0
-#define MAILBOX_CHANNEL_FRAMEBUFFER                     1
-#define MAILBOX_CHANNEL_VIRTUAL_UART                    2
-#define MAILBOX_CHANNEL_VCHIQ                           3
-#define MAILBOX_CHANNEL_LEDS                            4
-#define MAILBOX_CHANNEL_BUTTONS                         5
-#define MAILBOX_CHANNEL_TOUCH_SCREEN                    6
-#define MAILBOX_CHANNEL_COUNT                           7
-#define MAILBOX_CHANNEL_PROPERTY_TAGS_ARM_TO_VIDEO_CORE 8
-#define MAILBOX_CHANNEL_PROPERTY_TAGS_VIDEO_CORE_TO_ARM 9
-*/
 
 /**
  * The read register for mailbox 0 at offset (the Linux source mentions something of "and the next 4 words", but I've
@@ -141,135 +129,89 @@
 #define MAILBOX_CLOCK_ID_PIXEL_BVB 0x00000000e // PIXEL_BVB
 
 #define MAILBOX_PROPERTY_TAG_SET_CLOCK_RATE 0x00038002
-namespace mailbox_property_tag {
-  constexpr auto SET_CLOCK_RATE = 0x00038002;
-} // namespace mailbox_property_tag
-
-// NOTE: don't change the struct member order, it should be this order described by rasberrypi docs
-/*using mailbox_property_set_clock_rate_t = struct [[gnu::aligned(16)]] mailbox_property_set_clock_rate_t {
-  u32 size; // =sizeof(struct my_property_set_clock_rate_t);
-  u32 code; // =MAILBOX_CODE_REQUEST ;
-
-  u32 tag;                // =MAILBOX_PROPERTY_TAG_SET_CLOCK_RATE;
-  u32 buffer_size;        // =12;
-  u32 tag_code;           // =MAILBOX_CODE_REQUEST;
-  u32 clock_id;           // =CLOCK_ID_UART;
-  u32 rate;               // =4000000;
-  u32 skip_setting_turbo; // =0;
-
-  u32 end; // =MAILBOX_PROPERTY_TAG_END
-};
-static_assert(sizeof(mailbox_property_set_clock_rate_t) == 48);*/
-// The buffer itself is 16-byte aligned as only the upper 28 bits of the address can be passed via the mailbox.
-
-/**
- * send mailbox message to mailbox
- * @param channel which channel to send
- * @param data message data
- */
-// void mailbox_call(u32 channel, void* data);
-
-/**
- * after mailbox_call, we should detect the response is successful or not
- * @param code code
- * @param tag_code tag code
- * @return true on success, false on failure
- */
-// bool is_valid_mailbox_response(u32 code, u32 tag_code);
-
-// extern volatile unsigned int mbox[36];
+  namespace mailbox_property_tag {
+    constexpr auto SET_CLOCK_RATE = 0x00038002;
+  } // namespace mailbox_property_tag
 
 #define MBOX_REQUEST 0
-
-/* channels */
-/*
-#define MBOX_CH_POWER 0
-#define MBOX_CH_FB    1
-#define MBOX_CH_VUART 2
-#define MBOX_CH_VCHIQ 3
-#define MBOX_CH_LEDS  4
-#define MBOX_CH_BTNS  5
-#define MBOX_CH_TOUCH 6
-#define MBOX_CH_COUNT 7
-#define MBOX_CH_PROP  8
-*/
 
 /* tags */
 #define MBOX_TAG_GETSERIAL  0x10004
 #define MBOX_TAG_SETCLKRATE 0x38002
 #define MBOX_TAG_LAST       0
 
-// int mbox_call(unsigned char ch);
+  template <typename T> concept IsClassOrStruct = std::is_class_v<T>;
 
-template <typename T> concept IsClassOrStruct = std::is_class_v<T>;
-
-namespace mailbox {
-  enum class Channel : int {
-    POWER_MANAGEMENT                = 0,
-    FRAMEBUFFER                     = 1,
-    VIRTUAL_UART                    = 2,
-    VCHIQ                           = 3,
-    LEDS                            = 4,
-    BUTTONS                         = 5,
-    TOUCH_SCREEN                    = 6,
-    COUNT                           = 7,
-    PROPERTY_TAGS_ARM_TO_VIDEO_CORE = 8,
-    PROPERTY_TAGS_VIDEO_CORE_TO_ARM = 9,
-  };
-
-  namespace _property {
-    class _SetClockRate {
-    public:
-      const u32 tag         = mailbox_property_tag::SET_CLOCK_RATE;
-      const u32 buffer_size = 12;
-      const u32 tag_code    = MAILBOX_CODE_REQUEST;
-      const u32 clock_id    = MAILBOX_CLOCK_ID_UART;
-      const u32 rate;               // =4000000;
-      const u32 skip_setting_turbo; // =0;
-      _SetClockRate(const u32 rate, const u32 skip_setting_turbo)
-          : rate(rate), skip_setting_turbo(skip_setting_turbo) {}
-
-      _SetClockRate(const u32 tag, const u32 buffer_size, const u32 tag_code, const u32 clock_id, const u32 rate,
-                    const u32 skip_setting_turbo)
-          : tag(tag), buffer_size(buffer_size), tag_code(tag_code), clock_id(clock_id), rate(rate),
-            skip_setting_turbo(skip_setting_turbo) {}
+  namespace mailbox {
+    enum class Channel : int {
+      POWER_MANAGEMENT                = 0,
+      FRAMEBUFFER                     = 1,
+      VIRTUAL_UART                    = 2,
+      VCHIQ                           = 3,
+      LEDS                            = 4,
+      BUTTONS                         = 5,
+      TOUCH_SCREEN                    = 6,
+      COUNT                           = 7,
+      PROPERTY_TAGS_ARM_TO_VIDEO_CORE = 8,
+      PROPERTY_TAGS_VIDEO_CORE_TO_ARM = 9,
     };
 
-  } // namespace _property
+    namespace _property {
+      class _SetClockRate {
+      public:
+        const u32 tag         = mailbox_property_tag::SET_CLOCK_RATE;
+        const u32 buffer_size = 12;
+        const u32 tag_code    = MAILBOX_CODE_REQUEST;
+        const u32 clock_id    = MAILBOX_CLOCK_ID_UART;
+        const u32 rate;               // =4000000;
+        const u32 skip_setting_turbo; // =0;
+        _SetClockRate(const u32 rate, const u32 skip_setting_turbo)
+            : rate(rate), skip_setting_turbo(skip_setting_turbo) {}
 
-  namespace property {
+        _SetClockRate(const u32 tag, const u32 buffer_size, const u32 tag_code, const u32 clock_id, const u32 rate,
+                      const u32 skip_setting_turbo)
+            : tag(tag), buffer_size(buffer_size), tag_code(tag_code), clock_id(clock_id), rate(rate),
+              skip_setting_turbo(skip_setting_turbo) {}
+      };
 
-    template <IsClassOrStruct T> struct Property {
-    public:
-      const u32 size; /*= sizeof(MailboxProperty); */ // todo: fix size, size is 16 aligned
-      const u32 code = MAILBOX_CODE_REQUEST;
+    } // namespace _property
 
-      const T p; // properties
+    namespace property {
 
-      const u32 end = MAILBOX_PROPERTY_TAG_END;
+      template <IsClassOrStruct T> struct Property {
+      public:
+        const u32 size; /*= sizeof(MailboxProperty); */ // todo: fix size, size is 16 aligned
+        const u32 code = MAILBOX_CODE_REQUEST;
 
-      Property(const u32 size, const T& p) : size(size), p(p) {}
+        const T p; // properties
 
-      Property(const u32 size, const u32 code, const T& p, const u32 an_end)
-          : size(size), code(code), p(p), end(an_end) {}
-    };
+        const u32 end = MAILBOX_PROPERTY_TAG_END;
 
-    class SetClockRate : public Property<_property::_SetClockRate> {
-    public:
-      SetClockRate(const u32 rate, const u32 skip_setting_turbo) : Property(36, {rate, skip_setting_turbo}) {}
-    };
-    static_assert(sizeof(SetClockRate) == 36);
-  } // namespace property
+        Property(const u32 size, const T& p) : size(size), p(p) {}
 
-  // find a way to put this function to mailbox.cc file
-  template <typename P> [[nodiscard]] extern bool call(const Channel& channel, const property::Property<P>& property) {
-    do {
-      asm volatile("nop"); // todo: magic, remove this line will cause print to stuck
-    } while (*MAILBOX0_STATUS & MAILBOX_FULL);
-    // send message to mailbox
-    u32 x           = (underlying_value(channel) & 0xF) | (((u32)((unsigned long)&property)) & ~0xf);
-    *MAILBOX0_WRITE = x;
-    // todo: return true???
-    return true;
-  }
-} // namespace mailbox
+        Property(const u32 size, const u32 code, const T& p, const u32 an_end)
+            : size(size), code(code), p(p), end(an_end) {}
+      };
+
+      class SetClockRate : public Property<_property::_SetClockRate> {
+      public:
+        SetClockRate(const u32 rate, const u32 skip_setting_turbo) : Property(36, {rate, skip_setting_turbo}) {}
+      };
+      static_assert(sizeof(SetClockRate) == 36);
+    } // namespace property
+
+    // find a way to put this function to mailbox.cc file
+    template <typename P>
+    [[nodiscard]] extern bool call(const Channel& channel, const property::Property<P>& property) {
+      do {
+        asm volatile("nop"); // todo: magic, remove this line will cause print to stuck
+      } while (*MAILBOX0_STATUS & MAILBOX_FULL);
+      // send message to mailbox
+      u32 x           = (underlying_value(channel) & 0xF) | (((u32)((unsigned long)&property)) & ~0xf);
+      *MAILBOX0_WRITE = x;
+      // todo: return true???
+      return true;
+    }
+  } // namespace mailbox
+
+} // namespace NS_RPI3

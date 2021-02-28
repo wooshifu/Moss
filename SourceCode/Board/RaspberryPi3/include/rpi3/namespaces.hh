@@ -1,9 +1,5 @@
 #pragma once
 
-#ifndef NAMESPACE_RPI3_BEGIN
-#define NAMESPACE_RPI3_BEGIN namespace rpi3 {
-#endif
-
-#ifndef NAMESPACE_RPI3_END
-#define NAMESPACE_RPI3_END }
+#ifndef NS_RPI3
+#define NS_RPI3 rpi3
 #endif

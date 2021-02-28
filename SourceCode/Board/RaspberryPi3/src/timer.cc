@@ -1,12 +1,13 @@
-#include "libcxx/log.hh"
-#include "libcxx/memory.hh"
-#include "libcxx/types.hh"
-#include "rpi3/mmio.hh"
-#include "rpi3/timer.hh"
+#include "libcxx/memory.hh"   // for memory_write_32bits, memory_read_32bits
+#include "libcxx/types.hh"    // for u32, u64
+#include "rpi3/mmio.hh"       // for CORE0_INTERRUPT_SOURCES, CORE0_TIMER_I...
+#include "rpi3/namespaces.hh" // for NAMESPACE_RPI3_BEGIN, NAMESPACE_RPI3_END
+#include "rpi3/timer.hh"      // for handle_local_timer_irq, read_core0_pen...
 
-/* reload value, should be max 28 bits(268435455). 38.4MHz */
-// todo: change value
-constexpr u32 interval = 38400000;
+namespace NS_RPI3 {
+  /* reload value, should be max 28 bits(268435455). 38.4MHz */
+  // todo: change value
+  constexpr u32 interval = 38400000;
 
 #if 0
 #define TIMER_CS  (MMIO_BASE + 0x00003000)
@@ -36,20 +37,24 @@ void handle_timer_irq(void) {
 }
 #endif
 
-void routing_local_timer_to_core0_irq() {
-  memory_write_32bits((u32*)LOCAL_INTERRUPT_ROUTING, LOCAL_TIMER_INTERRUPT_ROUTING_TO_CORE0_IRQ);
-  memory_write_32bits((u32*)LOCAL_TIMER_CONTROL, (interval | LOCAL_TIMER_CONTROL_VALUE));
-}
+  void routing_local_timer_to_core0_irq() {
+    memory_write_32bits((u32*)LOCAL_INTERRUPT_ROUTING, LOCAL_TIMER_INTERRUPT_ROUTING_TO_CORE0_IRQ);
+    memory_write_32bits((u32*)LOCAL_TIMER_CONTROL, (interval | LOCAL_TIMER_CONTROL_VALUE));
+  }
 
-static u64 elapsed_seconds = 0;
-void handle_local_timer_irq() {
-  ++elapsed_seconds;
-  log_d("current elapsed seconds:%lu", elapsed_seconds);
-  memory_write_32bits((u32*)LOCAL_TIMER_CLEAR, LOCAL_TIMER_CLEAR_ACK);
-}
+  static u64 elapsed_seconds = 0;
+  void handle_local_timer_irq() {
+    ++elapsed_seconds;
+    //  log_d("current elapsed seconds:%lu", elapsed_seconds);
+    memory_write_32bits((u32*)LOCAL_TIMER_CLEAR, LOCAL_TIMER_CLEAR_ACK);
+  }
 
-void routing_core0_cntv_to_core0_irq() {
-  memory_write_32bits((u32*)CORE0_TIMER_INTERRUPT_CONTROL, COREn_CNTV_IRQ_INTERRUPT_ENABLED);
-}
+  void routing_core0_cntv_to_core0_irq() {
+    memory_write_32bits((u32*)CORE0_TIMER_INTERRUPT_CONTROL, COREn_CNTV_IRQ_INTERRUPT_ENABLED);
+  }
 
-u32 read_core0_pending_interrupt() { return memory_read_32bits((const u32*)CORE0_INTERRUPT_SOURCES); }
+  u32 read_core0_pending_interrupt() { return memory_read_32bits((const u32*)CORE0_INTERRUPT_SOURCES); }
+
+} // namespace NS_RPI3
+
+u32 read_core0_pending_interrupt() { return NS_RPI3::read_core0_pending_interrupt(); }

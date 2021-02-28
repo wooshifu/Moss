@@ -1,9 +1,10 @@
 #include "hal/init.hh"
+#include "rpi3/namespaces.hh"
 #include "rpi3/uart0.hh"
 
 int init_board() {
   //  uart_init();
-  init_uart0();
+  NS_RPI3::init_uart0();
 
   //  init_mmu();
   //  log_i("MMU ENABLED!!!");
@@ -12,14 +13,14 @@ int init_board() {
   //    log_i("%llx: mmu read: %llx", i, *(u64 *)(i));
   //  }
 
-/*
-  rpi3::init_random_generator();
+  /*
+    NS_RPI3::init_random_generator();
 
-  for (int i = 0; i < 1000; ++i) {
-    auto v = rpi3::generate_random(1, 100);
-    log_i("random data: %u", v);
-  }
-*/
+    for (int i = 0; i < 1000; ++i) {
+      auto v = NS_RPI3::generate_random(1, 100);
+      log_i("random data: %u", v);
+    }
+  */
 
   // enable generic timer
   //  routing_core0_cntv_to_core0_irq();
