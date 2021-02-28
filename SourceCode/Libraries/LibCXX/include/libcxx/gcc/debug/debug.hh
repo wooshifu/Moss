@@ -37,7 +37,7 @@
  *  the standard library algorithms.
 */
 
-#include "libcxx/gcc/debug/assertions.h"
+#include "libcxx/gcc/debug/assertions.hh"
 
 // Debug mode namespaces.
 

@@ -37,7 +37,7 @@
 #define _FUNCTEXCEPT_H 1
 
 #include "libcxx/gcc/bits/c++config.hh"
-#include "libcxx/gcc/bits/exception_defines.h"
+#include "libcxx/gcc/bits/exception_defines.hh"
 
 namespace std _GLIBCXX_VISIBILITY(default)
 {

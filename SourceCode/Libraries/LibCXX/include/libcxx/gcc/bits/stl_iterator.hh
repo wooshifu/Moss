@@ -60,10 +60,10 @@
 #ifndef _STL_ITERATOR_H
 #define _STL_ITERATOR_H 1
 
-#include "libcxx/gcc/bits/cpp_type_traits.h"
-#include "libcxx/gcc/ext/type_traits.h"
+#include "libcxx/gcc/bits/cpp_type_traits.hh"
+#include "libcxx/gcc/ext/type_traits.hh"
 #include "libcxx/gcc/bits/move.hh"
-#include "libcxx/gcc/bits/ptr_traits.h"
+#include "libcxx/gcc/bits/ptr_traits.hh"
 
 #if __cplusplus >= 201103L
 # include "libcxx/gcc/type_traits.hh"
@@ -78,8 +78,8 @@
 
 #if __cplusplus > 201703L
 # include "libcxx/gcc/compare.hh"
-# include "libcxx/gcc/new"
-# include "libcxx/gcc/bits/iterator_concepts.h"
+# include "libcxx/gcc/new.hh"
+# include "libcxx/gcc/bits/iterator_concepts.hh"
 #endif
 
 namespace std _GLIBCXX_VISIBILITY(default)

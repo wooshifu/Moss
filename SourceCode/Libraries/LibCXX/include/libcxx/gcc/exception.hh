@@ -35,7 +35,7 @@
 #pragma GCC visibility push(default)
 
 #include "libcxx/gcc/bits/c++config.hh"
-#include "libcxx/gcc/bits/exception.h"
+#include "libcxx/gcc/bits/exception.hh"
 
 extern "C++" {
 
@@ -144,8 +144,8 @@ _GLIBCXX_END_NAMESPACE_VERSION
 #pragma GCC visibility pop
 
 #if (__cplusplus >= 201103L)
-#include "libcxx/gcc/bits/exception_ptr.h"
-#include "libcxx/gcc/bits/nested_exception.h"
+#include "libcxx/gcc/bits/exception_ptr.hh"
+#include "libcxx/gcc/bits/nested_exception.hh"
 #endif
 
 #endif

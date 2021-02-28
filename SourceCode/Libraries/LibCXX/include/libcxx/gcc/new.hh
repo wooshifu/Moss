@@ -38,7 +38,7 @@
 #pragma GCC system_header
 
 #include "libcxx/gcc/bits/c++config.hh"
-#include "libcxx/gcc/exception"
+#include "libcxx/gcc/exception.hh"
 
 #pragma GCC visibility push(default)
 

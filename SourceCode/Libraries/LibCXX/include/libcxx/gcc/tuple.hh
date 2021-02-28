@@ -38,7 +38,7 @@
 #include "libcxx/gcc/utility.hh"
 #include "libcxx/gcc/array.hh"
 #include "libcxx/gcc/bits/uses_allocator.hh"
-#include "libcxx/gcc/bits/invoke.h"
+#include "libcxx/gcc/bits/invoke.hh"
 #if __cplusplus > 201703L
 # include "libcxx/gcc/compare.hh"
 # define __cpp_lib_constexpr_tuple 201811L

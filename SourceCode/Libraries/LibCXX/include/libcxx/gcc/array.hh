@@ -36,9 +36,9 @@
 #else
 
 #include "libcxx/gcc/utility.hh"
-#include "libcxx/gcc/bits/functexcept.h"
-#include "libcxx/gcc/bits/stl_algobase.h"
-#include "libcxx/gcc/bits/range_access.h"
+#include "libcxx/gcc/bits/functexcept.hh"
+#include "libcxx/gcc/bits/stl_algobase.hh"
+#include "libcxx/gcc/bits/range_access.hh"
 
 namespace std _GLIBCXX_VISIBILITY(default)
 {

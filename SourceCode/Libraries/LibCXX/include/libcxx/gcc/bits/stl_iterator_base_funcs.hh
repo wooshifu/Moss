@@ -61,8 +61,8 @@
 
 #pragma GCC system_header
 
-#include "libcxx/gcc/bits/concept_check.h"
-#include "libcxx/gcc/debug/assertions.h"
+#include "libcxx/gcc/bits/concept_check.hh"
+#include "libcxx/gcc/debug/assertions.hh"
 
 namespace std _GLIBCXX_VISIBILITY(default)
 {

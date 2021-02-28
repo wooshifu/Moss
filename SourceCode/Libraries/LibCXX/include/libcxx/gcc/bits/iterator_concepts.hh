@@ -33,8 +33,8 @@
 #pragma GCC system_header
 
 #include "libcxx/gcc/concepts.hh"
-#include "libcxx/gcc/bits/ptr_traits.h"	// to_address
-#include "libcxx/gcc/bits/range_cmp.h"	// identity, ranges::less
+#include "libcxx/gcc/bits/ptr_traits.hh" // to_address
+#include "libcxx/gcc/bits/range_cmp.hh"  // identity, ranges::less
 
 #if __cpp_lib_concepts
 namespace std _GLIBCXX_VISIBILITY(default)

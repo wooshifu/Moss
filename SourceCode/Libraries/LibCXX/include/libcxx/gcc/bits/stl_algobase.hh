@@ -57,18 +57,18 @@
 #define _STL_ALGOBASE_H 1
 
 #include "libcxx/gcc/bits/c++config.hh"
-#include "libcxx/gcc/bits/functexcept.h"
-#include "libcxx/gcc/bits/cpp_type_traits.h"
-#include "libcxx/gcc/ext/type_traits.h"
-#include "libcxx/gcc/ext/numeric_traits.h"
+#include "libcxx/gcc/bits/functexcept.hh"
+#include "libcxx/gcc/bits/cpp_type_traits.hh"
+#include "libcxx/gcc/ext/type_traits.hh"
+#include "libcxx/gcc/ext/numeric_traits.hh"
 #include "libcxx/gcc/bits/stl_pair.hh"
-#include "libcxx/gcc/bits/stl_iterator_base_types.h"
-#include "libcxx/gcc/bits/stl_iterator_base_funcs.h"
-#include "libcxx/gcc/bits/stl_iterator.h"
-#include "libcxx/gcc/bits/concept_check.h"
-#include "libcxx/gcc/debug/debug.h"
+#include "libcxx/gcc/bits/stl_iterator_base_types.hh"
+#include "libcxx/gcc/bits/stl_iterator_base_funcs.hh"
+#include "libcxx/gcc/bits/stl_iterator.hh"
+#include "libcxx/gcc/bits/concept_check.hh"
+#include "libcxx/gcc/debug/debug.hh"
 #include "libcxx/gcc/bits/move.hh" // For std::swa"
-#include "libcxx/gcc/bits/predefined_ops.h"
+#include "libcxx/gcc/bits/predefined_ops.hh"
 #if __cplusplus >= 201103L
 # include "libcxx/gcc/type_traits.hh"
 #endif

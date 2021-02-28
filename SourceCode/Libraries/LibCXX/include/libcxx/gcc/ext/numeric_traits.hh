@@ -31,8 +31,8 @@
 
 #pragma GCC system_header
 
-#include "libcxx/gcc/bits/cpp_type_traits.h"
-#include "libcxx/gcc/ext/type_traits.h"
+#include "libcxx/gcc/bits/cpp_type_traits.hh"
+#include "libcxx/gcc/ext/type_traits.hh"
 
 namespace __gnu_cxx _GLIBCXX_VISIBILITY(default)
 {

@@ -31,9 +31,9 @@
 
 #pragma GCC system_header
 
-#include "libcxx/gcc/bits/exception.h"
+#include "libcxx/gcc/bits/exception.hh"
 #if __cplusplus >= 201103L
-#include "libcxx/gcc/bits/hash_bytes.h"
+#include "libcxx/gcc/bits/hash_bytes.hh"
 #endif
 
 #pragma GCC visibility push(default)

@@ -32,7 +32,7 @@
 #pragma GCC system_header
 
 #include "libcxx/gcc/bits/c++config.hh"
-#include "libcxx/gcc/bits/cpp_type_traits.h"
+#include "libcxx/gcc/bits/cpp_type_traits.hh"
 
 extern "C++" {
 
