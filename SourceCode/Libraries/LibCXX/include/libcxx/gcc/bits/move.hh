@@ -32,7 +32,7 @@
 
 #include "libcxx/gcc/bits/c++config.hh"
 #if __cplusplus < 201103L
-#include <bits/concept_check.h>
+#include "libcxx/gcc/bits/concept_check.h"
 #endif
 
 namespace std _GLIBCXX_VISIBILITY(default) {

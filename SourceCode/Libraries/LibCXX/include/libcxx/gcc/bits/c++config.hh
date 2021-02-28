@@ -663,7 +663,7 @@ namespace std {
 #define _PSTL_ASSERT(_Condition)               __glibcxx_assert(_Condition)
 #define _PSTL_ASSERT_MSG(_Condition, _Message) __glibcxx_assert(_Condition)
 
-#include <pstl/pstl_config.h>
+#include "pstl/pstl_config.h"
 #endif // __has_include
 #endif // C++17
 

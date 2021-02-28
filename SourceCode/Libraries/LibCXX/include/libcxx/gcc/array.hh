@@ -327,7 +327,7 @@ namespace std _GLIBCXX_VISIBILITY(default) {
 } // namespace )
 
 #ifdef _GLIBCXX_DEBUG
-#include <debug/array>
+#include "libcxx/gcc/debug/array"
 #endif
 
 #endif // C++11
