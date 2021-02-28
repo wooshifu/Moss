@@ -261,10 +261,8 @@ namespace mailbox {
     static_assert(sizeof(SetClockRate) == 36);
   } // namespace property
 
-  template <typename P> concept DerivedFromProperty = requires(P p) { std::derived_from<P, property::Property<P>>; };
-
   // find a way to put this function to mailbox.cc file
-  template <DerivedFromProperty P> [[nodiscard]] extern bool call(const Channel& channel, const P& property) {
+  template <typename P> [[nodiscard]] extern bool call(const Channel& channel, const property::Property<P>& property) {
     do {
       asm volatile("nop"); // todo: magic, remove this line will cause print to stuck
     } while (*MAILBOX0_STATUS & MAILBOX_FULL);

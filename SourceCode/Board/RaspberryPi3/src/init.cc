@@ -12,7 +12,14 @@ int init_board() {
   //    log_i("%llx: mmu read: %llx", i, *(u64 *)(i));
   //  }
 
-  //  init_random_generator();
+/*
+  rpi3::init_random_generator();
+
+  for (int i = 0; i < 1000; ++i) {
+    auto v = rpi3::generate_random(1, 100);
+    log_i("random data: %u", v);
+  }
+*/
 
   // enable generic timer
   //  routing_core0_cntv_to_core0_irq();
