@@ -64,12 +64,10 @@
 #ifndef _STL_RELOPS_H
 #define _STL_RELOPS_H 1
 
-namespace std _GLIBCXX_VISIBILITY(default)
-{
-_GLIBCXX_BEGIN_NAMESPACE_VERSION
+namespace std _GLIBCXX_VISIBILITY(default) {
+  _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
-  namespace rel_ops
-  {
+  namespace rel_ops {
     /** @namespace std::rel_ops
      *  @brief  The generated relational operators are sequestered here.
      */
@@ -82,10 +80,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
      *
      *  This function uses @c == to determine its result.
      */
-    template <class _Tp>
-      inline bool
-      operator!=(const _Tp& __x, const _Tp& __y)
-      { return !(__x == __y); }
+    template <class _Tp> inline bool operator!=(const _Tp& __x, const _Tp& __y) { return !(__x == __y); }
 
     /**
      *  @brief Defines @c > for arbitrary types, in terms of @c <.
@@ -95,10 +90,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
      *
      *  This function uses @c < to determine its result.
      */
-    template <class _Tp>
-      inline bool
-      operator>(const _Tp& __x, const _Tp& __y)
-      { return __y < __x; }
+    template <class _Tp> inline bool operator>(const _Tp& __x, const _Tp& __y) { return __y < __x; }
 
     /**
      *  @brief Defines @c <= for arbitrary types, in terms of @c <.
@@ -108,10 +100,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
      *
      *  This function uses @c < to determine its result.
      */
-    template <class _Tp>
-      inline bool
-      operator<=(const _Tp& __x, const _Tp& __y)
-      { return !(__y < __x); }
+    template <class _Tp> inline bool operator<=(const _Tp& __x, const _Tp& __y) { return !(__y < __x); }
 
     /**
      *  @brief Defines @c >= for arbitrary types, in terms of @c <.
@@ -121,13 +110,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
      *
      *  This function uses @c < to determine its result.
      */
-    template <class _Tp>
-      inline bool
-      operator>=(const _Tp& __x, const _Tp& __y)
-      { return !(__x < __y); }
+    template <class _Tp> inline bool operator>=(const _Tp& __x, const _Tp& __y) { return !(__x < __y); }
   } // namespace rel_ops
 
-_GLIBCXX_END_NAMESPACE_VERSION
-} // namespace std
+  _GLIBCXX_END_NAMESPACE_VERSION
+} // namespace )
 
 #endif /* _STL_RELOPS_H */

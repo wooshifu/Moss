@@ -8,12 +8,12 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 3, or (at your option)
 // any later version.
-// 
+//
 // GCC is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // Under Section 7 of GPL version 3, you are granted additional
 // permissions described in the GCC Runtime Library Exception, version
 // 3.1, as published by the Free Software Foundation.
@@ -44,18 +44,16 @@
 
 extern "C++" {
 
-namespace std 
-{
+namespace std {
   /**
    *  @brief  Exception possibly thrown by @c new.
    *  @ingroup exceptions
    *
    *  @c bad_alloc (or classes derived from it) is used to report allocation
    *  errors from the throwing forms of @c new.  */
-  class bad_alloc : public exception 
-  {
+  class bad_alloc : public exception {
   public:
-    bad_alloc() throw() { }
+    bad_alloc() throw() {}
 
 #if __cplusplus >= 201103L
     bad_alloc(const bad_alloc&) = default;
@@ -71,10 +69,9 @@ namespace std
   };
 
 #if __cplusplus >= 201103L
-  class bad_array_new_length : public bad_alloc
-  {
+  class bad_array_new_length : public bad_alloc {
   public:
-    bad_array_new_length() throw() { }
+    bad_array_new_length() throw() {}
 
     // This declaration is not useless:
     // http://gcc.gnu.org/onlinedocs/gcc-3.0.2/gcc_6.html#SEC118
@@ -86,11 +83,10 @@ namespace std
 #endif
 
 #if __cpp_aligned_new
-  enum class align_val_t: size_t {};
+  enum class align_val_t : size_t {};
 #endif
 
-  struct nothrow_t
-  {
+  struct nothrow_t {
 #if __cplusplus >= 201103L
     explicit nothrow_t() = default;
 #endif
@@ -122,108 +118,89 @@ namespace std
  *
  *  Placement new and delete signatures (take a memory address argument,
  *  does nothing) may not be replaced by a user's program.
-*/
-_GLIBCXX_NODISCARD void* operator new(std::size_t) _GLIBCXX_THROW (std::bad_alloc)
-  __attribute__((__externally_visible__));
-_GLIBCXX_NODISCARD void* operator new[](std::size_t) _GLIBCXX_THROW (std::bad_alloc)
-  __attribute__((__externally_visible__));
-void operator delete(void*) _GLIBCXX_USE_NOEXCEPT
-  __attribute__((__externally_visible__));
-void operator delete[](void*) _GLIBCXX_USE_NOEXCEPT
-  __attribute__((__externally_visible__));
+ */
+_GLIBCXX_NODISCARD void* operator new(std::size_t) _GLIBCXX_THROW(std::bad_alloc)
+    __attribute__((__externally_visible__));
+_GLIBCXX_NODISCARD void* operator new[](std::size_t) _GLIBCXX_THROW(std::bad_alloc)
+    __attribute__((__externally_visible__));
+void operator delete(void*)_GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
+void operator delete[](void*) _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
 #if __cpp_sized_deallocation
-void operator delete(void*, std::size_t) _GLIBCXX_USE_NOEXCEPT
-  __attribute__((__externally_visible__));
-void operator delete[](void*, std::size_t) _GLIBCXX_USE_NOEXCEPT
-  __attribute__((__externally_visible__));
+void operator delete(void*, std::size_t)_GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
+void operator delete[](void*, std::size_t) _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
 #endif
 _GLIBCXX_NODISCARD void* operator new(std::size_t, const std::nothrow_t&) _GLIBCXX_USE_NOEXCEPT
-  __attribute__((__externally_visible__, __malloc__));
+    __attribute__((__externally_visible__, __malloc__));
 _GLIBCXX_NODISCARD void* operator new[](std::size_t, const std::nothrow_t&) _GLIBCXX_USE_NOEXCEPT
-  __attribute__((__externally_visible__, __malloc__));
-void operator delete(void*, const std::nothrow_t&) _GLIBCXX_USE_NOEXCEPT
-  __attribute__((__externally_visible__));
-void operator delete[](void*, const std::nothrow_t&) _GLIBCXX_USE_NOEXCEPT
-  __attribute__((__externally_visible__));
+    __attribute__((__externally_visible__, __malloc__));
+void operator delete(void*, const std::nothrow_t&)_GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
+void operator delete[](void*, const std::nothrow_t&) _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
 #if __cpp_aligned_new
-_GLIBCXX_NODISCARD void* operator new(std::size_t, std::align_val_t)
-  __attribute__((__externally_visible__));
-_GLIBCXX_NODISCARD void* operator new(std::size_t, std::align_val_t, const std::nothrow_t&)
-  _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__, __malloc__));
-void operator delete(void*, std::align_val_t)
-  _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
-void operator delete(void*, std::align_val_t, const std::nothrow_t&)
-  _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
-_GLIBCXX_NODISCARD void* operator new[](std::size_t, std::align_val_t)
-  __attribute__((__externally_visible__));
-_GLIBCXX_NODISCARD void* operator new[](std::size_t, std::align_val_t, const std::nothrow_t&)
-  _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__, __malloc__));
-void operator delete[](void*, std::align_val_t)
-  _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
-void operator delete[](void*, std::align_val_t, const std::nothrow_t&)
-  _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
+_GLIBCXX_NODISCARD void* operator new(std::size_t, std::align_val_t) __attribute__((__externally_visible__));
+_GLIBCXX_NODISCARD void* operator new(std::size_t, std::align_val_t, const std::nothrow_t&) _GLIBCXX_USE_NOEXCEPT
+    __attribute__((__externally_visible__, __malloc__));
+void operator delete(void*, std::align_val_t)_GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
+void operator delete(void*, std::align_val_t, const std::nothrow_t&)_GLIBCXX_USE_NOEXCEPT
+    __attribute__((__externally_visible__));
+_GLIBCXX_NODISCARD void* operator new[](std::size_t, std::align_val_t) __attribute__((__externally_visible__));
+_GLIBCXX_NODISCARD void* operator new[](std::size_t, std::align_val_t, const std::nothrow_t&) _GLIBCXX_USE_NOEXCEPT
+    __attribute__((__externally_visible__, __malloc__));
+void operator delete[](void*, std::align_val_t) _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
+void operator delete[](void*, std::align_val_t, const std::nothrow_t&) _GLIBCXX_USE_NOEXCEPT
+    __attribute__((__externally_visible__));
 #if __cpp_sized_deallocation
-void operator delete(void*, std::size_t, std::align_val_t)
-  _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
-void operator delete[](void*, std::size_t, std::align_val_t)
-  _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
+void operator delete(void*, std::size_t, std::align_val_t)_GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
+void operator delete[](void*, std::size_t, std::align_val_t) _GLIBCXX_USE_NOEXCEPT
+    __attribute__((__externally_visible__));
 #endif // __cpp_sized_deallocation
 #endif // __cpp_aligned_new
 
 // Default placement versions of operator new.
-_GLIBCXX_NODISCARD inline void* operator new(std::size_t, void* __p) _GLIBCXX_USE_NOEXCEPT
-{ return __p; }
-_GLIBCXX_NODISCARD inline void* operator new[](std::size_t, void* __p) _GLIBCXX_USE_NOEXCEPT
-{ return __p; }
+_GLIBCXX_NODISCARD inline void* operator new(std::size_t, void* __p) _GLIBCXX_USE_NOEXCEPT { return __p; }
+_GLIBCXX_NODISCARD inline void* operator new[](std::size_t, void* __p) _GLIBCXX_USE_NOEXCEPT { return __p; }
 
 // Default placement versions of operator delete.
-inline void operator delete  (void*, void*) _GLIBCXX_USE_NOEXCEPT { }
-inline void operator delete[](void*, void*) _GLIBCXX_USE_NOEXCEPT { }
+inline void operator delete(void*, void*)_GLIBCXX_USE_NOEXCEPT {}
+inline void operator delete[](void*, void*) _GLIBCXX_USE_NOEXCEPT {}
 //@}
 } // extern "C++"
 
 #if __cplusplus >= 201703L
 #ifdef _GLIBCXX_HAVE_BUILTIN_LAUNDER
-namespace std
-{
+namespace std {
 #define __cpp_lib_launder 201606
   /// Pointer optimization barrier [ptr.launder]
-  template<typename _Tp>
-    [[nodiscard]] constexpr _Tp*
-    launder(_Tp* __p) noexcept
-    { return __builtin_launder(__p); }
+  template <typename _Tp> [[nodiscard]] constexpr _Tp* launder(_Tp* __p) noexcept { return __builtin_launder(__p); }
 
   // The program is ill-formed if T is a function type or
   // (possibly cv-qualified) void.
 
-  template<typename _Ret, typename... _Args _GLIBCXX_NOEXCEPT_PARM>
-    void launder(_Ret (*)(_Args...) _GLIBCXX_NOEXCEPT_QUAL) = delete;
-  template<typename _Ret, typename... _Args _GLIBCXX_NOEXCEPT_PARM>
-    void launder(_Ret (*)(_Args......) _GLIBCXX_NOEXCEPT_QUAL) = delete;
+  template <typename _Ret, typename... _Args _GLIBCXX_NOEXCEPT_PARM>
+  void launder(_Ret (*)(_Args...) _GLIBCXX_NOEXCEPT_QUAL) = delete;
+  template <typename _Ret, typename... _Args _GLIBCXX_NOEXCEPT_PARM>
+  void launder(_Ret (*)(_Args......) _GLIBCXX_NOEXCEPT_QUAL) = delete;
 
-  void launder(void*) = delete;
-  void launder(const void*) = delete;
-  void launder(volatile void*) = delete;
+  void launder(void*)                = delete;
+  void launder(const void*)          = delete;
+  void launder(volatile void*)       = delete;
   void launder(const volatile void*) = delete;
-}
+} // namespace std
 #endif // _GLIBCXX_HAVE_BUILTIN_LAUNDER
 #endif // C++17
 
 #if __cplusplus > 201703L
-namespace std
-{
+namespace std {
   /// Tag type used to declare a class-specific operator delete that can
   /// invoke the destructor before deallocating the memory.
-  struct destroying_delete_t
-  {
+  struct destroying_delete_t {
     explicit destroying_delete_t() = default;
   };
   /// Tag variable of type destroying_delete_t.
   inline constexpr destroying_delete_t destroying_delete{};
-}
+} // namespace std
 // Only define the feature test macro if the compiler supports the feature:
 #if __cpp_impl_destroying_delete
-# define __cpp_lib_destroying_delete 201806L
+#define __cpp_lib_destroying_delete 201806L
 #endif
 #endif // C++20
 

@@ -6,9 +6,9 @@
 #include "libcxx/types.hh"
 
 namespace test {
-u32 __test_all_asserts     = 0;
-u32 __test_success_asserts = 0;
-u32 __test_failed_asserts  = 0;
+  u32 __test_all_asserts     = 0;
+  u32 __test_success_asserts = 0;
+  u32 __test_failed_asserts  = 0;
 } // namespace test
 
 #ifndef __TEST_NAME_CONCAT

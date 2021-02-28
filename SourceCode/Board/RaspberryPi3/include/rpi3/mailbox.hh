@@ -175,9 +175,9 @@ static_assert(sizeof(mailbox_property_set_clock_rate_t) == 48);*/
  * @param tag_code tag code
  * @return true on success, false on failure
  */
-//bool is_valid_mailbox_response(u32 code, u32 tag_code);
+// bool is_valid_mailbox_response(u32 code, u32 tag_code);
 
-//extern volatile unsigned int mbox[36];
+// extern volatile unsigned int mbox[36];
 
 #define MBOX_REQUEST 0
 

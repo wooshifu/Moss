@@ -1,10 +1,9 @@
 #include "hal/init.hh"
 #include "rpi3/uart0.hh"
 
-
 int init_board() {
-//  uart_init();
-    init_uart0();
+  //  uart_init();
+  init_uart0();
 
   //  init_mmu();
   //  log_i("MMU ENABLED!!!");

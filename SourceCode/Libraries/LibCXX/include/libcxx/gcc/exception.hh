@@ -39,33 +39,30 @@
 
 extern "C++" {
 
-namespace std
-{
+namespace std {
   /** @addtogroup exceptions
    *  @{
    */
 
   /** If an %exception is thrown which is not listed in a function's
    *  %exception specification, one of these may be thrown.  */
-  class bad_exception : public exception
-  {
+  class bad_exception : public exception {
   public:
-    bad_exception() _GLIBCXX_USE_NOEXCEPT { }
+    bad_exception() _GLIBCXX_USE_NOEXCEPT {}
 
     // This declaration is not useless:
     // http://gcc.gnu.org/onlinedocs/gcc-3.0.2/gcc_6.html#SEC118
     virtual ~bad_exception() _GLIBCXX_TXN_SAFE_DYN _GLIBCXX_USE_NOEXCEPT;
 
     // See comment in eh_exception.cc.
-    virtual const char*
-    what() const _GLIBCXX_TXN_SAFE_DYN _GLIBCXX_USE_NOEXCEPT;
+    virtual const char* what() const _GLIBCXX_TXN_SAFE_DYN _GLIBCXX_USE_NOEXCEPT;
   };
 
   /// If you write a replacement %terminate handler, it must be of this type.
-  typedef void (*terminate_handler) ();
+  typedef void (*terminate_handler)();
 
   /// If you write a replacement %unexpected handler, it must be of this type.
-  typedef void (*unexpected_handler) ();
+  typedef void (*unexpected_handler)();
 
   /// Takes a new handler function as an argument, returns the old function.
   terminate_handler set_terminate(terminate_handler) _GLIBCXX_USE_NOEXCEPT;
@@ -77,7 +74,7 @@ namespace std
 
   /** The runtime will call this function if %exception handling must be
    *  abandoned for any reason.  It can also be called by the user.  */
-  void terminate() _GLIBCXX_USE_NOEXCEPT __attribute__ ((__noreturn__));
+  void terminate() _GLIBCXX_USE_NOEXCEPT __attribute__((__noreturn__));
 
   /// Takes a new handler function as an argument, returns the old function.
   unexpected_handler set_unexpected(unexpected_handler) _GLIBCXX_USE_NOEXCEPT;
@@ -89,7 +86,7 @@ namespace std
 
   /** The runtime will call this function if an %exception is thrown which
    *  violates the function's %exception specification.  */
-  void unexpected() __attribute__ ((__noreturn__));
+  void unexpected() __attribute__((__noreturn__));
 
   /** [18.6.4]/1:  'Returns true after completing evaluation of a
    *  throw-expression until either completing initialization of the
@@ -103,20 +100,19 @@ namespace std
    *  (15.5.1).'
    */
   _GLIBCXX17_DEPRECATED
-  bool uncaught_exception() _GLIBCXX_USE_NOEXCEPT __attribute__ ((__pure__));
+  bool uncaught_exception() _GLIBCXX_USE_NOEXCEPT __attribute__((__pure__));
 
 #if __cplusplus >= 201703L || !defined(__STRICT_ANSI__) // c++17 or gnu++98
 #define __cpp_lib_uncaught_exceptions 201411L
   /// The number of uncaught exceptions.
-  int uncaught_exceptions() _GLIBCXX_USE_NOEXCEPT __attribute__ ((__pure__));
+  int uncaught_exceptions() _GLIBCXX_USE_NOEXCEPT __attribute__((__pure__));
 #endif
 
   // @} group exceptions
 } // namespace std
 
-namespace __gnu_cxx
-{
-_GLIBCXX_BEGIN_NAMESPACE_VERSION
+namespace __gnu_cxx {
+  _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
   /**
    *  @brief A replacement for the standard terminate_handler which
@@ -136,8 +132,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    */
   void __verbose_terminate_handler();
 
-_GLIBCXX_END_NAMESPACE_VERSION
-} // namespace
+  _GLIBCXX_END_NAMESPACE_VERSION
+} // namespace __gnu_cxx
 
 } // extern "C++"
 
