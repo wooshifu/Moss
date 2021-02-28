@@ -35,8 +35,8 @@ void init_uart0() {
     mailbox_call(MAILBOX_CHANNEL_PROPERTY_TAGS_ARM_TO_VIDEO_CORE, &data);
   */
 
-  [[gnu::aligned(16)]] auto set_clock_rate = mailbox::property::SetClockRate(4'000'000, 0);
-  bool success = mailbox::call(mailbox::Channel::PROPERTY_TAGS_ARM_TO_VIDEO_CORE, set_clock_rate);
+  alignas(16) auto set_clock_rate = mailbox::property::SetClockRate(4'000'000, 0);
+  bool success                    = mailbox::call(mailbox::Channel::PROPERTY_TAGS_ARM_TO_VIDEO_CORE, set_clock_rate);
   if (not success) {
     // todo: what should we do if success
   }

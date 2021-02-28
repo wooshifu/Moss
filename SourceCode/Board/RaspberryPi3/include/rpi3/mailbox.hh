@@ -1,7 +1,7 @@
 #pragma once
 
-#include "libcxx/concept.hh"
-#include "libcxx/type_traits.hh"
+#include "libcxx/gcc/concepts.hh"
+#include "libcxx/gcc/type_traits.hh"
 #include "libcxx/types.hh"
 #include "libcxx/utils.hh"
 
