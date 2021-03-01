@@ -30,6 +30,11 @@ SECTIONS
     . = ALIGN(8);
     __data_end = .;
 
+    .init_array :
+    {
+        *(.init_array)
+    }
+
     /* must be aligned */
     . = ALIGN(8);
     __bss_start = .;
@@ -40,6 +45,16 @@ SECTIONS
     }
     . = ALIGN(8);
     __bss_end = .;
+
+    .symtab :
+    {
+        *(.symtab)
+    }
+
+    .strtab :
+    {
+        *(.strtab)
+    }
 
     .interp :
     {
