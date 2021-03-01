@@ -1,18 +1,19 @@
-#include "rpi3/mailbox.hh"    // for call, SetClockRate, Channel, Channel::...
-#include "rpi3/mmio.hh"       // for MMIO_BASE, GPFSEL1, GPPUDCLK0, GPPUD
-#include "rpi3/namespaces.hh" // for NAMESPACE_RPI3
-#include "rpi3/uart0.hh"      // for init_uart0
+#include "libcxx/cast.hh"  // for force_cast
+#include "rpi3/mailbox.hh" // for call, SetClockRate, Channel, Channel::...
+#include "rpi3/mmio.hh"
+#include "rpi3/rpi3.hh"  // for NS_RPI3
+#include "rpi3/uart0.hh" // for init_uart0
 
-namespace NS_RPI3 {
+namespace NS_rpi3 {
   /* PL011 UART registers */
-  volatile unsigned int* UART0_DATA_REGISTER                     = ((volatile unsigned int*)(MMIO_BASE + 0x00201000));
-  volatile unsigned int* UART0_FLAG_REGISTER                     = ((volatile unsigned int*)(MMIO_BASE + 0x00201018));
-  volatile unsigned int* UART0_INTEGER_BAUD_RATE_DIVISOR         = ((volatile unsigned int*)(MMIO_BASE + 0x00201024));
-  volatile unsigned int* UART0_FRACTIONAL_BAUD_RATE_DIVISOR      = ((volatile unsigned int*)(MMIO_BASE + 0x00201028));
-  volatile unsigned int* UART0_LINE_CONTROL_REGISTER             = ((volatile unsigned int*)(MMIO_BASE + 0x0020102C));
-  volatile unsigned int* UART0_CONTROL_REGISTER                  = ((volatile unsigned int*)(MMIO_BASE + 0x00201030));
-  volatile unsigned int* UART0_INTERRUPT_MASK_SET_CLEAR_REGISTER = ((volatile unsigned int*)(MMIO_BASE + 0x00201038));
-  volatile unsigned int* UART0_INTERRUPT_CLEAR_REGISTER          = ((volatile unsigned int*)(MMIO_BASE + 0x00201044));
+  auto* UART0_DATA_REGISTER                     = force_cast(volatile unsigned int*, NS_mmio::BASE + 0x00201000);
+  auto* UART0_FLAG_REGISTER                     = force_cast(volatile unsigned int*, NS_mmio::BASE + 0x00201018);
+  auto* UART0_INTEGER_BAUD_RATE_DIVISOR         = force_cast(volatile unsigned int*, NS_mmio::BASE + 0x00201024);
+  auto* UART0_FRACTIONAL_BAUD_RATE_DIVISOR      = force_cast(volatile unsigned int*, NS_mmio::BASE + 0x00201028);
+  auto* UART0_LINE_CONTROL_REGISTER             = force_cast(volatile unsigned int*, NS_mmio::BASE + 0x0020102C);
+  auto* UART0_CONTROL_REGISTER                  = force_cast(volatile unsigned int*, NS_mmio::BASE + 0x00201030);
+  auto* UART0_INTERRUPT_MASK_SET_CLEAR_REGISTER = force_cast(volatile unsigned int*, NS_mmio::BASE + 0x00201038);
+  auto* UART0_INTERRUPT_CLEAR_REGISTER          = force_cast(volatile unsigned int*, NS_mmio::BASE + 0x00201044);
 
   /**
    * Set baud rate and characteristics (115200 8N1) and map to GPIO
@@ -20,8 +21,8 @@ namespace NS_RPI3 {
   void init_uart0() {
     *UART0_CONTROL_REGISTER = 0; // turn off UART0
 
-    alignas(16) auto set_clock_rate = mailbox::property::SetClockRate(4'000'000, 0);
-    bool success                    = mailbox::call(mailbox::Channel::PROPERTY_TAGS_ARM_TO_VIDEO_CORE, set_clock_rate);
+    alignas(16) auto set_clock_rate = NS_mailbox::property::SetClockRate(4'000'000, 0);
+    bool success = NS_mailbox::call(mailbox::Channel::PROPERTY_TAGS_ARM_TO_VIDEO_CORE, set_clock_rate);
     if (not success) {
       // todo: what should we do if success
     }
@@ -35,21 +36,21 @@ namespace NS_RPI3 {
     //  log_d("uart0(id:%u) clock rate initialized to rate:%u", data.clock_id, data.rate);
 
     /* map UART0 to GPIO pins */
-    unsigned int r = *GPFSEL1;
+    unsigned int r = *NS_mmio::GPFSEL1;
     r &= ~((7 << 12) | (7 << 15)); // gpio14, gpio15, [17:15]:FSEL15, [14:12]:FSEL14
     r |= (4 << 12) | (4 << 15);    // alt0, 0b100 = GPIO Pin takes alternate function 0
-    *GPFSEL1 = r;
-    *GPPUD   = 0; // enable pins 14 and 15
-    r        = 150;
+    *NS_mmio::GPFSEL1 = r;
+    *NS_mmio::GPPUD   = 0; // enable pins 14 and 15
+    r                 = 150;
     while (r--) {
       asm volatile("nop");
     }
-    *GPPUDCLK0 = (1 << 14) | (1 << 15);
-    r          = 150;
+    *NS_mmio::GPPUDCLK0 = (1 << 14) | (1 << 15);
+    r                   = 150;
     while (r--) {
       asm volatile("nop");
     }
-    *GPPUDCLK0                          = 0;         // flush GPIO setup
+    *NS_mmio::GPPUDCLK0                 = 0;         // flush GPIO setup
     *UART0_INTERRUPT_CLEAR_REGISTER     = 0x7FF;     // clear interrupts
     *UART0_INTEGER_BAUD_RATE_DIVISOR    = 2;         // 115200 baud, 4000000/(16*115200)
     *UART0_FRACTIONAL_BAUD_RATE_DIVISOR = 0xB;       // BAUDDIV = (FUARTCLK/(16 * Baud rate))
@@ -113,20 +114,20 @@ namespace NS_RPI3 {
 
   int getchar() { return uart0_getc(); }
 
-} // namespace NS_RPI3
+} // namespace NS_rpi3
 
-int putchar(int character) { return NS_RPI3::putchar(character); }
+int putchar(int character) { return NS_rpi3::putchar(character); }
 
 #if 0
 /* PL011 UART registers */
-#define UART0_DR   ((volatile unsigned int*)(MMIO_BASE + 0x00201000))
-#define UART0_FR   ((volatile unsigned int*)(MMIO_BASE + 0x00201018))
-#define UART0_IBRD ((volatile unsigned int*)(MMIO_BASE + 0x00201024))
-#define UART0_FBRD ((volatile unsigned int*)(MMIO_BASE + 0x00201028))
-#define UART0_LCRH ((volatile unsigned int*)(MMIO_BASE + 0x0020102C))
-#define UART0_CR   ((volatile unsigned int*)(MMIO_BASE + 0x00201030))
-#define UART0_IMSC ((volatile unsigned int*)(MMIO_BASE + 0x00201038))
-#define UART0_ICR  ((volatile unsigned int*)(MMIO_BASE + 0x00201044))
+#define UART0_DR   force_cast(volatile unsigned int*, NS_mmio::BASE + 0x00201000)
+#define UART0_FR   force_cast(volatile unsigned int*, NS_mmio::BASE + 0x00201018)
+#define UART0_IBRD force_cast(volatile unsigned int*, NS_mmio::BASE + 0x00201024)
+#define UART0_FBRD force_cast(volatile unsigned int*, NS_mmio::BASE + 0x00201028)
+#define UART0_LCRH force_cast(volatile unsigned int*, NS_mmio::BASE + 0x0020102C)
+#define UART0_CR   force_cast(volatile unsigned int*, NS_mmio::BASE + 0x00201030)
+#define UART0_IMSC force_cast(volatile unsigned int*, NS_mmio::BASE + 0x00201038)
+#define UART0_ICR  force_cast(volatile unsigned int*, NS_mmio::BASE + 0x00201044)
 
 // static bool uart_initialized = false;
 /**

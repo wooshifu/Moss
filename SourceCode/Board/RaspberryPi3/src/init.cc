@@ -1,8 +1,8 @@
 #include "hal/init.hh"
-#include "rpi3/namespaces.hh"
+#include "rpi3/rpi3.hh" // for NS_rpi3
 #include "rpi3/uart0.hh"
 
-namespace NS_RPI3 {
+namespace NS_rpi3 {
   int init_board() {
     init_uart0();
 
@@ -33,6 +33,6 @@ namespace NS_RPI3 {
     //  lfb_showpicture();
     return 0;
   }
-} // namespace NS_RPI3
+} // namespace NS_rpi3
 
-int init_board() { return rpi3::init_board(); }
+int init_board() { return NS_rpi3::init_board(); }

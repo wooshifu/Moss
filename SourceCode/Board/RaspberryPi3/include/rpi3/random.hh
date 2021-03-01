@@ -1,8 +1,8 @@
 #pragma once
 
-#include "rpi3/namespaces.hh"
+#include "rpi3/rpi3.hh"
 
-namespace NS_RPI3 {
+namespace NS_rpi3 {
   /**
    * initialize the random generator
    */
@@ -16,4 +16,4 @@ namespace NS_RPI3 {
    */
   unsigned int generate_random(unsigned int min, unsigned int max);
 
-} // namespace NS_RPI3
+} // namespace NS_rpi3
