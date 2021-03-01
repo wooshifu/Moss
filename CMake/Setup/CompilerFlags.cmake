@@ -64,6 +64,7 @@ function(setup_compiler_flags IN_board IN_arch)
 
 
     set(ignore_specific_warnings
+            "-Wno-unused-variable"
             "-Wno-unused-parameter"
             "-Wno-unused-function"
             )
