@@ -1,6 +1,6 @@
 name: Moss
 
-on: [push]
+on: [push, pull_request]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -42,6 +42,11 @@ jobs:
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: cmake --build . --config $BUILD_TYPE
 
+    - uses: actions/upload-artifact@v2
+      with:
+        name: build-on-linux-${{env.BUILD_TYPE}}
+        path: ${{runner.workspace}}/
+
 # disable build-on-mac, because 1 macOS minute counts as 10 regular minutes, enable this build when necessary
   build-on-mac:
     # The CMake configure and build commands are platform agnostic and should work equally
@@ -77,3 +82,8 @@ jobs:
         shell: bash
         # Execute the build.  You can specify a specific target with "--target <NAME>"
         run: export PATH="/usr/local/opt/llvm/bin:$PATH" && cmake --build . --config $BUILD_TYPE
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build-on-mac-${{env.BUILD_TYPE}}
+          path: ${{runner.workspace}}/
