@@ -8,3 +8,15 @@ choice
     config BOARD_USING_RaspberryPi4
         bool "using board raspberry pi 4"
 endchoice
+
+config KERNEL_ENABLE_GUI
+    bool "enable GUI"
+    default y
+
+config KERNEL_ENABLE_SMP
+    bool "enable smp"
+    default n
+
+config KERNEL_PRINT_MEMORY_LAYOUT
+    bool "print memory layout info"
+    default y

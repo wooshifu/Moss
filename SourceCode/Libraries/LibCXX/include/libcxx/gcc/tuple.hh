@@ -35,10 +35,10 @@
 #include "libcxx/gcc/bits/c++0x_warning.hh"
 #else
 
-#include "libcxx/gcc/utility.hh"
-#include "libcxx/gcc/array.hh"
-#include "libcxx/gcc/bits/uses_allocator.hh"
 #include "libcxx/gcc/bits/invoke.hh"
+#include "libcxx/gcc/bits/move.hh"
+#include "libcxx/gcc/bits/uses_allocator.hh"
+#include "libcxx/gcc/utility.hh"
 #if __cplusplus > 201703L
 #include "libcxx/gcc/compare.hh"
 #define __cpp_lib_constexpr_tuple 201811L
