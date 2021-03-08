@@ -49,6 +49,7 @@ jobs:
 
 # disable build-on-mac, because 1 macOS minute counts as 10 regular minutes, enable this build when necessary
   build-on-mac:
+    if: false # change it to true to build on mac
     # The CMake configure and build commands are platform agnostic and should work equally
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
