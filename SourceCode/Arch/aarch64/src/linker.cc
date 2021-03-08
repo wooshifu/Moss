@@ -1,8 +1,8 @@
 #include "aarch64/linker.hh"
-#include "kconfig.hh"          // for CONFIG_KERNEL_PRINT_MEMORY_LAYOUT
-#include "libcxx/gcc/array.hh" // for array
-#include "libcxx/gcc/tuple.hh" // for make_tuple, get
-#include "libcxx/log.hh"       // for log_d
+#include "array"         // for array
+#include "kconfig.hh"    // for CONFIG_KERNEL_PRINT_MEMORY_LAYOUT
+#include "libcxx/log.hh" // for log_d
+#include "tuple"         // for make_tuple, get
 
 void print_memory_layout() {
 #if CONFIG_KERNEL_PRINT_MEMORY_LAYOUT

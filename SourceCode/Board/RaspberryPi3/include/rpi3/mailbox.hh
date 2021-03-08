@@ -1,11 +1,11 @@
 #pragma once
 
-#include "libcxx/gcc/concepts.hh"
-#include "libcxx/gcc/type_traits.hh"
+#include "concepts"
 #include "libcxx/types.hh"
 #include "libcxx/utils.hh"
 #include "rpi3/mmio.hh"
 #include "rpi3/rpi3.hh"
+#include "type_traits"
 
 #ifndef NS_mailbox
 #define NS_mailbox mailbox

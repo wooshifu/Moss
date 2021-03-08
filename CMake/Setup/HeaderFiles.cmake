@@ -6,6 +6,10 @@ function(target_include_libcxx_header_files IN_target)
     target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Libraries/LibCXX/include)
 endfunction()
 
+function(target_include_libstdcxx_header_files IN_target)
+    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Libraries/LibGccStd/include)
+endfunction()
+
 function(target_include_kernel_header_files IN_target)
     target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Kernel/include)
 endfunction()
