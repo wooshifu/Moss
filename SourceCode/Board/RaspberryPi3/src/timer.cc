@@ -1,8 +1,8 @@
 #include "libcxx/memory.hh" // for memory_write_32bits, memory_read_32bits
 #include "libcxx/types.hh"  // for u32, u64
 #include "rpi3/mmio.hh"
-#include "rpi3/rpi3.hh"     // for NS_MMIO, NS_RPI3
-#include "rpi3/timer.hh"    // for handle_local_timer_irq, read_core0_pen...
+#include "rpi3/rpi3.hh"  // for NS_MMIO, NS_RPI3
+#include "rpi3/timer.hh" // for handle_local_timer_irq, read_core0_pen...
 
 namespace NS_rpi3 {
   /* reload value, should be max 28 bits(268435455). 38.4MHz */
