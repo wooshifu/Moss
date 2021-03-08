@@ -14,6 +14,7 @@
     bl     show_invalid_entry_message
     // TODO: kernel_exit should we do this ???
     //b      err_hang
+    bl oops
 .endm
 
 // todo: save not only generic registers
