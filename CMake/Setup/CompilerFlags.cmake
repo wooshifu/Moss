@@ -28,22 +28,30 @@ function(read_arch_compiler_flags_from_file IN_file OUT_flag)
     set(${OUT_flag} ${flag} PARENT_SCOPE)
 endfunction()
 
-
-if (NOT DEFINED OPTIMIZATION_LEVEL)
-    if (CMAKE_BUILD_TYPE MATCHES "Rel")
-        set(OPTIMIZATION_LEVEL 2)
-    elseif (CMAKE_BUILD_TYPE MATCHES "Debug")
-        set(OPTIMIZATION_LEVEL 0)
-    else ()
-        set(OPTIMIZATION_LEVEL 0)
-    endif ()
-endif ()
-message(STATUS "OPTIMIZATION_LEVEL: ${OPTIMIZATION_LEVEL}")
-
 macro(disable_compiler_link_flags)
     set(CMAKE_C_LINK_FLAGS "")
     set(CMAKE_CXX_LINK_FLAGS "")
 endmacro()
+
+function(get_optimization_level OUT_optimization_level)
+    if (NOT DEFINED OPTIMIZATION_LEVEL)
+        if (CMAKE_BUILD_TYPE MATCHES "Rel")
+            set(${OUT_optimization_level} 2 PARENT_SCOPE)
+        elseif (CMAKE_BUILD_TYPE MATCHES "Debug")
+            set(${OUT_optimization_level} 0 PARENT_SCOPE)
+        else ()
+            set(${OUT_optimization_level} 0 PARENT_SCOPE)
+        endif ()
+    endif ()
+endfunction()
+
+function(get_debug_flag OUT_debug_flag)
+    if (CMAKE_BUILD_TYPE MATCHES "Rel")
+        set(${OUT_debug_flag} "" PARENT_SCOPE)
+    else ()
+        set(${OUT_debug_flag} "-g" PARENT_SCOPE)
+    endif ()
+endfunction()
 
 function(setup_compiler_flags IN_board IN_arch)
     set(arch_flag_file ${MOSS_SOURCE_CODE_DIR}/Arch/${ARCH}/.flags)
@@ -69,12 +77,16 @@ function(setup_compiler_flags IN_board IN_arch)
             "-Wno-unused-function"
             )
 
+    get_debug_flag(debug_flag)
+    get_optimization_level(optimization_level)
+    message(STATUS "OPTIMIZATION_LEVEL :${optimization_level}")
+
     string(JOIN " " common_cmake_c_flags
             ${arch_compiler_flags}
             ${board_compiler_flags}
             # "-v"
-            "-O${OPTIMIZATION_LEVEL}"
-            "-g"
+            "-O${optimization_level}"
+            ${debug_flag}
             # "-save-temps" # this flag will broke iwyu
             "-Wall"
             "-Wextra"
