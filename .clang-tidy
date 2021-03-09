@@ -3,6 +3,7 @@
 Checks: >
   clang-diagnostic-*,
   -clang-diagnostic-format,
+  -clang-diagnostic-unknown-attributes,
 
   clang-analyzer-*,
 
