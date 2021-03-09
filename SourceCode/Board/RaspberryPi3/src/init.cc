@@ -1,4 +1,5 @@
 #include "hal/init.hh"
+#include "libcxx/log.hh"
 #include "rpi3/rpi3.hh" // for NS_rpi3
 #include "rpi3/uart0.hh"
 
@@ -35,4 +36,10 @@ namespace NS_rpi3 {
   }
 } // namespace NS_rpi3
 
-int init_board() { return NS_rpi3::init_board(); }
+int init_board() {
+  auto result = NS_rpi3::init_board();
+  if (not_ok(result)) {
+    log_f("post init board failed, code: %d", result);
+  }
+  return result;
+}

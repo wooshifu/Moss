@@ -24,5 +24,6 @@
 
 #ifndef __ASSEMBLER__ // hidden function declaration in asm source files
 #include "libcxx/macro.hh"
+extern_C void init_exception_vector_table_asm();
 extern_C void init_exception_vector_table();
 #endif

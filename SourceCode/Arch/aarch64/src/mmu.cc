@@ -227,7 +227,7 @@ static int enable_mmu() {
   return 0;
 }
 
-void init_mmu() {
+int init_mmu() {
   log_d("start to init mmu");
 
   clear_l0_page_table();
@@ -237,4 +237,5 @@ void init_mmu() {
   enable_mmu();
 
   log_d("successfully init mmu");
+  return 0;
 }

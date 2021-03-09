@@ -1,10 +1,9 @@
-#include "aarch64/exception.hh" // for init_exception_vector_table
-#include "aarch64/interrupt.hh" // for enable_interrupt
-#include "aarch64/linker.hh"
-#include "aarch64/timer.hh" // for enable_cntv, read_cntfrq, write_cntv...
-#include "hal/init.hh"      // for init_cpu
-#include "libcxx/log.hh"
-#include "libcxx/types.hh" // for u64
+#include "aarch64/interrupt.hh"  // for enable_interrupt
+#include "aarch64/linker.hh"     // for print_memory_layout
+#include "aarch64/timer.hh"      // for enable_cntv, read_cntfrq, write_cntv...
+#include "hal/init.hh"           // for init_cpu
+#include "libcxx/log.hh"         // for log_d
+#include "libcxx/types.hh"       // for u64
 
 static void init_generic_timer() {
   u64 counter_frequency = read_cntfrq();
@@ -16,8 +15,6 @@ static void init_generic_timer() {
 
 int init_cpu() {
   print_memory_layout();
-
-  init_exception_vector_table();
 
   init_generic_timer();
 

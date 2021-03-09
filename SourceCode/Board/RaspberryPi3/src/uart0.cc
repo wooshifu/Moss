@@ -5,6 +5,7 @@
 #include "rpi3/uart0.hh" // for init_uart0
 
 namespace NS_rpi3 {
+  static bool is_uart0_initialized = false;
   /* PL011 UART registers */
   auto* UART0_DATA_REGISTER                     = force_cast(volatile unsigned int*, NS_mmio::BASE + 0x00201000);
   auto* UART0_FLAG_REGISTER                     = force_cast(volatile unsigned int*, NS_mmio::BASE + 0x00201018);
@@ -57,6 +58,7 @@ namespace NS_rpi3 {
     *UART0_LINE_CONTROL_REGISTER        = 0b11 << 5; // 8n1, b11 = 8 bits
     *UART0_CONTROL_REGISTER             = 0x301;     // enable Tx, Rx, FIFO
     //  log_d("uart0 successfully initialized");
+    is_uart0_initialized = true;
   }
 
   /**
@@ -117,6 +119,8 @@ namespace NS_rpi3 {
 } // namespace NS_rpi3
 
 int putchar(int character) { return NS_rpi3::putchar(character); }
+
+bool is_serial_port_initialized() { return rpi3::is_uart0_initialized; }
 
 #if 0
 /* PL011 UART registers */

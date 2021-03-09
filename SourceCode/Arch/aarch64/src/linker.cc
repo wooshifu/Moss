@@ -1,3 +1,5 @@
+#include <utility>       // for forward
+
 #include "aarch64/linker.hh"
 #include "array"         // for array
 #include "kconfig.hh"    // for CONFIG_KERNEL_PRINT_MEMORY_LAYOUT

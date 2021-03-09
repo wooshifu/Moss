@@ -1,12 +1,18 @@
-#include "hal/halt.hh"      // for never_return
-#include "hal/init.hh"      // for init_board, init_cpu
-#include "kernel/logo.hh"   // for print_moss_logo
-#include "libcxx/log.hh"    // for log_i
-#include "libcxx/macro.hh"  // for extern_C
-#include "libcxx/printf.hh" // for printf
+#include "hal/init.hh"           // for init_board_with_hooks, init_cpu, pos...
+#include "hal/oops.hh"           // for oops
+#include "kernel/logo.hh"        // for print_moss_logo
+#include "libcxx/error_code.hh"  // for not_ok
+#include "libcxx/log.hh"         // for log_i
+#include "libcxx/macro.hh"       // for extern_C
+#include "libcxx/printf.hh"      // for printf
 
 extern_C [[noreturn]] void kernel_main() {
-  init_board();
+  pre_kernel_main();
+
+  auto result = init_board_with_hooks();
+  if (not_ok(result)) {
+    oops();
+  }
   printf(">>>>>>>>> entered kernel_main <<<<<<<<<\n");
 
   print_moss_logo();
@@ -19,6 +25,5 @@ extern_C [[noreturn]] void kernel_main() {
   log_i("test float: %f", 1.123456789);
   printf(">>>>>>>>> exited kernel_main <<<<<<<<<\n");
 
-  never_return();
-  printf("this line of code should never be executed\n");
+  post_kernel_main();
 }

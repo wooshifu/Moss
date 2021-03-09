@@ -17,7 +17,7 @@ target_enable_iwyu(${PROJECT_NAME})
 set(COMMON_KERNEL_OBJECTS
         $<TARGET_OBJECTS:ObjKernel>
         $<TARGET_OBJECTS:ObjLibCXX>
-#        $<TARGET_OBJECTS:ObjLibGccStd>
+        $<TARGET_OBJECTS:ObjHAL>
         $<TARGET_OBJECTS:ObjBoardRaspberryPi3>
         )
 
