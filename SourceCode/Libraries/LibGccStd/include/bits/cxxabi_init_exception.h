@@ -60,7 +60,7 @@ namespace __cxxabiv1
     {
       // Allocate memory for the primary exception plus the thrown object.
       void*
-      __cxa_allocate_exception(size_t) _GLIBCXX_NOTHROW;
+      __cxa_allocate_exception(std::size_t) _GLIBCXX_NOTHROW;
 
       void
       __cxa_free_exception(void*) _GLIBCXX_NOTHROW;
