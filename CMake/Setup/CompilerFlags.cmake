@@ -81,12 +81,17 @@ function(setup_compiler_flags IN_board IN_arch)
     get_optimization_level(optimization_level)
     message(STATUS "OPTIMIZATION_LEVEL :${optimization_level}")
 
+    set(macro_flags
+            "-D_GLIBCXX_HOSTED=0" # override glibc macro
+            )
+
     string(JOIN " " common_cmake_c_flags
             ${arch_compiler_flags}
             ${board_compiler_flags}
             # "-v"
             "-O${optimization_level}"
             ${debug_flag}
+            ${macro_flags}
             # "-save-temps" # this flag will broke iwyu
             "-Wall"
             "-Wextra"
