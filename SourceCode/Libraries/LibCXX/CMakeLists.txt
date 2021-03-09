@@ -1,4 +1,4 @@
-PROJECT(ObjLibCXX CXX ASM)
+project(ObjLibCXX CXX ASM)
 
 aux_source_directory(${ObjLibCXX_SOURCE_DIR}/src LibCXXSrc)
 

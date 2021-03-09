@@ -1,4 +1,4 @@
-PROJECT(ObjUnitTests CXX ASM)
+project(ObjUnitTests CXX ASM)
 
 function(find_test_cases)
     FILE(GLOB TestHeaderFiles LIST_DIRECTORIES false ${ObjUnitTests_SOURCE_DIR}/include/test_*.hh)
