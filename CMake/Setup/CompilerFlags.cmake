@@ -77,7 +77,10 @@ function(setup_compiler_flags IN_board IN_arch)
             "-Wno-unused-function"
             )
 
+    set(c_ignore_specific_warnings "-Wno-override-init")
+
     get_debug_flag(debug_flag)
+    message(STATUS "debug_flag :${debug_flag}")
     get_optimization_level(optimization_level)
     message(STATUS "OPTIMIZATION_LEVEL :${optimization_level}")
 
@@ -85,7 +88,9 @@ function(setup_compiler_flags IN_board IN_arch)
             "-D_GLIBCXX_HOSTED=0" # override glibc macro
             )
 
-    string(JOIN " " common_cmake_c_flags
+    set(cxx_specific_flags "-nostdinc++")
+
+    string(JOIN " " common_compiler_flags
             ${arch_compiler_flags}
             ${board_compiler_flags}
             # "-v"
@@ -103,14 +108,13 @@ function(setup_compiler_flags IN_board IN_arch)
             "-fno-builtin"
             "-fno-exceptions"
             "-nostdinc"
-            "-nostdinc++"
             "-nostdlib"
             "-nostartfiles"
             )
 
-    set(CMAKE_C_FLAGS "-std=c11 ${common_cmake_c_flags}" PARENT_SCOPE)
-    set(CMAKE_CXX_FLAGS "-std=c++20 ${common_cmake_c_flags}" PARENT_SCOPE)
-    set(CMAKE_ASM_FLAGS "-std=c11 ${common_cmake_c_flags}" PARENT_SCOPE)
+    set(CMAKE_C_FLAGS "-std=c11 ${c_ignore_specific_warnings} ${common_compiler_flags}" PARENT_SCOPE)
+    set(CMAKE_CXX_FLAGS "-std=c++20 ${cxx_specific_flags} ${common_compiler_flags}" PARENT_SCOPE)
+    set(CMAKE_ASM_FLAGS "-std=c11 ${common_compiler_flags}" PARENT_SCOPE)
 endfunction()
 
 macro(print_compiler_flags)

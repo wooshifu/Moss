@@ -7,6 +7,7 @@
 extern_C [[noreturn]] void oops() {
   if (is_serial_port_initialized()) {
     log_f("oops!!!");
+    // todo: print sp, pc and related register values
   }
   never_return();
 }

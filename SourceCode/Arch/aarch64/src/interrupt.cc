@@ -5,19 +5,6 @@
 #include "libcxx/macro.hh"
 #include "libcxx/types.hh"
 
-constexpr const char* entry_error_messages[] = {
-    "SYNC_INVALID_EL1t",   "IRQ_INVALID_EL1t",   "FIQ_INVALID_EL1t",   "ERROR_INVALID_EL1T",
-
-    "SYNC_INVALID_EL1h",   "IRQ_INVALID_EL1h",   "FIQ_INVALID_EL1h",   "ERROR_INVALID_EL1h",
-
-    "SYNC_INVALID_EL0_64", "IRQ_INVALID_EL0_64", "FIQ_INVALID_EL0_64", "ERROR_INVALID_EL0_64",
-
-    "SYNC_INVALID_EL0_32", "IRQ_INVALID_EL0_32", "FIQ_INVALID_EL0_32", "ERROR_INVALID_EL0_32"};
-
-extern_C void show_invalid_entry_message(int type, u64 esr, u64 address) {
-  log_e("%s, ESR: %lx, address: %lx", entry_error_messages[type], esr, address);
-}
-
 /**
  * dispatch interrupt to cpu interrupt handler or peripheral interrupt handler
  * @param interrupt_number

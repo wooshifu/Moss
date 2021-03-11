@@ -9,8 +9,11 @@
 .macro handle_invalid_entry type
     kernel_entry
     mov    x0, #\type
-    mrs    x1, esr_el1
-    mrs    x2, elr_el1
+    // todo: should not read el_1 register values if we are in el0
+    mrs    x1, far_el1
+    mov    x2, sp
+    mrs    x3, esr_el1
+    mrs    x4, elr_el1
     bl     show_invalid_entry_message
     // TODO: kernel_exit should we do this ???
     //b      err_hang
