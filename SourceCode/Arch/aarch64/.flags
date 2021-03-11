@@ -9,3 +9,7 @@
 -mcpu=cortex-a53
 # -mfpu=fp-armv8
 # -mfloat-abi=soft
+
+-DARCH_ARM=1 # arch arm
+-DARCH_AARCH64=1 # arch aarch64
+-DBITS_64=1 # 64 bits
