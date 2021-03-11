@@ -3,4 +3,5 @@
 # "#" started line is comment
 # "-key=value # comment" is also valid comment
 
-# RaspberryPi3 specific compiler flags, currently no specific compiler flags is required
+# RaspberryPi3 specific compiler flags, leave it blank if no flags should be specified
+-DBOARD_NAME="\"raspberry pi3\""
