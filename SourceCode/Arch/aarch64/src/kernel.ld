@@ -13,6 +13,78 @@ SECTIONS
     __text_end = .;
 
     . = ALIGN(8);
+    __pre_init_board_hook_start = .;
+    .pre_init_board_hook :
+    {
+        *(.pre_init_board_hook)
+    }
+    . = ALIGN(8);
+    __pre_init_board_hook_end = .;
+
+    . = ALIGN(8);
+    __post_init_board_hook_start = .;
+    .post_init_board_hook :
+    {
+        *(.post_init_board_hook)
+    }
+    . = ALIGN(8);
+    __post_init_board_hook_end = .;
+
+    . = ALIGN(8);
+    __pre_init_cpu_hook_start = .;
+    .pre_init_cpu_hook :
+    {
+        *(.pre_init_cpu_hook)
+    }
+    . = ALIGN(8);
+    __pre_init_cpu_hook_end = .;
+
+    . = ALIGN(8);
+    __post_init_cpu_hook_start = .;
+    .post_init_cpu_hook :
+    {
+        *(.post_init_cpu_hook)
+    }
+    . = ALIGN(8);
+    __post_init_cpu_hook_end = .;
+
+    . = ALIGN(8);
+    __pre_init_mmu_hook_start = .;
+    .pre_init_mmu_hook :
+    {
+        *(.pre_init_mmu_hook)
+    }
+    . = ALIGN(8);
+    __pre_init_mmu_hook_end = .;
+
+    . = ALIGN(8);
+    __post_init_mmu_hook_start = .;
+    .post_init_mmu_hook :
+    {
+        *(.post_init_mmu_hook)
+    }
+    . = ALIGN(8);
+    __post_init_mmu_hook_end = .;
+
+    . = ALIGN(8);
+    __pre_kernel_main_hook_start = .;
+    .pre_kernel_main_hook :
+    {
+        *(.pre_kernel_main_hook)
+    }
+    . = ALIGN(8);
+    __pre_kernel_main_hook_end = .;
+
+    . = ALIGN(8);
+    __post_kernel_main_hook_start = .;
+    .post_kernel_main_hook :
+    {
+        *(.post_kernel_main_hook)
+    }
+    . = ALIGN(8);
+    __post_kernel_main_hook_end = .;
+
+    . = ALIGN(8);
     __rodata_start = .;
     .rodata :
     {

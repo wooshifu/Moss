@@ -1,4 +1,3 @@
-#include "array"                // for array
 #include "hal/halt.hh"          // for never_return
 #include "hal/init.hh"          // for post_init_board, post_init_cpu, post_init...
 #include "hal/oops.hh"          // for oops
@@ -7,76 +6,73 @@
 #include "libcxx/log.hh"        // for log_d
 #include "libcxx/macro.hh"      // for extern_C
 
-static int init_function_hook(auto init_functions) {
-  for (const auto& function : init_functions) {
-    auto result = function();
+static int run_init_hooks(const uptr* init_hook_start_address, const uptr* init_hook_end_address) {
+  uptr* start_address                 = (uptr*)(init_hook_start_address);
+  int result                          = 0;
+  init_function_pointer init_function = nullptr;
+
+  while (start_address < init_hook_end_address) {
+    init_function = reinterpret_cast<init_function_pointer>(start_address);
+    result        = init_function();
     if (not_ok(result)) {
-      return result;
+      oops();
+      break;
     }
-    return result;
+    start_address += (1 << 3);
+  }
+
+  return result;
+}
+
+REGISTER_AS_POST_INIT_BOARD_HOOK static int post_init_board_function_test1() {
+  if (is_serial_port_initialized()) {
+    log_d("post_init_board hook 1");
   }
   return 0;
 }
 
-static std::array pre_init_board_functions = {[]() { return 0; }};
-static std::array post_init_board_functions{
-    []() {
-      if (is_serial_port_initialized()) {
-        log_d("post_init_board hook");
-      }
-      return 0;
-    },
-};
-int pre_init_board() { return init_function_hook(pre_init_board_functions); }
-int post_init_board() { return init_function_hook(post_init_board_functions); }
-
-static std::array pre_init_cpu_functions{
-    []() {
-      log_d("pre_init_cpu hook");
-      return 0;
-    },
-};
-static std::array post_init_cpu_functions{
-    []() {
-      log_d("post_init_cpu hook");
-      return 0;
-    },
-};
-int pre_init_cpu() { return init_function_hook(pre_init_cpu_functions); }
-int post_init_cpu() { return init_function_hook(post_init_cpu_functions); }
-
-static std::array pre_init_mmu_functions{
-    []() {
-      log_d("pre_init_mmu hook");
-      return 0;
-    },
-};
-static std::array post_init_mmu_functions{
-    []() {
-      log_d("post_init_mmu hook");
-      return 0;
-    },
-};
-int pre_init_mmu() { return init_function_hook(pre_init_mmu_functions); };
-int post_init_mmu() { return init_function_hook(post_init_mmu_functions); };
-
-// kernel_main hooks
-extern_C int init_exception_vector_table();
-static std::array before_kernel_main_functions = {
-    init_exception_vector_table, /// exception vector table should be initialized first
-};
-void pre_kernel_main() {
-  for (const auto& before_kernel_main_function : before_kernel_main_functions) {
-    before_kernel_main_function();
+REGISTER_AS_POST_INIT_BOARD_HOOK static int post_init_board_function_test2() {
+  if (is_serial_port_initialized()) {
+    log_d("post_init_board hook 2");
   }
+  return 0;
 }
 
-static std::array post_kernel_main_functions = {
-    []() { log_d("post kernel main"); },
-};
+extern uptr __pre_init_board_hook_start;
+extern uptr __pre_init_board_hook_end;
+extern uptr __post_init_board_hook_start;
+extern uptr __post_init_board_hook_end;
+
+extern uptr __pre_init_cpu_hook_start;
+extern uptr __pre_init_cpu_hook_end;
+extern uptr __post_init_cpu_hook_start;
+extern uptr __post_init_cpu_hook_end;
+
+extern uptr __pre_init_mmu_hook_start;
+extern uptr __pre_init_mmu_hook_end;
+extern uptr __post_init_mmu_hook_start;
+extern uptr __post_init_mmu_hook_end;
+
+extern uptr __pre_kernel_main_hook_start;
+extern uptr __pre_kernel_main_hook_end;
+extern uptr __post_kernel_main_hook_start;
+extern uptr __post_kernel_main_hook_end;
+
+static int pre_init_board() { return run_init_hooks(&__pre_init_board_hook_start, &__pre_init_board_hook_end); }
+static int post_init_board() { return run_init_hooks(&__post_init_board_hook_start, &__post_init_board_hook_end); }
+
+static int pre_init_cpu() { return run_init_hooks(&__pre_init_cpu_hook_start, &__pre_init_cpu_hook_end); }
+static int post_init_cpu() { return run_init_hooks(&__post_init_cpu_hook_start, &__post_init_cpu_hook_end); }
+
+static int pre_init_mmu() { return run_init_hooks(&__pre_init_mmu_hook_start, &__pre_init_mmu_hook_end); };
+static int post_init_mmu() { return run_init_hooks(&__post_init_mmu_hook_start, &__post_init_mmu_hook_end); };
+
+int pre_kernel_main() { return run_init_hooks(&__pre_kernel_main_hook_start, &__pre_kernel_main_hook_end); }
 [[noreturn]] void post_kernel_main() {
-  for (const auto& post_kernel_main_function : post_kernel_main_functions) {
-    post_kernel_main_function();
+  int result = run_init_hooks(&__post_kernel_main_hook_start, &__post_kernel_main_hook_end);
+  if (not_ok(result)) {
+    log_f("post kernel main hook failed");
+    oops();
   }
   never_return();
 }
