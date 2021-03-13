@@ -36,10 +36,10 @@ namespace NS_rpi3 {
   }
 } // namespace NS_rpi3
 
-int init_board() {
+KErrorCode init_board() {
   auto result = NS_rpi3::init_board();
   if (not_ok(result)) {
     log_f("post init board failed, code: %d", result);
   }
-  return result;
+  return KErrorCode::OK;
 }

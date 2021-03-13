@@ -5,10 +5,9 @@
 #include "libcxx/macro.hh"
 #include "libcxx/types.hh"
 
-/// this is a init hook function, so detect it's initialized or not
-REGISTER_AS_PRE_KERNEL_MAIN_HOOK static int init_exception_vector_table() {
+REGISTER_AS_PRE_KERNEL_MAIN_HOOK static KErrorCode init_exception_vector_table() {
   init_exception_vector_table_asm();
-  return 0;
+  return KErrorCode::OK;
 }
 
 constexpr const char* entry_error_messages[] = {

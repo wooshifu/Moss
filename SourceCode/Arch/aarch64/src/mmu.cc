@@ -4,6 +4,7 @@
 #include "aarch64/mair.hh"          // for setup_mair_el1
 #include "aarch64/page.hh"          // for L0PageTableEntry, L2PageTableEntry
 #include "aarch64/page_property.hh" // for PAGE_ALIGN, PAGE_SIZE, TCR_TxSZ
+#include "libcxx/error_code.hh"     // for KErrorCode
 #include "libcxx/log.hh"            // for log_d, log_e
 #include "libcxx/string.hh"         // for memset
 #include "libcxx/types.hh"          // for u64
@@ -227,7 +228,7 @@ static int enable_mmu() {
   return 0;
 }
 
-int init_mmu() {
+KErrorCode init_mmu() {
   log_d("start to init mmu");
 
   clear_l0_page_table();
@@ -237,5 +238,5 @@ int init_mmu() {
   enable_mmu();
 
   log_d("successfully init mmu");
-  return 0;
+  return KErrorCode::OK;
 }

@@ -5,17 +5,17 @@
 /// return value convention, zero on success, non zero on failure
 
 ///// function pointer to init hook function
-using init_function_pointer = int (*)();
+using init_function_pointer = KErrorCode (*)();
 
-int init_board();
+KErrorCode init_board();
 
-int init_cpu();
+KErrorCode init_cpu();
 
-int init_mmu();
+KErrorCode init_mmu();
 
-int pre_kernel_main();
+KErrorCode pre_kernel_main();
 KErrorCode init_board_with_hooks();
-[[noreturn]] void post_kernel_main();
+[[noreturn]] KErrorCode post_kernel_main();
 
 #ifndef SECTION_PRE_INIT_BOARD_HOOK
 #define SECTION_PRE_INIT_BOARD_HOOK section(".pre_init_board_hook")

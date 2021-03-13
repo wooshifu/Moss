@@ -13,11 +13,11 @@ static void init_generic_timer() {
   log_d("generic timer enabled");
 }
 
-int init_cpu() {
+KErrorCode init_cpu() {
   print_memory_layout();
 
   init_generic_timer();
 
   enable_interrupt();
-  return 0;
+  return KErrorCode::OK;
 }
