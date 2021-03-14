@@ -4,8 +4,7 @@
 #include "rpi3/rpi3.hh"
 
 namespace NS_rpi3 {
-  void routing_local_timer_to_core0_irq();
   void handle_local_timer_irq();
-  void routing_core0_cntv_to_core0_irq();
-  u32 read_core0_pending_interrupt();
+  void init_generic_timer();
+  void handle_generic_timer_irq();
 } // namespace NS_rpi3

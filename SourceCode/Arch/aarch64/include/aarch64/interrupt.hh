@@ -1,4 +1,4 @@
 #pragma once
 
-void enable_interrupt();
-void disable_interrupt();
+void inline enable_interrupt() { asm volatile("msr daifclr, #2"); }
+void inline disable_interrupt() { asm volatile("msr daifset, #2"); }

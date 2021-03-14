@@ -2,18 +2,18 @@
 #include "hal/oops.hh"          // for oops
 #include "kernel/board.hh"      // for print_board_name
 #include "kernel/logo.hh"       // for print_moss_logo
-#include "libcxx/error_code.hh" // for ok, not_ok
-#include "libcxx/log.hh"        // for log_i
+#include "libcxx/error_code.hh" // for not_ok, KErrorCode
 #include "libcxx/macro.hh"      // for extern_C
 #include "libcxx/printf.hh"     // for printf
 
 extern_C [[noreturn]] void kernel_main() {
   pre_kernel_main();
 
-  auto result = init_board_with_hooks();
+  KErrorCode result = init_board_with_hooks();
   if (not_ok(result)) {
     oops();
   }
+
   printf(">>>>>>>>> entered kernel_main <<<<<<<<<\n");
 
   print_moss_logo();
@@ -21,10 +21,6 @@ extern_C [[noreturn]] void kernel_main() {
 
   init_cpu();
 
-  log_i("Hello %s", "World");
-  log_i("test int: %d", 123);
-  log_i("test long long: %llu", 123LL);
-  log_i("test float: %f", 1.123456789);
   printf(">>>>>>>>> exited kernel_main <<<<<<<<<\n");
 
   post_kernel_main();

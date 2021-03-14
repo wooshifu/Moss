@@ -1,6 +1,8 @@
 #include "hal/init.hh"
+#include "libcxx/error_code.hh" // for not_ok, KErrorCode, KErrorCode::OK
 #include "libcxx/log.hh"
 #include "rpi3/rpi3.hh" // for NS_rpi3
+#include "rpi3/timer.hh"
 #include "rpi3/uart0.hh"
 
 namespace NS_rpi3 {
@@ -14,24 +16,11 @@ namespace NS_rpi3 {
     //    log_i("%llx: mmu read: %llx", i, *(u64 *)(i));
     //  }
 
-    /*
-      NS_RPI3::init_random_generator();
-
-      for (int i = 0; i < 1000; ++i) {
-        auto v = NS_RPI3::generate_random(1, 100);
-        log_i("random data: %u", v);
-      }
-    */
-
-    // enable generic timer
-    //  routing_core0_cntv_to_core0_irq();
-
+    // init generic timer
+    init_generic_timer();
     // enable local timer
     //  routing_local_timer_to_core0_irq();
 
-    //  init_lfb();
-    //  // display a pixmap
-    //  lfb_showpicture();
     return 0;
   }
 } // namespace NS_rpi3

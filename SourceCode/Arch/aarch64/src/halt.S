@@ -7,14 +7,16 @@ halt:
     add x1, x1, #0x26
     hlt #0xF000
 
-
+/*
+ * void never_return(const char* reason)
+ */
 .global never_return
 never_return:
 #if LOG_LEVEL <= LOG_LEVEL_DEBUG
-    ldr x0, =never_return_message
     bl printf
 #endif
     wfi
+    ldr x0, =never_return_message
     b never_return
 
 never_return_message:

@@ -21,7 +21,7 @@
 .endm
 
 // todo: save not only generic registers
-// 将寄存器x0-x30存储到堆栈中
+// save x0-x30 to stack
 .macro	kernel_entry
     sub	sp, sp, #S_FRAME_SIZE
     stp	x0, x1, [sp, #16 * 0]
@@ -43,7 +43,7 @@
 .endm
 
 // todo: restore not only generic registers
-// 复制回x0-x30寄存器的值来恢复处理器状态
+// restore x0-x30 from stack
 .macro	kernel_exit
     ldp	x0, x1, [sp, #16 * 0]
     ldp	x2, x3, [sp, #16 * 1]
@@ -67,14 +67,14 @@
 
 
 
-/*
- * Exception vectors table.
- */
+/// exception vectors table.
+/// about EL1t and EL1h, see https://developer.arm.com/documentation/ddi0488/c/programmers-model/armv8-architecture-concepts/stack-pointer-selection
 .align 11 // 2k align, vbar_el1 [11:0] is RES0, so 2k align is required
 .globl exception_vectors_table
 exception_vectors_table:
     exception_vector_entry  sync_invalid_el1t           // Synchronous EL1t
-    exception_vector_entry  irq_invalid_el1t            // IRQ EL1t
+    // todo: why cntv irq routes here?
+    exception_vector_entry  el1_irq                     // IRQ EL1t
     exception_vector_entry  fiq_invalid_el1t            // FIQ EL1t
     exception_vector_entry  error_invalid_el1t          // Error EL1t
 
@@ -142,7 +142,7 @@ error_invalid_el0_32:
 
 el1_irq:
     kernel_entry
-    bl  handle_interrupt
+    bl  handle_el1_irq
     kernel_exit
 
 .globl err_hang

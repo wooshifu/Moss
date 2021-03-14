@@ -3,8 +3,6 @@
 #include "hal/interface.hh"
 #include "libcxx/error_code.hh"
 
-/// return value convention, zero on success, non zero on failure
-
 ///// function pointer to init hook function
 using init_function_pointer = KErrorCode (*)();
 

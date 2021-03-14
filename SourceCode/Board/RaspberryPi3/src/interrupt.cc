@@ -1,4 +1,5 @@
 #include "hal/interrupt.hh" // for handle_peripheral_interrupt
+#include "libcxx/log.hh"    // for log_d
 #include "libcxx/memory.hh" // for memory_write_32bits
 #include "libcxx/types.hh"  // for u64, u32
 #include "rpi3/mmio.hh"     // for NS_MMIO
@@ -24,10 +25,17 @@ namespace NS_rpi3 {
     return false;
   }
 
+  u32 read_core0_pending_interrupt() { return memory_read_32bits((const u32*)NS_mmio::CORE0_INTERRUPT_SOURCES); }
 } // namespace NS_rpi3
 
-bool handle_peripheral_interrupt(u64 interrupt_number) {
-  return NS_rpi3::handle_peripheral_interrupt(interrupt_number);
-}
+bool board_handle_interrupt() {
+  // each core has its own pending local interrupts register
+  u32 interrupt_number = NS_rpi3::read_core0_pending_interrupt();
+  log_d("interrupt number: %d", interrupt_number);
+  if (interrupt_number == NS_rpi3::NS_mmio::COREn_CNTV_INTERRUPT_SOURCE) {
+    NS_rpi3::handle_generic_timer_irq();
+    return true;
+  }
 
-void enable_interrupt_controller() { NS_rpi3::enable_interrupt_controller(); }
+  return false;
+}

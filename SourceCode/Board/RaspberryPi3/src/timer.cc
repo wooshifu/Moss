@@ -1,3 +1,5 @@
+#include "aarch64/timer.hh"
+#include "libcxx/log.hh"
 #include "libcxx/memory.hh" // for memory_write_32bits, memory_read_32bits
 #include "libcxx/types.hh"  // for u32, u64
 #include "rpi3/mmio.hh"
@@ -53,8 +55,21 @@ void handle_timer_irq(void) {
     memory_write_32bits((u32*)NS_mmio::CORE0_TIMER_INTERRUPT_CONTROL, NS_mmio::COREn_CNTV_IRQ_INTERRUPT_ENABLED);
   }
 
-  u32 read_core0_pending_interrupt() { return memory_read_32bits((const u32*)NS_mmio::CORE0_INTERRUPT_SOURCES); }
+  /// frequency, eg 62500000 Hz/second
+  static u64 counter_frequency = 0;
+  void init_generic_timer() {
+    routing_core0_cntv_to_core0_irq();
 
+    counter_frequency = read_cntfrq_el0();
+    log_d("counter frequency el0: %lu", counter_frequency);
+    write_cntv_tval_el0(counter_frequency);
+    enable_cntv_el0();
+    log_d("generic timer initialized");
+  }
+
+  void handle_generic_timer_irq() {
+    static u64 count = 0;
+    log_d("handle_generic_timer_irq %ld", count++);
+    write_cntv_tval_el0(counter_frequency);
+  }
 } // namespace NS_rpi3
-
-u32 read_core0_pending_interrupt() { return NS_rpi3::read_core0_pending_interrupt(); }
