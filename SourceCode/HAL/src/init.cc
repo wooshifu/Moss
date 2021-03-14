@@ -77,7 +77,7 @@ KErrorCode pre_kernel_main() { return run_init_hooks(&__pre_kernel_main_hook_sta
     log_f("post kernel main hook failed");
     oops();
   }
-  never_return();
+  never_return("[DEBUG init.cc:80(post_kernel_main)] post kernel main, will never return\n");
 }
 
 KErrorCode init_board_with_hooks() {

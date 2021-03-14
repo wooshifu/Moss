@@ -1,5 +1,6 @@
 #pragma once
 
+#include "hal/interface.hh"
 #include "libcxx/macro.hh"
 
-extern_C [[noreturn]] void oops();
+HAL_INTERFACE extern_C [[noreturn]] void oops();

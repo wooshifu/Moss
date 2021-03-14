@@ -1,9 +1,6 @@
 #pragma once
 
-#include "libcxx/types.hh"
+#include "hal/interface.hh"
 
-u32 read_core0_pending_interrupt();
-
-bool handle_cpu_interrupt(u64 interrupt_number);
-
-bool handle_peripheral_interrupt(u64 interrupt_number);
+HAL_INTERFACE bool board_handle_interrupt();
+HAL_INTERFACE bool cpu_handle_interrupt();

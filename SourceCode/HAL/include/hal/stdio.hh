@@ -1,4 +1,6 @@
 #pragma once
 
-int getchar();
-int putchar(int character);
+#include "hal/interface.hh"
+
+HAL_INTERFACE int getchar();
+HAL_INTERFACE int putchar(int character);

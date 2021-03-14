@@ -1,13 +1,16 @@
 #pragma once
 
+#include "hal/interface.hh"
 #include "libcxx/macro.hh"
 
 /**
  * halt the cpu
  */
-extern_C void halt();
+HAL_INTERFACE extern_C void halt();
 
 /**
  * infinite loop, this function will never return
  */
-extern_C [[noreturn]] void never_return();
+HAL_INTERFACE extern_C [[noreturn]] void never_return(const char* reason);
+
+[[noreturn]] inline void never_return() { never_return("wfi, will never return\n"); }

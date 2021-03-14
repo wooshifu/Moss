@@ -1,5 +1,6 @@
 #pragma once
 
+#include "hal/interface.hh"
 #include "libcxx/error_code.hh"
 
 /// return value convention, zero on success, non zero on failure
@@ -7,11 +8,11 @@
 ///// function pointer to init hook function
 using init_function_pointer = KErrorCode (*)();
 
-KErrorCode init_board();
+HAL_INTERFACE KErrorCode init_board();
 
-KErrorCode init_cpu();
+HAL_INTERFACE KErrorCode init_cpu();
 
-KErrorCode init_mmu();
+HAL_INTERFACE KErrorCode init_mmu();
 
 KErrorCode pre_kernel_main();
 KErrorCode init_board_with_hooks();
