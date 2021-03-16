@@ -26,16 +26,12 @@ static KErrorCode run_init_hooks(const uptr* init_hook_start_address, const uptr
 }
 
 REGISTER_AS_POST_INIT_BOARD_HOOK static KErrorCode post_init_board_function_test1() {
-  if (is_serial_port_initialized()) {
-    log_d("post_init_board hook 1");
-  }
+  if (is_serial_port_initialized()) { log_d("post_init_board hook 1"); }
   return KErrorCode::OK;
 }
 
 REGISTER_AS_POST_INIT_BOARD_HOOK static KErrorCode post_init_board_function_test2() {
-  if (is_serial_port_initialized()) {
-    log_d("post_init_board hook 2");
-  }
+  if (is_serial_port_initialized()) { log_d("post_init_board hook 2"); }
   return KErrorCode::OK;
 }
 
@@ -77,28 +73,27 @@ KErrorCode pre_kernel_main() { return run_init_hooks(&__pre_kernel_main_hook_sta
     log_f("post kernel main hook failed");
     oops();
   }
-  never_return("[DEBUG init.cc:80(post_kernel_main)] post kernel main, will never return\n");
+  never_return("[DEBUG init.cc:76(post_kernel_main)] post kernel main, will never return\n");
 }
 
 KErrorCode init_board_with_hooks() {
-  auto result = pre_init_board();
-  if (ok(result) and is_serial_port_initialized()) {
-    log_f("pre init board failed, code: %d", underlying_value(result));
+  KErrorCode result = pre_init_board();
+  if (not_ok((result))) {
+    if (is_serial_port_initialized()) { log_e("pre init board failed, code: %d", underlying_value(result)); };
+    return result;
   }
 
   result = init_board();
   if (not_ok(result)) {
-    if (!is_serial_port_initialized()) {
-      return KErrorCode::UNKNOWN;
-    }
-
-    log_f("init board failed");
-    oops();
+    if (is_serial_port_initialized()) { log_f("init board failed"); }
+    return result;
   }
 
   result = post_init_board();
   if (not_ok(result)) {
     log_f("post init board failed, code: %d", underlying_value(result));
+    return result;
   }
-  return KErrorCode::OK;
+
+  return result;
 }

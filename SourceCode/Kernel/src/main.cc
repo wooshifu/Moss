@@ -7,19 +7,19 @@
 #include "libcxx/printf.hh"     // for printf
 
 extern_C [[noreturn]] void kernel_main() {
-  pre_kernel_main();
+  KErrorCode result = pre_kernel_main();
+  if (not_ok(result)) { oops("oops!!! pre kernel main error"); }
 
-  KErrorCode result = init_board_with_hooks();
-  if (not_ok(result)) {
-    oops();
-  }
+  result = init_board_with_hooks();
+  if (not_ok(result)) { oops("oops!!! init board error"); }
 
   printf(">>>>>>>>> entered kernel_main <<<<<<<<<\n");
 
   print_moss_logo();
   print_board_name();
 
-  init_cpu();
+  result = init_cpu();
+  if (not_ok(result)) { oops("oops!!! init cpu error"); }
 
   printf(">>>>>>>>> exited kernel_main <<<<<<<<<\n");
 
