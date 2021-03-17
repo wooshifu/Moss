@@ -6,7 +6,7 @@ if (CMAKE_C_COMPILER_ID AND NOT CMAKE_C_COMPILER_ID STREQUAL "GNU")
 endif ()
 
 if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    message(FATAL_ERROR "[compiler] only g++ is supported")
+#    message(FATAL_ERROR "[compiler] only g++ is supported")
 endif ()
 
 set(GCC_MIN_VERSION_REQUIRED 10.0.0)
@@ -75,6 +75,9 @@ function(setup_compiler_flags IN_board IN_arch)
             "-Wno-unused-variable"
             "-Wno-unused-parameter"
             "-Wno-unused-function"
+            "-Wno-unknown-attributes"
+            "-Wno-unused-command-line-argument"
+            "-Wno-initializer-overrides"
             )
 
     set(c_ignore_specific_warnings "-Wno-override-init")
@@ -104,12 +107,13 @@ function(setup_compiler_flags IN_board IN_arch)
             ${ignore_specific_warnings}
             "-MD"
             "-fpic"
+            "-fuse-ld=lld"
             "-ffreestanding"
             "-fno-builtin"
             "-fno-exceptions"
             "-nostdinc"
             "-nostdlib"
-            "-nostartfiles"
+#            "-nostartfiles"
             )
 
     set(CMAKE_C_FLAGS "-std=c11 ${c_ignore_specific_warnings} ${common_compiler_flags}" PARENT_SCOPE)

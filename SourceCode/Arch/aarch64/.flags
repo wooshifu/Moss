@@ -4,9 +4,9 @@
 # "-key=value # comment" is also valid comment
 
 # aarch64 specific compiler flags
-# --target=aarch64-unknown-linux-elf
-# -march=armv8-a+crc+fp
--mcpu=cortex-a53
+--target=aarch64-unknown-linux-elf
+-march=armv8-a+crc+fp
+# -mcpu=cortex-a53
 # -mfpu=fp-armv8
 # -mfloat-abi=soft
 

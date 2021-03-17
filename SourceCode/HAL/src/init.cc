@@ -7,6 +7,7 @@
 #include "libcxx/macro.hh"      // for extern_C
 #include "libcxx/utils.hh"      // for underlying_value
 
+// todo: __pre_kernel_main_hook_start and __pre_kernel_main_hook_end not working as expected
 static KErrorCode run_init_hooks(const uptr* init_hook_start_address, const uptr* init_hook_end_address) {
   uptr* start_address                 = (uptr*)(init_hook_start_address);
   KErrorCode result                   = KErrorCode::OK;
@@ -20,6 +21,8 @@ static KErrorCode run_init_hooks(const uptr* init_hook_start_address, const uptr
       break;
     }
     start_address += (1 << 3);
+    (void)start_address;
+    break;
   }
 
   return result;

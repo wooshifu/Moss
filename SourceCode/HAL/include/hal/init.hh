@@ -16,6 +16,7 @@ KErrorCode pre_kernel_main();
 KErrorCode init_board_with_hooks();
 [[noreturn]] KErrorCode post_kernel_main();
 
+// todo: don't rely on compiler extension, it's not reliable and not portable
 #ifndef SECTION_PRE_INIT_BOARD_HOOK
 #define SECTION_PRE_INIT_BOARD_HOOK section(".pre_init_board_hook")
 #endif

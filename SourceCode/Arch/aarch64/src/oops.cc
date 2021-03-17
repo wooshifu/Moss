@@ -7,8 +7,8 @@
 extern_C [[noreturn]] void oops() { oops("oops"); }
 
 [[noreturn]] void oops(const char* reason) {
-  [[likely]] if (is_serial_port_initialized()) {
-    log_f("oops!!!");
+  if (is_serial_port_initialized()) {
+    /*[[likely]]*/ log_f("oops!!!");
     // todo: print sp, pc and related register values
   }
   never_return(reason);

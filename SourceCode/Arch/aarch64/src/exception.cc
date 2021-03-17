@@ -6,7 +6,8 @@
 #include "libcxx/macro.hh"
 #include "libcxx/types.hh"
 
-REGISTER_AS_PRE_KERNEL_MAIN_HOOK static KErrorCode init_exception_vector_table() {
+// todo: REGISTER_AS_PRE_KERNEL_MAIN_HOOK KErrorCode init_exception_vector_table will be inlined by clang???
+REGISTER_AS_PRE_KERNEL_MAIN_HOOK KErrorCode init_exception_vector_table() {
   init_exception_vector_table_asm();
   return KErrorCode::OK;
 }

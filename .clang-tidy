@@ -29,6 +29,7 @@ Checks: >
   -modernize-use-trailing-return-type,
 
   performance-*,
+  -performance-no-int-to-ptr,
 
   portability-*,
 
@@ -36,6 +37,7 @@ Checks: >
   -readability-braces-around-statements,
   -readability-implicit-bool-conversion,
   -readability-magic-numbers,
+  -readability-function-cognitive-complexity,
 
 WarningsAsErrors: '*'
 HeaderFilterRegex: ''

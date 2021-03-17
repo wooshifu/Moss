@@ -63,6 +63,8 @@ wfi
     eret                            // exception return. from EL2. continue from .L__in_el1
 
 .L__in_el1:
+    // sp 必须在 mmu 映射的范围内
+    // sp must be in mmu mapped address
     mov     sp, x1             // in EL1. Set sp to _start
 
     // Set CPACR_EL1 (Architecture Feature Access Control Register) to avoid trap from SIMD or float point instruction

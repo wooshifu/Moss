@@ -9,8 +9,6 @@ SECTIONS
         KEEP(*(.text.boot))
         *(.text)
     }
-    . = ALIGN(8);
-    __text_end = .;
 
     . = ALIGN(8);
     __pre_init_board_hook_start = .;
@@ -83,6 +81,9 @@ SECTIONS
     }
     . = ALIGN(8);
     __post_kernel_main_hook_end = .;
+
+    . = ALIGN(8);
+    __text_end = .;
 
     . = ALIGN(8);
     __rodata_start = .;
