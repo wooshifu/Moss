@@ -1,7 +1,0 @@
-# RaspberryPi3 required compiler flags
-# compiler flags could be put in one line, or put it in separate line
-# "#" started line is comment
-# "-key=value # comment" is also valid comment
-
-# RaspberryPi3 specific compiler flags, leave it blank if no flags should be specified
--DBOARD_NAME="\"raspberry pi3\""

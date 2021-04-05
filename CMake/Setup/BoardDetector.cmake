@@ -3,6 +3,7 @@ function(read_board_from_config_file)
         message(FATAL_ERROR "file .config not found in directory ${Moss_SOURCE_DIR}")
     endif ()
 
+    message(STATUS "searching board information from ${Moss_SOURCE_DIR}/.config")
     file(STRINGS ${Moss_SOURCE_DIR}/.config lines)
     foreach (line IN LISTS lines)
         if (line MATCHES "CONFIG_BOARD_USING_\([A-Za-z0-9_]+\)=y")

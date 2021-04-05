@@ -1,31 +1,28 @@
-message(STATUS "detected c compiler id: ${CMAKE_C_COMPILER_ID}, version: ${CMAKE_C_COMPILER_VERSION}")
-message(STATUS "detected c++ compiler id: ${CMAKE_CXX_COMPILER_ID}, version: ${CMAKE_CXX_COMPILER_VERSION}")
-
-if (CMAKE_C_COMPILER_ID AND NOT CMAKE_C_COMPILER_ID STREQUAL "GNU")
-    message(FATAL_ERROR "[compiler] only gcc is supported")
-endif ()
-
-if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-#    message(FATAL_ERROR "[compiler] only g++ is supported")
-endif ()
-
 set(GCC_MIN_VERSION_REQUIRED 10.0.0)
-if (CMAKE_C_COMPILER_ID AND CMAKE_C_COMPILER_VERSION VERSION_LESS ${GCC_MIN_VERSION_REQUIRED} OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${GCC_MIN_VERSION_REQUIRED})
-    message(FATAL_ERROR "gcc version must be greater than ${GCC_MIN_VERSION_REQUIRED}")
+set(CLANG_MIN_VERSION_REQUIRED 11.0.0)
+if (USING_GNU_COMPILER)
+    if (CMAKE_C_COMPILER_ID AND CMAKE_C_COMPILER_VERSION VERSION_LESS ${GCC_MIN_VERSION_REQUIRED} OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${GCC_MIN_VERSION_REQUIRED})
+        message(FATAL_ERROR "gcc version must be greater than ${GCC_MIN_VERSION_REQUIRED}")
+    endif ()
+elseif (USING_CLANG_COMPILER)
+    if (CMAKE_C_COMPILER_ID AND CMAKE_C_COMPILER_VERSION VERSION_LESS ${CLANG_MIN_VERSION_REQUIRED} OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${CLANG_MIN_VERSION_REQUIRED})
+        message(FATAL_ERROR "clang version must be greater than ${CLANG_MIN_VERSION_REQUIRED}")
+    endif ()
+else ()
+    message(FATAL_ERROR "unsupported compiler")
 endif ()
 
-function(read_arch_compiler_flags_from_file IN_file OUT_flag)
-    file(STRINGS ${IN_file} lines)
+function(read_compiler_flags_from_flags_cmake_file IN_file OUT_flag)
+    if (NOT EXISTS ${IN_file})
+        message(FATAL_ERROR "file ${IN_file} not found")
+    endif ()
 
-    foreach (line IN LISTS lines)
-        # "#" started line is comment line, remove it
-        string(REGEX REPLACE "\#.*" "" stripped "${line}")
-        if (stripped)
-            list(APPEND flag "${stripped}")
-        endif ()
-    endforeach ()
-    message(STATUS ".flag: ${flag}")
-    set(${OUT_flag} ${flag} PARENT_SCOPE)
+    message(STATUS "by convention, function(get_compiler_flags OUT_flags) should be defined in ${IN_file}")
+    include(${IN_file})
+    get_compiler_flags(compiler_flags)
+    message(STATUS "compiler flags: ${compiler_flags}")
+
+    set(${OUT_flag} ${compiler_flags} PARENT_SCOPE)
 endfunction()
 
 macro(disable_compiler_link_flags)
@@ -54,21 +51,15 @@ function(get_debug_flag OUT_debug_flag)
 endfunction()
 
 function(setup_compiler_flags IN_board IN_arch)
-    set(arch_flag_file ${MOSS_SOURCE_CODE_DIR}/Arch/${ARCH}/.flags)
-    if (NOT EXISTS ${arch_flag_file})
-        message(FATAL_ERROR "${arch_flag_file} must exist")
-    endif ()
-
-    message(STATUS "[arch] .flag file: ${arch_flag_file}")
-    read_arch_compiler_flags_from_file(${arch_flag_file} arch_compiler_flags)
+    set(arch_flag_file ${MOSS_SOURCE_CODE_DIR}/Arch/${ARCH}/flags.cmake)
+    message(STATUS "[arch] flags.cmake file: ${arch_flag_file}")
+    read_compiler_flags_from_flags_cmake_file(${arch_flag_file} arch_compiler_flags)
     message(STATUS "[arch] arch_compiler_flags is: ${arch_compiler_flags}")
 
-    set(board_flag_file ${MOSS_SOURCE_CODE_DIR}/Board/${IN_board}/.flags)
-    if (EXISTS ${board_flag_file})
-        message(STATUS "[board] .flag file: ${board_flag_file}")
-        read_arch_compiler_flags_from_file(${board_flag_file} board_compiler_flags)
-        message(STATUS "[board] board_compiler_flags is: ${board_compiler_flags}")
-    endif ()
+    set(board_flag_file ${MOSS_SOURCE_CODE_DIR}/Board/${IN_board}/flags.cmake)
+    message(STATUS "[board] flags.cmake file: ${board_flag_file}")
+    read_compiler_flags_from_flags_cmake_file(${board_flag_file} board_compiler_flags)
+    message(STATUS "[board] board_compiler_flags is: ${board_compiler_flags}")
 
 
     set(ignore_specific_warnings
@@ -93,6 +84,12 @@ function(setup_compiler_flags IN_board IN_arch)
 
     set(cxx_specific_flags "-nostdinc++")
 
+    if (USING_CLANG_COMPILER)
+        set(compiler_specific_flags "-fuse-ld=lld")
+    elseif (USING_GNU_COMPILER)
+        set(compiler_specific_flags "")
+    endif ()
+
     string(JOIN " " common_compiler_flags
             ${arch_compiler_flags}
             ${board_compiler_flags}
@@ -100,20 +97,20 @@ function(setup_compiler_flags IN_board IN_arch)
             "-O${optimization_level}"
             ${debug_flag}
             ${macro_flags}
-            # "-save-temps" # this flag will broke iwyu
+            # "-save-temps" # this flag will break iwyu
             "-Wall"
             "-Wextra"
             "-Werror"
             ${ignore_specific_warnings}
             "-MD"
             "-fpic"
-            "-fuse-ld=lld"
             "-ffreestanding"
             "-fno-builtin"
             "-fno-exceptions"
             "-nostdinc"
             "-nostdlib"
-#            "-nostartfiles"
+            ${compiler_specific_flags}
+            "-nostartfiles"
             )
 
     set(CMAKE_C_FLAGS "-std=c11 ${c_ignore_specific_warnings} ${common_compiler_flags}" PARENT_SCOPE)

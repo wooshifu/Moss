@@ -1,3 +1,15 @@
+message(STATUS "CMAKE_C_COMPILER_ID:${CMAKE_C_COMPILER_ID} CMAKE_CXX_COMPILER_ID:${CMAKE_CXX_COMPILER_ID}")
+# NOTE: define global variable USING_GNU_COMPILER or USING_CLANG_COMPILER for following usage
+if (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    message(STATUS "using GCC compiler")
+    set(USING_GNU_COMPILER 1)
+elseif (CMAKE_C_COMPILER_ID STREQUAL "Clang" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
+    message(STATUS "using clang compiler")
+    set(USING_CLANG_COMPILER 1)
+else ()
+    message(FATAL_ERROR "unsupported compiler: CMAKE_C_COMPILER_ID:${CMAKE_C_COMPILER_ID} CMAKE_CXX_COMPILER_ID:${CMAKE_CXX_COMPILER_ID}")
+endif ()
+
 # find all cmake files, and then include the file
 file(GLOB cmake_files LIST_DIRECTORIES false ${Moss_SOURCE_DIR}/CMake/Setup/*.cmake)
 message(STATUS "found CmakeFiles: ${cmake_files}")
