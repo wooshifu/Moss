@@ -11,76 +11,12 @@ SECTIONS
     }
 
     . = ALIGN(8);
-    __pre_init_board_hook_start = .;
-    .pre_init_board_hook :
+    __init_hooks_start = .;
+    .init_hooks :
     {
-        *(.pre_init_board_hook)
+        *(.init_hook)
     }
-    . = ALIGN(8);
-    __pre_init_board_hook_end = .;
-
-    . = ALIGN(8);
-    __post_init_board_hook_start = .;
-    .post_init_board_hook :
-    {
-        *(.post_init_board_hook)
-    }
-    . = ALIGN(8);
-    __post_init_board_hook_end = .;
-
-    . = ALIGN(8);
-    __pre_init_cpu_hook_start = .;
-    .pre_init_cpu_hook :
-    {
-        *(.pre_init_cpu_hook)
-    }
-    . = ALIGN(8);
-    __pre_init_cpu_hook_end = .;
-
-    . = ALIGN(8);
-    __post_init_cpu_hook_start = .;
-    .post_init_cpu_hook :
-    {
-        *(.post_init_cpu_hook)
-    }
-    . = ALIGN(8);
-    __post_init_cpu_hook_end = .;
-
-    . = ALIGN(8);
-    __pre_init_mmu_hook_start = .;
-    .pre_init_mmu_hook :
-    {
-        *(.pre_init_mmu_hook)
-    }
-    . = ALIGN(8);
-    __pre_init_mmu_hook_end = .;
-
-    . = ALIGN(8);
-    __post_init_mmu_hook_start = .;
-    .post_init_mmu_hook :
-    {
-        *(.post_init_mmu_hook)
-    }
-    . = ALIGN(8);
-    __post_init_mmu_hook_end = .;
-
-    . = ALIGN(8);
-    __pre_kernel_main_hook_start = .;
-    .pre_kernel_main_hook :
-    {
-        *(.pre_kernel_main_hook)
-    }
-    . = ALIGN(8);
-    __pre_kernel_main_hook_end = .;
-
-    . = ALIGN(8);
-    __post_kernel_main_hook_start = .;
-    .post_kernel_main_hook :
-    {
-        *(.post_kernel_main_hook)
-    }
-    . = ALIGN(8);
-    __post_kernel_main_hook_end = .;
+    __init_hooks_end = .;
 
     . = ALIGN(8);
     __text_end = .;
@@ -123,6 +59,7 @@ SECTIONS
     . = ALIGN(8);
     __bss_end = .;
 
+/*
     . = ALIGN(8);
     __symtab_start = .;
     .symtab :
@@ -140,7 +77,7 @@ SECTIONS
     }
     . = ALIGN(8);
     __strtab_end = .;
-
+*/
     . = ALIGN(8);
     __interp_start = .;
     .interp :
@@ -164,4 +101,7 @@ SECTIONS
     . += 40960;
     . = ALIGN(8);
     __stack_end = .;
+
+    /* Strip unnecessary stuff */
+    /DISCARD/ : { *(.comment .note .eh_frame) }
 }

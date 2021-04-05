@@ -2,40 +2,40 @@
 
 #include "libcxx/types.hh"
 
-extern u64 __text_start;
-extern u64 __text_end;
+extern u64 __text_start[];
+extern u64 __text_end[];
 
-extern u64 __rodata_start;
-extern u64 __rodata_end;
+extern u64 __rodata_start[];
+extern u64 __rodata_end[];
 
-extern u64 __data_start;
-extern u64 __data_end;
+extern u64 __data_start[];
+extern u64 __data_end[];
 
-extern u64 __init_entry_start;
-extern u64 __init_entry_end;
+extern u64 __init_entry_start[];
+extern u64 __init_entry_end[];
 
-extern u64 __bss_start;
-extern u64 __bss_end;
+extern u64 __bss_start[];
+extern u64 __bss_end[];
 
-extern u64 __symtab_start;
-extern u64 __symtab_end;
+extern u64 __symtab_start[];
+extern u64 __symtab_end[];
 
-extern u64 __strtab_start;
-extern u64 __strtab_end;
+extern u64 __strtab_start[];
+extern u64 __strtab_end[];
 
-extern u64 __interp_start;
-extern u64 __interp_end;
+extern u64 __interp_start[];
+extern u64 __interp_end[];
 
-extern u64 __build_id_start;
-extern u64 __build_id_end;
+extern u64 __build_id_start[];
+extern u64 __build_id_end[];
 
-extern u64 __stack_start;
-extern u64 __stack_end;
+extern u64 __stack_start[];
+extern u64 __stack_end[];
 
 #ifndef __generate_memory_layout_functions
 #define __generate_memory_layout_functions(section_name, section_name_start, section_name_end)                         \
-  inline u64 get_##section_name##_start_address() { return reinterpret_cast<u64>(&section_name_start); }               \
-  inline u64 get_##section_name##_end_address() { return reinterpret_cast<u64>(&section_name_end); }                   \
+  inline u64 get_##section_name##_start_address() { return reinterpret_cast<u64>(section_name_start); }                                       \
+  inline u64 get_##section_name##_end_address() { return reinterpret_cast<u64>(section_name_end); }                                           \
   inline u64 get_##section_name##_size() {                                                                             \
     return get_##section_name##_end_address() - get_##section_name##_start_address();                                  \
   }

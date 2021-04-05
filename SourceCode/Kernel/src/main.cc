@@ -1,10 +1,11 @@
-#include "hal/init.hh"          // for init_board_with_hooks, init_cpu, pos...
-#include "hal/oops.hh"          // for oops
-#include "kernel/board.hh"      // for print_board_name
-#include "kernel/logo.hh"       // for print_moss_logo
-#include "libcxx/error_code.hh" // for not_ok, KErrorCode
-#include "libcxx/macro.hh"      // for extern_C
-#include "libcxx/printf.hh"     // for printf
+#include "hal/init.hh"           // for init_board_with_hooks, init_cpu, pos...
+#include "hal/init_hook.hh"
+#include "hal/oops.hh"           // for oops
+#include "kernel/board.hh"       // for print_board_name
+#include "kernel/logo.hh"        // for print_moss_logo
+#include "libcxx/error_code.hh"  // for not_ok, KErrorCode
+#include "libcxx/macro.hh"       // for extern_C
+#include "libcxx/printf.hh"      // for printf
 
 extern_C [[noreturn]] void kernel_main() {
   KErrorCode result = pre_kernel_main();
