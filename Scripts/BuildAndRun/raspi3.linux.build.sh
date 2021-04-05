@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
+# todo: use getopt to parse -r/--run -c/--cache options
+
 THIS_DIR=$(realpath "$(dirname "$0")")
 echo "current dir: ${THIS_DIR}"
 
