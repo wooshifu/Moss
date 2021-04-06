@@ -8,13 +8,13 @@
 #include "libcxx/types.hh"      // for uptr
 #include "libcxx/utils.hh"      // for underlying_value
 
-extern uptr __init_hooks_start[];
-extern uptr __init_hooks_end[];
+extern u64 __init_hooks_start[];
+extern u64 __init_hooks_end[];
 
 static KErrorCode run_init_hook(const InitHookType& init_hook_type) {
   // todo: 启用 mmu 后 __init_hooks_start,__init_hooks_end 是否会发生变化
-  uptr* init_hooks_start = __init_hooks_start;
-  uptr* init_hooks_end   = __init_hooks_end;
+  u64* init_hooks_start = __init_hooks_start;
+  u64* init_hooks_end   = __init_hooks_end;
   auto init_hooks_count  = (init_hooks_end - init_hooks_start) / (sizeof(InitHook) / sizeof(uptr));
   if (init_hooks_count == 0) { return KErrorCode::OK; }
 
