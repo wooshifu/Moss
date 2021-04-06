@@ -1,5 +1,5 @@
 set(GCC_MIN_VERSION_REQUIRED 10.0.0)
-set(CLANG_MIN_VERSION_REQUIRED 11.0.0)
+set(CLANG_MIN_VERSION_REQUIRED 10.0.0)
 if (USING_GNU_COMPILER)
     if (CMAKE_C_COMPILER_ID AND CMAKE_C_COMPILER_VERSION VERSION_LESS ${GCC_MIN_VERSION_REQUIRED} OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${GCC_MIN_VERSION_REQUIRED})
         message(FATAL_ERROR "gcc version must be greater than ${GCC_MIN_VERSION_REQUIRED}")
@@ -17,8 +17,8 @@ function(read_compiler_flags_from_flags_cmake_file IN_file OUT_flag)
         message(FATAL_ERROR "file ${IN_file} not found")
     endif ()
 
-    message(STATUS "by convention, function(get_compiler_flags OUT_flags) should be defined in ${IN_file}")
     include(${IN_file})
+    message(STATUS "NOTE: by convention, function(get_compiler_flags OUT_flags) should be defined in ${IN_file}")
     get_compiler_flags(compiler_flags)
     message(STATUS "compiler flags: ${compiler_flags}")
 

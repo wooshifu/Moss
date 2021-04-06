@@ -13,13 +13,16 @@ jobs:
     # cross-platform coverage.
     # See: https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#configuring-a-build-matrix
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        toolchain: [ ToolchainClang.cmake, ToolchainLinuxAarch64.cmake ]
 
     steps:
     - uses: actions/checkout@v2
 
     - name: Install Dependencies
       shell: bash
-      run: sudo apt-get update && sudo apt-get install --fix-missing -y build-essential binutils make cmake iwyu g++-10-aarch64-linux-gnu clang-tidy
+      run: sudo apt-get update && sudo apt-get install --fix-missing -y build-essential binutils make cmake iwyu g++-10-aarch64-linux-gnu clang-tidy clang llvm
 
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
@@ -34,7 +37,7 @@ jobs:
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/CMake/Toolchain/ToolchainLinuxAarch64.cmake ..
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/CMake/Toolchain/${{ matrix.toolchain }} ..
 
     - name: Build
       working-directory: ${{runner.workspace}}/build
@@ -44,17 +47,21 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: build-on-linux-${{env.BUILD_TYPE}}
+        name: ${{matrix.toolchain}}-build-on-linux-${{env.BUILD_TYPE}}
         path: ${{runner.workspace}}/
 
 # disable build-on-mac, because 1 macOS minute counts as 10 regular minutes, enable this build when necessary
   build-on-mac:
-    if: false # change it to true to build on mac
+    if: true # change it to true to build on mac
     # The CMake configure and build commands are platform agnostic and should work equally
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
     # See: https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#configuring-a-build-matrix
     runs-on: macos-10.15
+    strategy:
+      matrix:
+        # there is a clang-diagnostic-error when building with ToolchainMacAarch64.cmake
+        toolchain: [ ToolchainClang.cmake, ToolchainMacAarch64.cmake ]
 
     steps:
       - uses: actions/checkout@v2
@@ -68,7 +75,7 @@ jobs:
         # We'll use this as our working directory for all subsequent commands
         run: cmake -E make_directory ${{runner.workspace}}/build
 
-      - name: Configure CMake
+      - name: Configure CMake if toolchain is ToolchainMacAarch64.cmake
         # Use a bash shell so we can use the same syntax for environment variable
         # access regardless of the host operating system
         shell: bash
@@ -76,7 +83,19 @@ jobs:
         # Note the current convention is to use the -S and -B options here to specify source
         # and build directories, but this is only available with CMake 3.13 and higher.
         # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-        run: export PATH="/usr/local/opt/llvm/bin:$PATH" && cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/CMake/Toolchain/ToolchainMacAarch64.cmake ..
+        if: ${{ matrix.toolchain == 'ToolchainMacAarch64.cmake' }}
+        run: export PATH="/usr/local/opt/llvm/bin:$PATH" && cmake $GITHUB_WORKSPACE -DDISABLE_CLANG_TIDY=1 -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/CMake/Toolchain/${{ matrix.toolchain }} ..
+
+      - name: Configure CMake if toolchain is not ToolchainMacAarch64.cmake
+        # Use a bash shell so we can use the same syntax for environment variable
+        # access regardless of the host operating system
+        shell: bash
+        working-directory: ${{runner.workspace}}/build
+        # Note the current convention is to use the -S and -B options here to specify source
+        # and build directories, but this is only available with CMake 3.13 and higher.
+        # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
+        if: ${{ matrix.toolchain != 'ToolchainMacAarch64.cmake' }}
+        run: export PATH="/usr/local/opt/llvm/bin:$PATH" && cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/CMake/Toolchain/${{ matrix.toolchain }} ..
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
@@ -86,5 +105,5 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: build-on-mac-${{env.BUILD_TYPE}}
+          name: ${{matrix.toolchain}}-build-on-mac-${{env.BUILD_TYPE}}
           path: ${{runner.workspace}}/

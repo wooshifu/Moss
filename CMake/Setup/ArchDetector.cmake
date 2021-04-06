@@ -5,8 +5,8 @@ function(read_arch_from_arch_cmake_file IN_board OUT_arch)
         message(FATAL_ERROR "file ${arch_cmake_file} not found")
     endif ()
 
-    message(STATUS "by convention, function(get_board_arch OUT_board_arch) should be defined in ${arch_cmake_file}")
     include(${arch_cmake_file})
+    message(STATUS "NOTE: by convention, function(get_board_arch OUT_board_arch) should be defined in ${arch_cmake_file}")
     get_board_arch(BOARD_ARCH)
     message(STATUS "board arch: ${BOARD_ARCH}")
 
