@@ -52,6 +52,8 @@ SECTIONS
         __stack_end = .;
     }
 
+    .interp : { *(.interp) }
+
     /* strip unnecessary stuff */
-    /DISCARD/ : { *(.comment .note .eh_frame .interp) }
+    /DISCARD/ : { *(.comment .note .eh_frame) }
 }
