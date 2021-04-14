@@ -81,3 +81,13 @@ typedef _Bool bool;
 #define false 0
 #endif
 #endif
+
+using uint = unsigned int;
+
+using vaddr_t = uintptr_t;
+using paddr_t = uintptr_t;
+
+using cpu_mask_t = uint32_t;
+using cpu_num_t  = uint32_t;
+
+using zx_status_t = int32_t;

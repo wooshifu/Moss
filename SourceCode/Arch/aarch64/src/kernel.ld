@@ -6,6 +6,7 @@ SECTIONS
     . = 0x80000;
     .text : /*AT(0x00000000 + 0x00080000)*/
     {
+        __code_start = .;
         __text_start = .;
             *(.text.boot)
             *(.text)
@@ -16,6 +17,7 @@ SECTIONS
         __init_hooks_end = .;
 
         __text_end = .;
+        __code_end = .;
     }
 
     .rodata :
@@ -37,9 +39,11 @@ SECTIONS
     /* must be aligned */
     .bss :
     {
-        . = ALIGN(8);
+        /* align 64 bytes to fit assembly code .Lbss_loop */
+        . = ALIGN(64);
         __bss_start = .;
             *(.bss)
+        . = ALIGN(64);
         __bss_end = .;
     }
 
@@ -56,4 +60,6 @@ SECTIONS
 
     /* strip unnecessary stuff */
     /DISCARD/ : { *(.comment .note .eh_frame) }
+
+    _end = .;
 }

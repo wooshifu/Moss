@@ -16,7 +16,7 @@ function(target_include_kernel_header_files IN_target)
     target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Kernel/include)
 endfunction()
 
-function(target_include_arch_header_files IN_target IN_arch)
+function(target_include_specific_arch_header_files IN_target IN_arch)
     target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Arch/${IN_arch}/include)
 endfunction()
 
@@ -26,4 +26,8 @@ endfunction()
 
 function(target_include_tests_header_files IN_target)
     target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Tests/include)
+endfunction()
+
+function(target_include_arch_header_files IN_target)
+    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Arch/include)
 endfunction()
