@@ -5,7 +5,11 @@ function(setup_kconfig)
     endif ()
     message(STATUS "found python3: ${Python3_EXECUTABLE}")
 
-    set(kconfiglib_path ${Moss_SOURCE_DIR}/KconfigLib/Kconfiglib)
+    set(kconfiglib_path ${Moss_SOURCE_DIR}/Kconfiglib/Kconfiglib)
+    if (NOT EXISTS ${kconfiglib_path})
+        message(FATAL_ERROR "run git submodule update --init --recursive to pull all submodule code")
+    endif ()
+
     if (NOT EXISTS ${Moss_SOURCE_DIR}/.config)
         message(STATUS "${Moss_SOURCE_DIR}/.config not found. generating default .config file by running ${Python3_EXECUTABLE} ${Moss_SOURCE_DIR}/KConfig/alldefconfig.py")
         execute_process(COMMAND ${Python3_EXECUTABLE}

@@ -6,7 +6,7 @@ import sys
 if __name__ == '__main__':
     here = os.path.dirname(os.path.abspath(__file__))
 
-    kconfig = os.path.join(here, 'KconfigLib')
+    kconfig = os.path.join(here, 'Kconfiglib')
     sys.path.insert(len(sys.path), kconfig)
 
     from Kconfiglib import menuconfig
