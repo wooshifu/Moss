@@ -18,6 +18,8 @@ extern_C [[noreturn]] void kernel_main() {
 
   print_moss_logo();
   print_board_name();
+  int x = 0;
+  log_i("addr: 0x%p", &x);
 
   result = init_cpu();
   if (not_ok(result)) { oops("oops!!! init cpu error"); }

@@ -29,8 +29,9 @@
 //#if DISABLE_KASLR
 #if 1
 // uint64_t kernel_relocated_base = KERNEL_BASE;
-// uint64_t kernel_relocated_base = 0xffff'ffff'0000'0000;
-uint64_t kernel_relocated_base = 0x80000; // referenced by start.S // 树莓派的固件被加载的物理地址
+ uint64_t kernel_relocated_base = 0xffffffff00000000;
+//uint64_t kernel_relocated_base = 0xffff000000000000;
+//uint64_t kernel_relocated_base = 0x80000; // referenced by start.S // 树莓派的固件被加载的物理地址
 #else
 __UINT64_TYPE__ kernel_relocated_base = 0xffffffff10000000;
 #endif

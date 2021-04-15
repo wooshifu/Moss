@@ -134,10 +134,11 @@ size_t hw_rng_get_entropy(void* buf, size_t len) {
   }     return 0;
 
 }
-
+#if 0
 void hw_rng_register(const struct hw_rng_ops* new_ops) { ops = new_ops; }
 
 bool hw_rng_is_registered() { return ops != nullptr; }
+#endif
 
 extern "C"
 __NO_SAFESTACK uintptr_t choose_stack_guard(void) {

@@ -90,7 +90,7 @@ wfi
     // Record the entry time stamp.
     store_ticks kernel_entry_ticks
 
-    // 以下代码保存一些全局变量，save bootinfo
+    // save some global variables, save boot info
     /* save x0 in zbi_paddr */
     adrp    tmp, zbi_paddr
     str     x0, [tmp, #:lo12:zbi_paddr]
@@ -191,12 +191,13 @@ wfi
     //        pa      ->         va
     //     0x80000    ->      0x80000
     mov     x0, page_table1
-    mov     x1, kernel_vaddr    // in fuchsia: 0xffffffff00000000
+    mov     x1, kernel_vaddr // kernel_relocated_base   // in fuchsia: 0xffffffff00000000
     adr_global x2, __code_start // in fuchsia: 0xffffffff00000000
     adr_global x3, _end
     sub     x3, x3, x2
     mov     x4, MMU_PTE_KERNEL_RWX_FLAGS
     bl      arm64_boot_map
+    // todo: check map result
 
     /* Prepare tt_trampoline page table.
      * this will identity map the 1GB page holding the physical address of this code.
