@@ -2,11 +2,10 @@ ENTRY(__text_start)
 
 SECTIONS
 {
-    /*. = 0xffff000000080000;*/
     . = 0x80000;
-    .text : /*AT(0x00000000 + 0x00080000)*/
+    .text :
     {
-        __code_start = .;
+        __kernel_start = .;
         __text_start = .;
             *(.text.boot)
             *(.text)
@@ -17,7 +16,6 @@ SECTIONS
         __init_hooks_end = .;
 
         __text_end = .;
-        __code_end = .;
     }
 
     .rodata :
@@ -61,5 +59,5 @@ SECTIONS
     /* strip unnecessary stuff */
     /DISCARD/ : { *(.comment .note .eh_frame) }
 
-    _end = .;
+    __kernel_end = .;
 }

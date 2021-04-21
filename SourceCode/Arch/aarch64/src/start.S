@@ -126,13 +126,13 @@ wfi
 
     // The fixup code appears right after the kernel image (at __data_end in
     // our view).  Note this code overlaps with the kernel's bss!  It
-    // expects x0 to contain the actual runtime address of __code_start.
+    // expects x0 to contain the actual runtime address of __kernel_start.
     // currently, we don't need fixup
     // mov     x0, kernel_vaddr
     // bl      __data_end
 
     /* clear out the kernel's bss using current physical location */
-    /* NOTE: Relies on __bss_start and _end being 16 byte aligned */
+    /* NOTE: Relies on __bss_start and __kernel_end being 16 byte aligned */
 .Ldo_bss:
     adr_global tmp, __bss_start
     adr_global tmp2, __bss_end
@@ -153,9 +153,9 @@ wfi
     bl      boot_alloc_init
 
     /* save the physical address the kernel is loaded at */
-    adr_global x0, __code_start
+    adr_global x0, __kernel_start
     adr_global x1, kernel_base_phys
-    str     x0, [x1] // kernel_base_phys=__code_start
+    str     x0, [x1] // kernel_base_phys=__kernel_start
 
     /* clear out the kernel translation table */
     mov     tmp, #0
@@ -188,8 +188,8 @@ wfi
     /* note: mapping the kernel here with full rwx, this will get locked down later in vm initialization; */
     mov     x0, page_table1
     mov     x1, kernel_vaddr // kernel_vaddr==kernel_relocated_base
-    adr_global x2, __code_start
-    adr_global x3, _end
+    adr_global x2, __kernel_start
+    adr_global x3, __kernel_end
     sub     x3, x3, x2
     mov     x4, MMU_PTE_KERNEL_RWX_FLAGS
     bl      arm64_boot_map
@@ -271,9 +271,9 @@ wfi
     isb
 
     // Map our current physical PC to the virtual PC and jump there.
-    // PC = next_PC - __code_start + kernel_vaddr
+    // PC = next_PC - __kernel_start + kernel_vaddr
     adr     tmp, .Lmmu_on_vaddr
-    adr_global tmp2, __code_start
+    adr_global tmp2, __kernel_start
     sub     tmp, tmp, tmp2
     add     tmp, tmp, kernel_vaddr
     br      tmp

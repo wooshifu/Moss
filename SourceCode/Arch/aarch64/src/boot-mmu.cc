@@ -221,15 +221,15 @@ extern_C void arm64_mmu_boot_mapping_setup() {
   arm64_boot_map(arm64_kernel_translation_table, KERNEL_ASPACE_BASE, 0, ARCH_PHYSMAP_SIZE, MMU_PTE_KERNEL_DATA_FLAGS);
   //  mov     x0, page_table1
   //  mov     x1, kernel_vaddr    // in fuchsia: 0xffffffff00000000
-  //  adr_global x2, __code_start // in fuchsia: 0xffffffff00000000
-  //  adr_global x3, _end
+  //  adr_global x2, __kernel_start // in fuchsia: 0xffffffff00000000
+  //  adr_global x3, __kernel_end
   //  sub     x3, x3, x2
   //  mov     x4, MMU_PTE_KERNEL_RWX_FLAGS
   //  bl      arm64_boot_map
-  extern paddr_t __code_start[];
-  extern paddr_t _end[];
+  extern paddr_t __kernel_start[];
+  extern paddr_t __kernel_end[];
   arm64_boot_map(arm64_kernel_translation_table, static_cast<vaddr_t>(kernel_relocated_base),
-                 reinterpret_cast<paddr_t>(__code_start), _end - __code_start, MMU_PTE_KERNEL_RWX_FLAGS);
+                 reinterpret_cast<paddr_t>(__kernel_start), __kernel_end - __kernel_start, MMU_PTE_KERNEL_RWX_FLAGS);
 }
 
 #if 0
