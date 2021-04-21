@@ -1,3 +1,4 @@
+#include "aarch64/boot-mmu.hh"
 #include "hal/halt.hh"          // for never_return
 #include "hal/init.hh"          // for init_board
 #include "hal/init_hook.hh"     // for InitHookType, InitHook, InitHookPrio...
@@ -8,13 +9,13 @@
 #include "libcxx/types.hh"      // for uptr
 #include "libcxx/utils.hh"      // for underlying_value
 
-extern u64 __init_hooks_start[];
-extern u64 __init_hooks_end[];
+extern u64 __init_hooks_start;
+extern u64 __init_hooks_end;
 
 static KErrorCode run_init_hook(const InitHookType& init_hook_type) {
   // todo: 启用 mmu 后 __init_hooks_start,__init_hooks_end 是否会发生变化
-  u64* init_hooks_start = __init_hooks_start;
-  u64* init_hooks_end   = __init_hooks_end;
+  u64* init_hooks_start = kernel_relocated_base + &__init_hooks_start;
+  u64* init_hooks_end   = kernel_relocated_base + &__init_hooks_end;
   auto init_hooks_count  = (init_hooks_end - init_hooks_start) / (sizeof(InitHook) / sizeof(uptr));
   if (init_hooks_count == 0) { return KErrorCode::OK; }
 

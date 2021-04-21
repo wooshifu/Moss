@@ -1,17 +1,11 @@
-// Copyright 2016 The Fuchsia Authors
-//
-// Use of this source code is governed by a MIT-style
-// license that can be found in the LICENSE file or at
-// https://opensource.org/licenses/MIT
-
 #ifndef ZIRCON_KERNEL_ARCH_ARM64_INCLUDE_ARCH_ARM64_MP_H_
 #define ZIRCON_KERNEL_ARCH_ARM64_INCLUDE_ARCH_ARM64_MP_H_
 
-//#include "arch/arm64.h"
-#include "kernel/compiler.h"
-//#include "arch/arm64/feature.h"
-//#include "kernel/align.h"
-//#include "kernel/cpu.h"
+//#include "arch/arm64.hh"
+#include "kernel/compiler.hh"
+//#include "arch/arm64/feature.hh"
+//#include "kernel/align.hh"
+//#include "kernel/cpu.hh"
 
 __BEGIN_CDECLS
 

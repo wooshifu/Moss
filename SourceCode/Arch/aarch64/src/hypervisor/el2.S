@@ -1,14 +1,8 @@
-// Copyright 2017 The Fuchsia Authors
-//
-// Use of this source code is governed by a MIT-style
-// license that can be found in the LICENSE file or at
-// https://opensource.org/licenses/MIT
-
-#include "aarch64/hypervisor/el2_state.h"
-#include "aarch64/mmu.h"
-#include "aarch64/asm_macros.h"
-#include "arch/asm.h"
-#include "kernel/errors.h"
+#include "aarch64/hypervisor/el2_state.hh"
+#include "aarch64/mmu.hh"
+#include "aarch64/asm_macros.hh"
+#include "arch/asm.hh"
+#include "kernel/errors.hh"
 
 #define CNTHCTL_EL2_EL1PCTEN            BIT_32(0)
 #define CNTHCTL_EL2_EL1PCEN             BIT_32(1)

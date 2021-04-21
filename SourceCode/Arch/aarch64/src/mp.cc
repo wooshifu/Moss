@@ -1,21 +1,15 @@
-// Copyright 2016 The Fuchsia Authors
-// Copyright (c) 2014 Travis Geiselbrecht
-//
-// Use of this source code is governed by a MIT-style
-// license that can be found in the LICENSE file or at
-// https://opensource.org/licenses/MIT
-//#include "assert.h"
-//#include "platform.h"
-//#include "trace.h"
-//#include "zircon/errors.h"
-//#include "zircon/types.h"
+//#include "assert.hh"
+//#include "platform.hh"
+//#include "trace.hh"
+//#include "zircon/errors.hh"
+//#include "zircon/types.hh"
 
-#include "arch/mp.h"
-//#include "arch/ops.h"
-//#include "dev/interrupt.h"
-//#include "kernel/cpu.h"
-//#include "kernel/event.h"
-//#include "ktl/iterator.h"
+#include "arch/mp.hh"
+//#include "arch/ops.hh"
+//#include "dev/interrupt.hh"
+//#include "kernel/cpu.hh"
+//#include "kernel/event.hh"
+//#include "ktl/iterator.hh"
 
 #define LOCAL_TRACE 0
 

@@ -1,7 +1,3 @@
-// Copyright 2016 The Fuchsia Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 // This file provides macros for unifying differences in C/C++ compiler
 // extensions, and providing backwards-compatibility for older C++ standards.
 //

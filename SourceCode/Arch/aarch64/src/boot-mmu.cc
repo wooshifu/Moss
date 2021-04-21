@@ -1,26 +1,20 @@
-// Copyright 2017 The Fuchsia Authors
-//
-// Use of this source code is governed by a MIT-style
-// license that can be found in the LICENSE file or at
-// https://opensource.org/licenses/MIT
-
 #if 0
-#include "inttypes.h"
-#include "string.h"
-#include "sys/types.h"
+#include "inttypes.hh"
+#include "string.hh"
+#include "sys/types.hh"
 #endif
 
-#include "aarch64/mmu.h"          // for pte_t, MMU_PTE_OUTPUT_ADDR_MASK
-#include "aarch64/vm/bootalloc.h" // for boot_alloc_page_phys
-#include "arch/kernel_aspace.h"   // for KERNEL_ASPACE_BASE
-#include "kernel/compiler.h"      // for __NO_SAFESTACK, __FALLTHROUGH, __A...
-#include "kernel/errors.h"        // for ZX_ERR_BAD_STATE, ZX_OK
+#include "aarch64/mmu.hh"          // for pte_t, MMU_PTE_OUTPUT_ADDR_MASK
+#include "aarch64/vm/bootalloc.hh" // for boot_alloc_page_phys
+#include "arch/kernel_aspace.hh"   // for KERNEL_ASPACE_BASE
+#include "kernel/compiler.hh"      // for __NO_SAFESTACK, __FALLTHROUGH, __A...
+#include "kernel/errors.hh"        // for ZX_ERR_BAD_STATE, ZX_OK
 #include "libcxx/macro.hh"        // for extern_C
 #include "libcxx/types.hh"        // for uint64_t
 
 #if 0
-#include "vm/bootalloc.h"
-#include "vm/physmap.h"
+#include "vm/bootalloc.hh"
+#include "vm/physmap.hh"
 #endif
 
 // Static relocated base to prepare for KASLR. Used at early boot and by gdb

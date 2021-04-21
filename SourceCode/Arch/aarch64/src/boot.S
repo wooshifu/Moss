@@ -3,14 +3,14 @@
  * and we should use adr/adrp(adrp_global) to get the runtime-level address
  */
 
-#include "aarch64/asm_macros.h"
-#include "aarch64/asm.h"
-#include "aarch64/mmu.h"
-#include "arch/arm64.h"
-#include "arch/asm.h"
-#include "arch/defines.h"
-#include "arch/kernel_aspace.h"
-#include "kernel/tls.h"
+#include "aarch64/asm_macros.hh"
+#include "aarch64/asm.hh"
+#include "aarch64/mmu.hh"
+#include "arch/arm64.hh"
+#include "arch/asm.hh"
+#include "arch/defines.hh"
+#include "arch/kernel_aspace.hh"
+#include "kernel/tls.hh"
 
 // clang-format off
 
@@ -114,7 +114,6 @@ wfi
 
     // This can be any arbitrary (page-aligned) address >= KERNEL_ASPACE_BASE.
     // TODO(fxbug.dev/24762): Choose it randomly.
-    // TODO：主要作用应该是 kernel address random(内核地址随机化)？？？
     adr_global  tmp, kernel_relocated_base
     ldr     kernel_vaddr, [tmp]
 
@@ -128,8 +127,9 @@ wfi
     // The fixup code appears right after the kernel image (at __data_end in
     // our view).  Note this code overlaps with the kernel's bss!  It
     // expects x0 to contain the actual runtime address of __code_start.
-//    mov     x0, kernel_vaddr
-//    bl      __data_end
+    // currently, we don't need fixup
+    // mov     x0, kernel_vaddr
+    // bl      __data_end
 
     /* clear out the kernel's bss using current physical location */
     /* NOTE: Relies on __bss_start and _end being 16 byte aligned */
@@ -144,8 +144,7 @@ wfi
     cbnz    tmp2, .Lbss_loop
 .Lbss_loop_done:
 
-    // 打开 mmu 之前的栈
-    /* set up a functional stack pointer */
+    /* set up a functional stack pointer before mmu are enabled */
     adr_global tmp, boot_cpu_kstack_end
     mov     sp, tmp
 
@@ -171,14 +170,13 @@ wfi
     cmp     tmp, #MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP // cmp tmp, #512
     bne     .Lclear_top_page_table_loop
 
-//    bl arm64_mmu_boot_mapping_setup
+    // todo: move all mmu mappings together in arm64_mmu_boot_mapping_setup
+    // bl arm64_mmu_boot_mapping_setup
 
     /* void arm64_boot_map(pte_t* kernel_table0, vaddr_t vaddr, paddr_t paddr, size_t len, pte_t flags); */
 
     /* map a large run of physical memory at the base of the kernel's address space
      * TODO(fxbug.dev/47856): Only map the arenas. */
-    //        pa      ->         va
-    //         0      -> 0xffff000000000000UL
     mov     x0, page_table1
     mov     x1, KERNEL_ASPACE_BASE
     mov     x2, 0
@@ -188,16 +186,14 @@ wfi
 
     /* map the kernel to a fixed address */
     /* note: mapping the kernel here with full rwx, this will get locked down later in vm initialization; */
-    //        pa      ->         va
-    //     0x80000    ->      0x80000
     mov     x0, page_table1
-    mov     x1, kernel_vaddr // kernel_relocated_base   // in fuchsia: 0xffffffff00000000
-    adr_global x2, __code_start // in fuchsia: 0xffffffff00000000
+    mov     x1, kernel_vaddr // kernel_vaddr==kernel_relocated_base
+    adr_global x2, __code_start
     adr_global x3, _end
     sub     x3, x3, x2
     mov     x4, MMU_PTE_KERNEL_RWX_FLAGS
     bl      arm64_boot_map
-    // todo: check map result
+    // todo: check mmu mapping result
 
     /* Prepare tt_trampoline page table.
      * this will identity map the 1GB page holding the physical address of this code.
@@ -211,16 +207,13 @@ wfi
     cmp     tmp, #MMU_PAGE_TABLE_ENTRIES_IDENT
     blt     .Lclear_tt_trampoline
 
-    //todo: check the code
     /* Setup mapping at phys -> phys */
-    adr     tmp, .Lmmu_on_pc // tmp = (.Lmmu_on_pc=0x801e0)//tmp = (.Lmmu_on_pc=0xffff'ffff'0008'01e0)
+    adr     tmp, .Lmmu_on_pc
     lsr     tmp, tmp, #MMU_IDENT_TOP_SHIFT    /* tmp = paddr index */ // tmp >> 30
-    movlit  tmp2, MMU_PTE_IDENT_FLAGS // tmp2=0x709
+    movlit  tmp2, MMU_PTE_IDENT_FLAGS
     // ADD R0, R2, R3,LSL #1 ; R0 = R2 + (R3 << 1)
     add     tmp2, tmp2, tmp, lsl #MMU_IDENT_TOP_SHIFT  /* tmp2 = pt entry */ // tmp2=tmp2+(tmp<<30)
-    // tmp2=0x709
-    // str r1,[r0,r3,lsl#2] => r0 + (r3 << 2) = r1
-    str     tmp2, [page_table0, tmp, lsl #3]  /* tt_trampoline[paddr index] = pt entry */ // tt_trampoline[0] = 0x709
+    str     tmp2, [page_table0, tmp, lsl #3]  /* tt_trampoline[paddr index] = pt entry */
 
     /* mark page tables as set up, so secondary cpus can fall through */
     adr_global tmp, page_tables_not_ready
@@ -283,22 +276,13 @@ wfi
     adr_global tmp2, __code_start
     sub     tmp, tmp, tmp2
     add     tmp, tmp, kernel_vaddr
-    // 若此处 tmp 小于 KERNEL_ASPACE_BASE, 这需要设置对应的 mmu 映射，并跳转到 kernel space
-    br      tmp // tmp equal to .Lmmu_on_vaddr
+    br      tmp
 
-// todo: jump to kernel space
-.Ljump_to_kernel_space:
-// todo: implement jump_to_kernel_space
 .Lmmu_on_vaddr:
-    /*if(tmp<KERNEL_ASPACE_BASE){movlit  tmp, MMU_TCR_FLAGS_USER}else{movlit  tmp, MMU_TCR_FLAGS_KERNEL}*/
-    // todo: disable trampoline page-table in ttbr0 ??? why???
     /* Disable trampoline page-table in ttbr0 */
-    // todo: check tmp msb address is 0xffff or 0x0000
-    movlit  tmp, MMU_TCR_FLAGS_USER // MMU_TCR_FLAGS_KERNEL:0x12'b550'3590, MMU_TCR_FLAGS_USER:0x12b5103510
-//    movlit  tmp, MMU_TCR_FLAGS_KERNEL
+    movlit  tmp, MMU_TCR_FLAGS_KERNEL
     msr     tcr_el1, tmp
-    isb // todo: 此行崩溃??? // 可能原因：内存属性设置不对？//参考第三季17 MMU芯片手册解读-part3.vep
-    //todo：增加 exception table 以供调试
+    isb
 
     /* Invalidate the entire TLB */
     tlbi    vmalle1

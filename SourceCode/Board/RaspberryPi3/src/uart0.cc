@@ -1,11 +1,13 @@
-#include "libcxx/cast.hh"  // for force_cast
-#include "rpi3/mailbox.hh" // for call, SetClockRate, Channel, Channel::...
-#include "rpi3/mmio.hh"
-#include "rpi3/rpi3.hh"  // for NS_RPI3
-#include "rpi3/uart0.hh" // for init_uart0
+#include "aarch64/boot-mmu.hh"  // for kernel_relocated_base
+#include "libcxx/cast.hh"       // for force_cast
+#include "libcxx/types.hh"      // for u64
+#include "rpi3/mailbox.hh"      // for NS_mailbox, SetClockRate, Channel
+#include "rpi3/mmio.hh"         // for NS_mmio
+#include "rpi3/rpi3.hh"         // for NS_rpi3
+#include "rpi3/uart0.hh"        // for init_uart0
 
 namespace NS_rpi3 {
-  static bool is_uart0_initialized = false;
+  static bool is_uart0_initialized              = false;
   /* PL011 UART registers */
   auto* UART0_DATA_REGISTER                     = force_cast(volatile unsigned int*, NS_mmio::BASE + 0x00201000);
   auto* UART0_FLAG_REGISTER                     = force_cast(volatile unsigned int*, NS_mmio::BASE + 0x00201018);
@@ -20,7 +22,9 @@ namespace NS_rpi3 {
    * Set baud rate and characteristics (115200 8N1) and map to GPIO
    */
   void init_uart0() {
-    *UART0_CONTROL_REGISTER = 0; // turn off UART0
+    // todo: how to access physic address after mmu been enabled
+    *((u64 volatile*)kernel_relocated_base + 0x3F000000 + 0x00201030) = 0;
+    //    *UART0_CONTROL_REGISTER = 0; // turn off UART0
 
     alignas(16) auto set_clock_rate = NS_mailbox::property::SetClockRate(4'000'000, 0);
     bool success = NS_mailbox::call(mailbox::Channel::PROPERTY_TAGS_ARM_TO_VIDEO_CORE, set_clock_rate);
@@ -58,7 +62,7 @@ namespace NS_rpi3 {
     *UART0_LINE_CONTROL_REGISTER        = 0b11 << 5; // 8n1, b11 = 8 bits
     *UART0_CONTROL_REGISTER             = 0x301;     // enable Tx, Rx, FIFO
     //  log_d("uart0 successfully initialized");
-    is_uart0_initialized = true;
+    is_uart0_initialized                = true;
   }
 
   /**
@@ -95,9 +99,7 @@ namespace NS_rpi3 {
   void uart0_puts(char* string) {
     while (*string) {
       /* convert newline to carriage return + newline */
-      if (*string == '\n') {
-        uart0_send('\r');
-      }
+      if (*string == '\n') { uart0_send('\r'); }
       uart0_send(*string++);
     }
   }

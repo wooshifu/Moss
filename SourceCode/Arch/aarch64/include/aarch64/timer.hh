@@ -1,6 +1,6 @@
 #pragma once
 
-#include "aarch64/asm.hh"
+#include "aarch64/sysreg.hh"
 #include "libcxx/types.hh"
 
 inline void enable_cntv_el0() {

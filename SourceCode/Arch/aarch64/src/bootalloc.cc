@@ -1,29 +1,23 @@
-// Copyright 2016 The Fuchsia Authors
-// Copyright (c) 2014 Travis Geiselbrecht
-//
-// Use of this source code is governed by a MIT-style
-// license that can be found in the LICENSE file or at
-// https://opensource.org/licenses/MIT
-
-#include "arch/align.h"
-#include "arch/defines.h"
-#include "kernel/compiler.h"
+#include "arch/align.hh"
+#include "arch/defines.hh"
+#include "kernel/compiler.hh"
+#include "libcxx/types.hh"
 
 #if 0
-#include "vm/bootalloc.h"
+#include "vm/bootalloc.hh"
 
-#include "align.h"
-#include "lib/instrumentation/asan.h"
-#include "stdint.h"
-#include "stdlib.h"
-#include "sys/types.h"
-#include "trace.h"
+#include "align.hh"
+#include "lib/instrumentation/asan.hh"
+#include "stdint.hh"
+#include "stdlib.hh"
+#include "sys/types.hh"
+#include "trace.hh"
 
-#include "vm/physmap.h"
-#include "vm/pmm.h"
-#include "vm/vm.h"
+#include "vm/physmap.hh"
+#include "vm/pmm.hh"
+#include "vm/vm.hh"
 
-#include "vm_priv.h"
+#include "vm_priv.hh"
 
 #define LOCAL_TRACE VM_GLOBAL_TRACE(0)
 
@@ -33,7 +27,7 @@
 // Pointers are returned from the kernel's physmap
 #endif
 
-using paddr_t = unsigned long;
+//using paddr_t = unsigned long;
 // store the start and current pointer to the boot allocator in physical address
 paddr_t boot_alloc_start;
 paddr_t boot_alloc_end;

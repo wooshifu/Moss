@@ -1,6 +1,6 @@
 #pragma once
 
-#include "aarch64/asm.hh"
+#include "aarch64/sysreg.hh"
 #include "libcxx/log.hh"
 
 enum mair_field_value_index {

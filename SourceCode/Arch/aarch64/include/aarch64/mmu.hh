@@ -1,15 +1,8 @@
-// Copyright 2016 The Fuchsia Authors
-// Copyright (c) 2014 Google Inc. All rights reserved
-//
-// Use of this source code is governed by a MIT-style
-// license that can be found in the LICENSE file or at
-// https://opensource.org/licenses/MIT
-
 #ifndef ZIRCON_KERNEL_ARCH_ARM64_INCLUDE_ARCH_ARM64_MMU_H_
 #define ZIRCON_KERNEL_ARCH_ARM64_INCLUDE_ARCH_ARM64_MMU_H_
 
-#include "arch/defines.h"
-#include "arch/kernel_aspace.h"
+#include "arch/defines.hh"
+#include "arch/kernel_aspace.hh"
 
 // clang-format on
 #define IFTE(c, t, e) (!!(c) * (t) | !(c) * (e))
@@ -355,12 +348,12 @@ static_assert(MMU_PTE_KERNEL_DATA_FLAGS ==
 
 #ifndef __ASSEMBLER__
 #if 0
-#include "assert.h"
-#include "sys/types.h"
+#include "assert.hh"
+#include "sys/types.hh"
 #endif
-#include "kernel/compiler.h"
+#include "kernel/compiler.hh"
 
-#include "arch/arm64.h"
+#include "arch/arm64.hh"
 
 using pte_t = uint64_t;
 

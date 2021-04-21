@@ -1,44 +1,37 @@
-// Copyright 2016 The Fuchsia Authors
-// Copyright (c) 2014-2016 Travis Geiselbrecht
-//
-// Use of this source code is governed by a MIT-style
-// license that can be found in the LICENSE file or at
-// https://opensource.org/licenses/MIT
-
 #if 0
-#include "arch.h"
-#include "assert.h"
-#include "bits.h"
-#include "debug.h"
-#include "inttypes.h"
-#include "lib/arch/arm64/system.h"
-#include "lib/arch/intrin.h"
-#include "lib/arch/sysreg.h"
-#include "lib/boot-options/boot-options.h"
-#include "lib/cmdline.h"
-#include "lib/console.h"
-#include "platform.h"
-#include "stdlib.h"
-#include "string.h"
-#include "trace.h"
-#include "zircon/errors.h"
-#include "zircon/types.h"
+#include "arch.hh"
+#include "assert.hh"
+#include "bits.hh"
+#include "debug.hh"
+#include "inttypes.hh"
+#include "lib/arch/arm64/system.hh"
+#include "lib/arch/intrin.hh"
+#include "lib/arch/sysreg.hh"
+#include "lib/boot-options/boot-options.hh"
+#include "lib/cmdline.hh"
+#include "lib/console.hh"
+#include "platform.hh"
+#include "stdlib.hh"
+#include "string.hh"
+#include "trace.hh"
+#include "zircon/errors.hh"
+#include "zircon/types.hh"
 
-#include "arch/arm64/feature.h"
-#include "arch/arm64/mmu.h"
-#include "arch/arm64/registers.h"
-#include "arch/arm64/uarch.h"
-#include "arch/mp.h"
-#include "arch/ops.h"
-#include "arch/regs.h"
-#include "arch/vm.h"
-#include "kernel/cpu.h"
-#include "kernel/thread.h"
-#include "ktl/atomic.h"
-#include "lk/init.h"
-#include "lk/main.h"
+#include "arch/arm64/feature.hh"
+#include "arch/arm64/mmu.hh"
+#include "arch/arm64/registers.hh"
+#include "arch/arm64/uarch.hh"
+#include "arch/mp.hh"
+#include "arch/ops.hh"
+#include "arch/regs.hh"
+#include "arch/vm.hh"
+#include "kernel/cpu.hh"
+#include "kernel/thread.hh"
+#include "ktl/atomic.hh"
+#include "lk/init.hh"
+#include "lk/main.hh"
 
-#include "arch/arm64.h"
+#include "arch/arm64.hh"
 
 #define LOCAL_TRACE 0
 
@@ -62,7 +55,7 @@ static constexpr uint64_t PMUSERENR_EL0_ENABLE = 1 << 0;  // Enable EL0 access t
 #endif
 
 #include "libcxx/types.hh"
-#include "kernel/compiler.h"
+#include "kernel/compiler.hh"
 struct arm64_sp_info_t {
   uint64_t mpid;
   void* sp;                   // Stack pointer points to arbitrary data.

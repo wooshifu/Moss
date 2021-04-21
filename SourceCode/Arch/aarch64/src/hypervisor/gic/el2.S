@@ -1,13 +1,7 @@
-// Copyright 2017 The Fuchsia Authors
-//
-// Use of this source code is governed by a MIT-style
-// license that can be found in the LICENSE file or at
-// https://opensource.org/licenses/MIT
-
-#include "aarch64/hypervisor/el2_state.h"
-#include "aarch64/asm_macros.h"
-#include "arch/asm.h"
-#include "kernel/errors.h"
+#include "aarch64/hypervisor/el2_state.hh"
+#include "aarch64/asm_macros.hh"
+#include "arch/asm.hh"
+#include "kernel/errors.hh"
 
 // For details please refer to ARM Generic Interrupt Controller Architecture
 // Specification, version 3.0 and version 4.0. Table 8-6 Mapping of MSR and MRS

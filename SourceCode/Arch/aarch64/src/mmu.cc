@@ -1,9 +1,9 @@
-#include "aarch64/asm.hh"           // for ARM64_WRITE_SYSREG, ARM64_READ_S...
 #include "aarch64/barrier.hh"       // for dsb, isb
 #include "aarch64/linker.hh"        // for get_text_end_address, get_text_size
 #include "aarch64/mair.hh"          // for setup_mair_el1
 #include "aarch64/page.hh"          // for L0PageTableEntry, L2PageTableEntry
 #include "aarch64/page_property.hh" // for PAGE_ALIGN, PAGE_SIZE, TCR_TxSZ
+#include "aarch64/sysreg.hh"        // for ARM64_WRITE_SYSREG, ARM64_READ_S...
 #include "libcxx/error_code.hh"     // for KErrorCode
 #include "libcxx/log.hh"            // for log_d, log_e
 #include "libcxx/string.hh"         // for memset

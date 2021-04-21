@@ -1,13 +1,7 @@
-// Copyright 2017 The Fuchsia Authors
-//
-// Use of this source code is governed by a MIT-style
-// license that can be found in the LICENSE file or at
-// https://opensource.org/licenses/MIT
-
 #ifndef ZIRCON_KERNEL_ARCH_ARM64_INCLUDE_ARCH_ARM64_HYPERVISOR_EL2_STATE_H_
 #define ZIRCON_KERNEL_ARCH_ARM64_INCLUDE_ARCH_ARM64_HYPERVISOR_EL2_STATE_H_
 
-#include "kernel/compiler.h"
+#include "kernel/compiler.hh"
 
 // clang-format off
 
@@ -110,8 +104,8 @@
 
 #ifndef __ASSEMBLER__
 
-#include "arch/defines.h"
-#include "zircon/types.h"
+#include "arch/defines.hh"
+#include "zircon/types.hh"
 
 typedef uint32_t __ALIGNED(8) algn32_t;
 

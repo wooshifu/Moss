@@ -1,30 +1,23 @@
-// Copyright 2016 The Fuchsia Authors
-// Copyright (c) 2008-2015 Travis Geiselbrecht
-//
-// Use of this source code is governed by a MIT-style
-// license that can be found in the LICENSE file or at
-// https://opensource.org/licenses/MIT
-
 #if 0
-#include "debug.h"
+#include "debug.hh"
 
-#include "align.h"
-#include "ctype.h"
-#include "lib/crashlog.h"
-#include "platform.h"
-#include "stdio.h"
-#include "stdlib.h"
-#include "zircon/boot/crash-reason.h"
-#include "zircon/listnode.h"
-#include "zircon/time.h"
-#include "zircon/types.h"
+#include "align.hh"
+#include "ctype.hh"
+#include "lib/crashlog.hh"
+#include "platform.hh"
+#include "stdio.hh"
+#include "stdlib.hh"
+#include "zircon/boot/crash-reason.hh"
+#include "zircon/listnode.hh"
+#include "zircon/time.hh"
+#include "zircon/types.hh"
 
-#include "arch/ops.h"
-#include "dev/hw_rng.h"
-#include "kernel/lockdep.h"
-#include "kernel/spinlock.h"
-#include "ktl/algorithm.h"
-#include "platform/debug.h"
+#include "arch/ops.hh"
+#include "dev/hw_rng.hh"
+#include "kernel/lockdep.hh"
+#include "kernel/spinlock.hh"
+#include "ktl/algorithm.hh"
+#include "platform/debug.hh"
 
 namespace {
 
@@ -118,7 +111,7 @@ void assert_fail(const char* file, int line, const char* expression) {
 }
 #endif
 
-#include "kernel/compiler.h"
+#include "kernel/compiler.hh"
 #include "libcxx/types.hh"
 
 // Hardware RNG interface.
