@@ -71,7 +71,7 @@ FUNCTION(_start)
     // TODO: debug only, remove following code
     mrs     x1, mpidr_el1            // MPIDR_EL1: Multi-Processor Affinity Register
     and     x1, x1, #0xFFFF
-    cbz     x1, .L__xxx             // .L prefix is the local label in ELF
+    cbz     x1, .Lprimary_cpu             // .L prefix is the local label in ELF
 
 // cpu id > 0, stop
 // cpu id == 0 will also goto here after returned from kernel_main() if possible
@@ -79,7 +79,7 @@ FUNCTION(_start)
 wfi
     b       .L__current_cpu_idle
 
-.L__xxx:
+.Lprimary_cpu:
     sample_ticks
 
     /* Save the Boot info for the primary CPU only */
@@ -183,6 +183,7 @@ wfi
     mov     x3, ARCH_PHYSMAP_SIZE
     movlit  x4, MMU_PTE_KERNEL_DATA_FLAGS
     bl      arm64_boot_map
+    cbnz    x0, . // if mmu map failed, stop here
 
     /* map the kernel to a fixed address */
     /* note: mapping the kernel here with full rwx, this will get locked down later in vm initialization; */
@@ -193,7 +194,7 @@ wfi
     sub     x3, x3, x2
     mov     x4, MMU_PTE_KERNEL_RWX_FLAGS
     bl      arm64_boot_map
-    // todo: check mmu mapping result
+    cbnz    x0, . // if mmu map failed, stop here.
 
     /* Prepare tt_trampoline page table.
      * this will identity map the 1GB page holding the physical address of this code.
