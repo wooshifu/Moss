@@ -1,3 +1,6 @@
 [submodule "Kconfiglib/Kconfiglib"]
 	path = Kconfiglib/Kconfiglib
 	url = git@github.com:ulfalizer/Kconfiglib.git
+[submodule "Scripts/IWYU/include-what-you-use"]
+	path = Scripts/IWYU/include-what-you-use
+	url = git@github.com:include-what-you-use/include-what-you-use.git
