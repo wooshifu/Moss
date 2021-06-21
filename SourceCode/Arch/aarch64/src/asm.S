@@ -156,13 +156,11 @@ FUNCTION(arm64_elX_to_el1)
     SPECULATION_POSTFENCE
 END_FUNCTION(arm64_elX_to_el1)
 
-// todo: temp SMP_MAX_CPUS definition here
-#define SMP_MAX_CPUS 16
 FUNCTION(arm64_get_secondary_sp)
     mrs     x9, mpidr_el1
     ldr     x10, =0xff00ffffff  /* Mask for AFFx (cluster) ids */
     and     x9, x9, x10
-    mov     x10, #SMP_MAX_CPUS
+    mov     x10, #CONFIG_SMP_MAX_CPUS
 
     adr_global x11, arm64_secondary_sp_list
 

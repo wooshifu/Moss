@@ -1,3 +1,7 @@
+function(include_kconfig_header_file_globally flags)
+    set(${flags} "-imacros ${Moss_SOURCE_DIR}/SourceCode/Config/include/kconfig.hh" PARENT_SCOPE)
+endfunction()
+
 function(target_include_hal_header_files IN_target)
     target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/HAL/include)
 endfunction()

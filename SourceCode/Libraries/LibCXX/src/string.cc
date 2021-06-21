@@ -20,9 +20,7 @@ void* memset(void* destination, int character, size_t count) {
 }
 
 size_t strlen(const char* str) {
-  if (str == nullptr) {
-    return 0;
-  }
+  if (str == nullptr) { return 0; }
 
   size_t len = 0;
   while (*str++) {
@@ -32,31 +30,23 @@ size_t strlen(const char* str) {
 }
 
 char* strchr(const char* str, int character) {
-  if (str == nullptr) {
-    return nullptr;
-  }
+  if (str == nullptr) { return nullptr; }
 
   while (*str) {
-    if (*str == character) {
-      return (char*)str;
-    }
+    if (*str == character) { return (char*)str; }
     ++str;
   }
   return nullptr;
 }
 
 char* strrchr(const char* str, int character) {
-  if (str == nullptr) {
-    return nullptr;
-  }
+  if (str == nullptr) { return nullptr; }
 
   // todo: optimization. two loops here now
   size_t len = strlen(str);
   for (size_t index = len; index > 0; --index) {
     const char* string = str + index - 1;
-    if (*string == character) {
-      return (char*)string;
-    }
+    if (*string == character) { return (char*)string; }
   }
   return nullptr;
 }
@@ -87,8 +77,7 @@ char* strcat(char* destination, const char* source) {
   while (*destination) {
     destination++;
   }
-  while ((*destination++ = *source++) != '\0') {
-  }
+  while ((*destination++ = *source++) != '\0') {}
 
   return tmp;
 }
@@ -114,12 +103,8 @@ int strcmp(const char* left, const char* right) {
   while (true) {
     auto c1 = *left++;
     auto c2 = *right++;
-    if (c1 != c2) {
-      return c1 < c2 ? -1 : 1;
-    }
-    if (!c1) {
-      break;
-    }
+    if (c1 != c2) { return c1 < c2 ? -1 : 1; }
+    if (!c1) { break; }
   }
   return 0;
 }

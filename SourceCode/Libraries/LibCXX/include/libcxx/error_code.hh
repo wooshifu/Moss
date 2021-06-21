@@ -16,6 +16,7 @@ inline bool ok(bool code) { return code; }
 inline bool not_ok(bool code) { return not ok(code); }
 
 /// convention: zero represents ok, non-zero represents not ok
-template <typename T> concept Number = std::integral<T> && not std::same_as<T, bool>;
+template <typename T>
+concept Number = std::integral<T> && not std::same_as<T, bool>;
 inline bool ok(Number auto code) { return code == 0; }
 inline bool not_ok(Number auto code) { return not ok(code); }

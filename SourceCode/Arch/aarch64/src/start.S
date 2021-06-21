@@ -180,10 +180,10 @@ wfi
     mov     x0, page_table1
     mov     x1, KERNEL_ASPACE_BASE
     mov     x2, 0
-    mov     x3, ARCH_PHYSMAP_SIZE
+    mov     x3, ARCH_PHYSIC_MAP_SIZE // 512GB
     movlit  x4, MMU_PTE_KERNEL_DATA_FLAGS
     bl      arm64_boot_map
-    cbnz    x0, . // if mmu map failed, stop here
+    cbnz    x0, . // if mmu map failed, stops here
 
     /* map the kernel to a fixed address */
     /* note: mapping the kernel here with full rwx, this will get locked down later in vm initialization; */
@@ -194,7 +194,7 @@ wfi
     sub     x3, x3, x2
     mov     x4, MMU_PTE_KERNEL_RWX_FLAGS
     bl      arm64_boot_map
-    cbnz    x0, . // if mmu map failed, stop here.
+    cbnz    x0, . // if mmu map failed, stops here.
 
     /* Prepare tt_trampoline page table.
      * this will identity map the 1GB page holding the physical address of this code.
@@ -277,6 +277,8 @@ wfi
     adr_global tmp2, __kernel_start
     sub     tmp, tmp, tmp2
     add     tmp, tmp, kernel_vaddr
+    // jump to kernel space
+    // when gdb debugging, should run gdb command: `add-symbol-file kernel.elf 0xffffffff00000000` to load the kernel image to kernel space
     br      tmp
 
 .Lmmu_on_vaddr:
@@ -325,6 +327,7 @@ wfi
     store_ticks kernel_virtual_entry_ticks
 
     bl  kernel_main
+    // kernel_main should not return, if returned unexpected, stops here
     b   .
 
 .Lsecondary_boot:
@@ -378,8 +381,8 @@ END_DATA(boot_cpu_fake_arch_thread)
 
 .bss
 LOCAL_DATA(boot_cpu_kstack)
-    .skip ARCH_DEFAULT_STACK_SIZE
-    .balign 16
+    .skip ARCH_DEFAULT_STACK_SIZE // equal to 8192 bytes, 8Kb
+    .balign 16 // 16 bytes
 LOCAL_DATA(boot_cpu_kstack_end)
 END_DATA(boot_cpu_kstack)
 
@@ -403,11 +406,3 @@ END_DATA(boot_cpu_shadow_call_kstack)
 DATA(tt_trampoline)
     .skip 8 * MMU_PAGE_TABLE_ENTRIES_IDENT
 END_DATA(tt_trampoline)
-
-// This symbol is used by image.S
-.global IMAGE_ELF_ENTRY
-IMAGE_ELF_ENTRY = _start
-
-// This symbol is used by gdb python to know the base of the kernel module
-.global KERNEL_BASE_ADDRESS
-KERNEL_BASE_ADDRESS = KERNEL_BASE

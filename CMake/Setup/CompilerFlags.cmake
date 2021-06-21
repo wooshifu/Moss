@@ -46,7 +46,7 @@ function(get_debug_flag OUT_debug_flag)
     if (CMAKE_BUILD_TYPE MATCHES "Rel")
         set(${OUT_debug_flag} "" PARENT_SCOPE)
     else ()
-        set(${OUT_debug_flag} "-g" PARENT_SCOPE)
+        set(${OUT_debug_flag} "-g3" PARENT_SCOPE)
     endif ()
 endfunction()
 
@@ -90,7 +90,11 @@ function(setup_compiler_flags IN_board IN_arch)
         set(compiler_specific_flags "")
     endif ()
 
+    include_kconfig_header_file_globally(kconfig_flags)
+    message(STATUS kconfig_flags: "${kconfig_flags}")
+
     string(JOIN " " common_compiler_flags
+            ${kconfig_flags}
             ${arch_compiler_flags}
             ${board_compiler_flags}
             # "-v"

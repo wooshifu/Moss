@@ -31,7 +31,7 @@
 // C++ header guards.
 #ifdef __cplusplus
 #define __BEGIN_CDECLS extern "C" {
-#define __END_CDECLS }
+#define __END_CDECLS   }
 #else
 #define __BEGIN_CDECLS
 #define __END_CDECLS
@@ -42,7 +42,7 @@
 //
 
 // Function inlining directives.
-#define __NO_INLINE __attribute__((__noinline__))
+#define __NO_INLINE     __attribute__((__noinline__))
 #define __ALWAYS_INLINE __attribute__((__always_inline__))
 
 // Avoid issuing a warning if the given variable/function is unused.
@@ -126,7 +126,7 @@
 // If applied to a class method, the implicit "this" parameter counts as the
 // first argument.
 #define __PRINTFLIKE(__fmt, __varargs) __attribute__((__format__(__printf__, __fmt, __varargs)))
-#define __SCANFLIKE(__fmt, __varargs) __attribute__((__format__(__scanf__, __fmt, __varargs)))
+#define __SCANFLIKE(__fmt, __varargs)  __attribute__((__format__(__scanf__, __fmt, __varargs)))
 
 // Indicate that the `n`th argument to a function is non-null.
 //
@@ -220,7 +220,7 @@
 
 // The given function or global should be given a weak symbol, or a weak
 // alias to another symbol.
-#define __WEAK __attribute__((__weak__))
+#define __WEAK          __attribute__((__weak__))
 #define __WEAK_ALIAS(x) __attribute__((__weak__, __alias__(x)))
 
 // The given static variable should still be emitted by the compiler, even if it
@@ -232,7 +232,7 @@
 
 // Declare this object's ELF symbol visibility.
 #define __EXPORT __attribute__((__visibility__("default")))
-#define __LOCAL __attribute__((__visibility__("hidden")))
+#define __LOCAL  __attribute__((__visibility__("hidden")))
 
 //
 // Builtin functions.
@@ -245,7 +245,7 @@
 //     error(...);
 //   }
 //
-#define likely(x) __builtin_expect(!!(x), 1)
+#define likely(x)   __builtin_expect(!!(x), 1)
 #define unlikely(x) __builtin_expect(!!(x), 0)
 
 // Return the program counter of the calling function.
@@ -262,7 +262,7 @@
 
 // Get the offset of `field` from the beginning of the struct or class `type`.
 #define __offsetof(type, field) __builtin_offsetof(type, field)
-#define offsetof(type, field) __offsetof(type, field)
+#define offsetof(type, field)   __offsetof(type, field)
 
 // Return the number of elements in the given C-style array.
 //
@@ -292,7 +292,8 @@
 //   }
 //
 #if defined(__cplusplus) && __cplusplus >= 201703L
-#define __FALLTHROUGH [[fallthrough]]
+//#define __FALLTHROUGH [[fallthrough]]
+#define __FALLTHROUGH __attribute__((__fallthrough__))
 #elif defined(__cplusplus) && defined(__clang__)
 #define __FALLTHROUGH [[clang::fallthrough]]
 // The GNU style attribute is supported by Clang for C code, but __GNUC__ for
@@ -300,8 +301,8 @@
 #elif __GNUC__ >= 7 || (!defined(__cplusplus) && defined(__clang__))
 #define __FALLTHROUGH __attribute__((__fallthrough__))
 #else
-#define __FALLTHROUGH \
-  do {                \
+#define __FALLTHROUGH                                                                                                  \
+  do {                                                                                                                 \
   } while (0)
 #endif
 
@@ -319,28 +320,28 @@
 #else
 #define __THREAD_ANNOTATION(x)
 #endif
-#define __TA_CAPABILITY(x) __THREAD_ANNOTATION(__capability__(x))
-#define __TA_GUARDED(x) __THREAD_ANNOTATION(__guarded_by__(x))
-#define __TA_ACQUIRE(...) __THREAD_ANNOTATION(__acquire_capability__(__VA_ARGS__))
-#define __TA_ACQUIRE_SHARED(...) __THREAD_ANNOTATION(__acquire_shared_capability__(__VA_ARGS__))
-#define __TA_TRY_ACQUIRE(...) __THREAD_ANNOTATION(__try_acquire_capability__(__VA_ARGS__))
-#define __TA_ACQUIRED_BEFORE(...) __THREAD_ANNOTATION(__acquired_before__(__VA_ARGS__))
-#define __TA_ACQUIRED_AFTER(...) __THREAD_ANNOTATION(__acquired_after__(__VA_ARGS__))
-#define __TA_RELEASE(...) __THREAD_ANNOTATION(__release_capability__(__VA_ARGS__))
-#define __TA_RELEASE_SHARED(...) __THREAD_ANNOTATION(__release_shared_capability__(__VA_ARGS__))
-#define __TA_REQUIRES(...) __THREAD_ANNOTATION(__requires_capability__(__VA_ARGS__))
-#define __TA_REQUIRES_SHARED(...) __THREAD_ANNOTATION(__requires_shared_capability__(__VA_ARGS__))
-#define __TA_EXCLUDES(...) __THREAD_ANNOTATION(__locks_excluded__(__VA_ARGS__))
-#define __TA_ASSERT(...) __THREAD_ANNOTATION(__assert_capability__(__VA_ARGS__))
-#define __TA_ASSERT_SHARED(...) __THREAD_ANNOTATION(__assert_shared_capability__(__VA_ARGS__))
-#define __TA_RETURN_CAPABILITY(x) __THREAD_ANNOTATION(__lock_returned__(x))
-#define __TA_SCOPED_CAPABILITY __THREAD_ANNOTATION(__scoped_lockable__)
+#define __TA_CAPABILITY(x)             __THREAD_ANNOTATION(__capability__(x))
+#define __TA_GUARDED(x)                __THREAD_ANNOTATION(__guarded_by__(x))
+#define __TA_ACQUIRE(...)              __THREAD_ANNOTATION(__acquire_capability__(__VA_ARGS__))
+#define __TA_ACQUIRE_SHARED(...)       __THREAD_ANNOTATION(__acquire_shared_capability__(__VA_ARGS__))
+#define __TA_TRY_ACQUIRE(...)          __THREAD_ANNOTATION(__try_acquire_capability__(__VA_ARGS__))
+#define __TA_ACQUIRED_BEFORE(...)      __THREAD_ANNOTATION(__acquired_before__(__VA_ARGS__))
+#define __TA_ACQUIRED_AFTER(...)       __THREAD_ANNOTATION(__acquired_after__(__VA_ARGS__))
+#define __TA_RELEASE(...)              __THREAD_ANNOTATION(__release_capability__(__VA_ARGS__))
+#define __TA_RELEASE_SHARED(...)       __THREAD_ANNOTATION(__release_shared_capability__(__VA_ARGS__))
+#define __TA_REQUIRES(...)             __THREAD_ANNOTATION(__requires_capability__(__VA_ARGS__))
+#define __TA_REQUIRES_SHARED(...)      __THREAD_ANNOTATION(__requires_shared_capability__(__VA_ARGS__))
+#define __TA_EXCLUDES(...)             __THREAD_ANNOTATION(__locks_excluded__(__VA_ARGS__))
+#define __TA_ASSERT(...)               __THREAD_ANNOTATION(__assert_capability__(__VA_ARGS__))
+#define __TA_ASSERT_SHARED(...)        __THREAD_ANNOTATION(__assert_shared_capability__(__VA_ARGS__))
+#define __TA_RETURN_CAPABILITY(x)      __THREAD_ANNOTATION(__lock_returned__(x))
+#define __TA_SCOPED_CAPABILITY         __THREAD_ANNOTATION(__scoped_lockable__)
 #define __TA_NO_THREAD_SAFETY_ANALYSIS __THREAD_ANNOTATION(__no_thread_safety_analysis__)
 
 // Experimental lifetime analysis annotations.
 #ifndef __OWNER
 #ifdef __clang__
-#define __OWNER(x) [[gsl::Owner(x)]]
+#define __OWNER(x)   [[gsl::Owner(x)]]
 #define __POINTER(x) [[gsl::Pointer(x)]]
 #else
 #define __OWNER(x)
@@ -350,4 +351,4 @@
 
 #endif // !defined(__ASSEMBLER__)
 
-#endif  // SYSROOT_ZIRCON_COMPILER_H_
+#endif // SYSROOT_ZIRCON_COMPILER_H_

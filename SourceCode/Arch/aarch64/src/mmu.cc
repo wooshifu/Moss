@@ -199,9 +199,7 @@ static void cpu_init() {
 
   u64 tmp    = ARM64_READ_SYSREG(ID_AA64MMFR0_EL1);
   u64 parang = tmp & 0xf;
-  if (parang > ID_AA64MMFR0_PARANGE_48) {
-    parang = ID_AA64MMFR0_PARANGE_48;
-  }
+  if (parang > ID_AA64MMFR0_PARANGE_48) { parang = ID_AA64MMFR0_PARANGE_48; }
 
   tcr |= parang << TCR_IPS_SHIFT;
 

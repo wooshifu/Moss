@@ -38,8 +38,8 @@ typedef struct {
   uint8_t dmin_line;
   uint8_t cache_writeback_granule;
   uint8_t l1_instruction_cache_policy;
-  bool idc;  // requires icache invalidate to pou for instruction to data coherence
-  bool dic;  // requires data clean to pou for data to instruction coherence
+  bool idc; // requires icache invalidate to pou for instruction to data coherence
+  bool dic; // requires data clean to pou for data to instruction coherence
   // via iterating each cache level
   arm64_cache_desc_t level_data_type[7];
   arm64_cache_desc_t level_inst_type[7];
@@ -72,8 +72,7 @@ struct arm64_context_switch_frame {
 struct Thread;
 
 #if __has_feature(shadow_call_stack)
-void arm64_context_switch(vaddr_t* old_sp, vaddr_t new_sp, uintptr_t** old_scsp,
-                          uintptr_t* new_scsp);
+void arm64_context_switch(vaddr_t* old_sp, vaddr_t new_sp, uintptr_t** old_scsp, uintptr_t* new_scsp);
 #else
 void arm64_context_switch(vaddr_t* old_sp, vaddr_t new_sp);
 #endif
@@ -117,10 +116,10 @@ zx_status_t arm64_free_secondary_stack(cpu_num_t cpu_num);
 
 __END_CDECLS
 
-#endif  // __ASSEMBLER__
+#endif // __ASSEMBLER__
 
 /* used in above exception_flags arguments */
 #define ARM64_EXCEPTION_FLAG_LOWER_EL (1 << 0)
-#define ARM64_EXCEPTION_FLAG_ARM32 (1 << 1)
+#define ARM64_EXCEPTION_FLAG_ARM32    (1 << 1)
 
-#endif  // ZIRCON_KERNEL_ARCH_ARM64_INCLUDE_ARCH_ARM64_H_
+#endif // ZIRCON_KERNEL_ARCH_ARM64_INCLUDE_ARCH_ARM64_H_

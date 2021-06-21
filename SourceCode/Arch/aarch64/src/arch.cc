@@ -1,65 +1,11 @@
-#if 0
-#include "arch.hh"
-#include "assert.hh"
-#include "bits.hh"
-#include "debug.hh"
-#include "inttypes.hh"
-#include "lib/arch/arm64/system.hh"
-#include "lib/arch/intrin.hh"
-#include "lib/arch/sysreg.hh"
-#include "lib/boot-options/boot-options.hh"
-#include "lib/cmdline.hh"
-#include "lib/console.hh"
-#include "platform.hh"
-#include "stdlib.hh"
-#include "string.hh"
-#include "trace.hh"
-#include "zircon/errors.hh"
-#include "zircon/types.hh"
-
-#include "arch/arm64/feature.hh"
-#include "arch/arm64/mmu.hh"
-#include "arch/arm64/registers.hh"
-#include "arch/arm64/uarch.hh"
-#include "arch/mp.hh"
-#include "arch/ops.hh"
-#include "arch/regs.hh"
-#include "arch/vm.hh"
-#include "kernel/cpu.hh"
-#include "kernel/thread.hh"
-#include "ktl/atomic.hh"
-#include "lk/init.hh"
-#include "lk/main.hh"
-
-#include "arch/arm64.hh"
-
-#define LOCAL_TRACE 0
-
-// Counter-timer Kernel Control Register, EL1.
-static constexpr uint64_t CNTKCTL_EL1_ENABLE_VIRTUAL_COUNTER = 1 << 1;
-
-// Initial value for MSDCR_EL1 when starting userspace, which disables all debug exceptions.
-// Instruction Breakpoint Exceptions (software breakpoints) cannot be disabled and MDSCR does not
-// affect single-step behaviour.
-static constexpr uint32_t MSDCR_EL1_INITIAL_VALUE = 0;
-
-// Performance Monitors Count Enable Set, EL0.
-static constexpr uint64_t PMCNTENSET_EL0_ENABLE = 1UL << 31;  // Enable cycle count register.
-
-// Performance Monitor Control Register, EL0.
-static constexpr uint64_t PMCR_EL0_ENABLE_BIT = 1 << 0;
-static constexpr uint64_t PMCR_EL0_LONG_COUNTER_BIT = 1 << 6;
-
-// Performance Monitors User Enable Regiser, EL0.
-static constexpr uint64_t PMUSERENR_EL0_ENABLE = 1 << 0;  // Enable EL0 access to cycle counter.
-#endif
-
-#include "libcxx/types.hh"
+// IWYU pragma: no_include "kconfig.hh"
 #include "kernel/compiler.hh"
+#include "libcxx/types.hh"
+
 struct arm64_sp_info_t {
   uint64_t mpid;
-  void* sp;                   // Stack pointer points to arbitrary data.
-  uintptr_t* shadow_call_sp;  // SCS pointer points to array of addresses.
+  void* sp;                  // Stack pointer points to arbitrary data.
+  uintptr_t* shadow_call_sp; // SCS pointer points to array of addresses.
 
   // This part of the struct itself will serve temporarily as the
   // fake arch_thread in the thread pointer, so that safe-stack
@@ -72,25 +18,9 @@ struct arm64_sp_info_t {
 static_assert(sizeof(arm64_sp_info_t) == 40, "check arm64_get_secondary_sp assembly");
 static_assert(offsetof(arm64_sp_info_t, sp) == 8, "check arm64_get_secondary_sp assembly");
 static_assert(offsetof(arm64_sp_info_t, mpid) == 0, "check arm64_get_secondary_sp assembly");
-#if 0
-
-#define TP_OFFSET(field) ((int)offsetof(arm64_sp_info_t, field) - (int)sizeof(arm64_sp_info_t))
-static_assert(TP_OFFSET(stack_guard) == ZX_TLS_STACK_GUARD_OFFSET, "");
-static_assert(TP_OFFSET(unsafe_sp) == ZX_TLS_UNSAFE_SP_OFFSET, "");
-#undef TP_OFFSET
-
-// Used to hold up the boot sequence on secondary CPUs until signaled by the primary.
-static ktl::atomic<bool> secondaries_released;
-
-static volatile int secondaries_to_init = 0;
-
-// one for each secondary CPU, indexed by (cpu_num - 1).
-static Thread _init_thread[SMP_MAX_CPUS - 1];
-#endif
 
 // one for each CPU
-#define SMP_MAX_CPUS 16
-arm64_sp_info_t arm64_secondary_sp_list[SMP_MAX_CPUS];
+arm64_sp_info_t arm64_secondary_sp_list[CONFIG_SMP_MAX_CPUS];
 
 #if 0
 extern uint64_t arch_boot_el;  // Defined in start.S.
@@ -310,7 +240,7 @@ extern "C" [[noreturn]] void arm64_secondary_entry() {
 
   lk_secondary_cpu_entry();
 #endif
-  while(true) {
+  while (true) {
     asm volatile(R"asm(
       nop
       nop

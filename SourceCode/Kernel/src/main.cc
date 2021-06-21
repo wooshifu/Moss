@@ -1,12 +1,12 @@
-#include "hal/halt.hh"           // for never_return
-#include "hal/init.hh"           // for init_board, init_cpu
-#include "hal/oops.hh"           // for oops
-#include "kernel/board.hh"       // for print_board_name
-#include "kernel/logo.hh"        // for print_moss_logo
-#include "libcxx/error_code.hh"  // for not_ok, KErrorCode
-#include "libcxx/log.hh"         // for log_i
-#include "libcxx/macro.hh"       // for extern_C
-#include "libcxx/printf.hh"      // for printf
+#include "hal/halt.hh"          // for never_return
+#include "hal/init.hh"          // for init_board, init_cpu
+#include "hal/oops.hh"          // for oops
+#include "kernel/board.hh"      // for print_board_name
+#include "kernel/logo.hh"       // for print_moss_logo
+#include "libcxx/error_code.hh" // for not_ok, KErrorCode
+#include "libcxx/log.hh"        // for log_i
+#include "libcxx/macro.hh"      // for extern_C
+#include "libcxx/printf.hh"     // for printf
 
 extern KErrorCode init_exception_vector_table();
 extern_C [[noreturn]] void kernel_main() {

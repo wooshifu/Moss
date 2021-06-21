@@ -91,3 +91,4 @@ using cpu_mask_t = uint32_t;
 using cpu_num_t  = uint32_t;
 
 using zx_status_t = int32_t;
+using pte_t       = uint64_t;

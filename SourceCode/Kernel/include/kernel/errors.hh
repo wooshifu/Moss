@@ -1,5 +1,6 @@
-#ifndef SYSROOT_ZIRCON_ERRORS_H_
-#define SYSROOT_ZIRCON_ERRORS_H_
+#pragma once
+
+// todo: use KErrorCode instead
 
 // Zircon statuses are signed 32 bit integers. The space of values is
 // divided as follows:
@@ -230,5 +231,3 @@
 
 // ZX_ERR_INTERNAL_INTR_KILLED: A task was killed during an operation.
 #define ZX_ERR_INTERNAL_INTR_KILLED (-502)
-
-#endif  // SYSROOT_ZIRCON_ERRORS_H_

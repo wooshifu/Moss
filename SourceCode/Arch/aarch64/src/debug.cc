@@ -122,10 +122,8 @@ struct hw_rng_ops {
 const static struct hw_rng_ops* ops = nullptr;
 
 size_t hw_rng_get_entropy(void* buf, size_t len) {
-  if (ops != nullptr) {
-    return ops->hw_rng_get_entropy(buf, len);
-  }     return 0;
-
+  if (ops != nullptr) { return ops->hw_rng_get_entropy(buf, len); }
+  return 0;
 }
 #if 0
 void hw_rng_register(const struct hw_rng_ops* new_ops) { ops = new_ops; }
@@ -133,8 +131,7 @@ void hw_rng_register(const struct hw_rng_ops* new_ops) { ops = new_ops; }
 bool hw_rng_is_registered() { return ops != nullptr; }
 #endif
 
-extern "C"
-__NO_SAFESTACK uintptr_t choose_stack_guard(void) {
+extern "C" __NO_SAFESTACK uintptr_t choose_stack_guard(void) {
   uintptr_t guard{};
   if (hw_rng_get_entropy(&guard, sizeof(guard)) != sizeof(guard)) {
     // We can't get a random value, so use a randomish value.

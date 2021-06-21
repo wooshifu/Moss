@@ -59,7 +59,7 @@ static_assert(MMU_KERNEL_SIZE_SHIFT >= 25, "");
 //#if 1
 //// uint64_t kernel_relocated_base = KERNEL_BASE;
 //// uint64_t kernel_relocated_base = 0xffff'ffff'0000'0000;
-//uint64_t kernel_relocated_base = 0x80000; // referenced by start.S // 树莓派的固件被加载的物理地址
+// uint64_t kernel_relocated_base = 0x80000; // referenced by start.S // 树莓派的固件被加载的物理地址
 //#else
 //__UINT64_TYPE__ kernel_relocated_base = 0xffffffff10000000;
 //#endif
@@ -67,7 +67,7 @@ static_assert(MMU_KERNEL_SIZE_SHIFT >= 25, "");
 //// The main translation table for the kernel. Globally declared because it's reached
 //// from assembly.
 //// pte_t arm64_kernel_translation_table[512]
-//pte_t arm64_kernel_translation_table[MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP] __ALIGNED(MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP *
+// pte_t arm64_kernel_translation_table[MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP] __ALIGNED(MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP *
 //                                                                                  8);
 
 #if 0

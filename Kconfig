@@ -20,3 +20,12 @@ config KERNEL_ENABLE_SMP
 config KERNEL_PRINT_MEMORY_LAYOUT
     bool "print memory layout info"
     default y
+
+config KERNEL_ENABLE_KASLR
+    bool "enable KASLR"
+    default n
+
+config SMP_MAX_CPUS
+    int "smp max cpus"
+    range 1 32
+    default 16

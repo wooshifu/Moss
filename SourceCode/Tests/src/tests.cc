@@ -9,9 +9,7 @@ void run_tests() {
   size_t test_count = sizeof(test_cases) / sizeof(test_cases[0]);
   for (unsigned int index = 0; index < test_count; ++index) {
     test_case_func test_case = test_cases[index];
-    if (test_case != nullptr) {
-      test_case();
-    }
+    if (test_case != nullptr) { test_case(); }
   }
   log_i("%d test cases, %d passed, %d failed", test::__test_all_asserts, test::__test_success_asserts,
         test::__test_failed_asserts);

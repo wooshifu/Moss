@@ -1,10 +1,8 @@
-#ifndef ZIRCON_KERNEL_ARCH_ARM64_INCLUDE_ARCH_ARM64_MMU_H_
-#define ZIRCON_KERNEL_ARCH_ARM64_INCLUDE_ARCH_ARM64_MMU_H_
+#pragma once
 
 #include "arch/defines.hh"
 #include "arch/kernel_aspace.hh"
 
-// clang-format on
 #define IFTE(c, t, e) (!!(c) * (t) | !(c) * (e))
 #define NBITS01(n)    IFTE(n, 1, 0)
 #define NBITS02(n)    IFTE((n) >> 1, 1 + NBITS01((n) >> 1), NBITS01(n))
@@ -21,6 +19,9 @@
 #define MMU_KERNEL_SIZE_SHIFT (25)
 #else
 #define MMU_KERNEL_SIZE_SHIFT (KERNEL_ASPACE_BITS)
+#ifndef __ASSEMBLER__
+static_assert(MMU_KERNEL_SIZE_SHIFT == 48);
+#endif
 #endif
 #endif
 
@@ -36,8 +37,11 @@
 #define MMU_MAX_PAGE_SIZE_SHIFT 48
 
 #define MMU_KERNEL_PAGE_SIZE_SHIFT (PAGE_SIZE_SHIFT)
-#define MMU_USER_PAGE_SIZE_SHIFT   (USER_PAGE_SIZE_SHIFT)
-#define MMU_GUEST_PAGE_SIZE_SHIFT  (USER_PAGE_SIZE_SHIFT)
+#ifndef __ASSEMBLER__
+static_assert(MMU_KERNEL_PAGE_SIZE_SHIFT == 12);
+#endif
+#define MMU_USER_PAGE_SIZE_SHIFT  (USER_PAGE_SIZE_SHIFT)
+#define MMU_GUEST_PAGE_SIZE_SHIFT (USER_PAGE_SIZE_SHIFT)
 
 // For the identity map used temporarily in start.S as the cpu is trampolining
 // up to the high kernel address, set the max size of the temporary address
@@ -93,6 +97,9 @@
 
 #if MMU_KERNEL_SIZE_SHIFT > MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 0)
 #define MMU_KERNEL_TOP_SHIFT MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 0)
+#ifndef __ASSEMBLER__
+static_assert(MMU_KERNEL_TOP_SHIFT == 39);
+#endif
 #elif MMU_KERNEL_SIZE_SHIFT > MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 1)
 #define MMU_KERNEL_TOP_SHIFT MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 1)
 #elif MMU_KERNEL_SIZE_SHIFT > MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 2)
@@ -103,7 +110,10 @@
 #error Kernel address space size must be larger than page size
 #endif
 #define MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP (0x1 << (MMU_KERNEL_SIZE_SHIFT - MMU_KERNEL_TOP_SHIFT))
-#define MMU_KERNEL_PAGE_TABLE_ENTRIES     (0x1 << (MMU_KERNEL_PAGE_SIZE_SHIFT - 3))
+#ifndef __ASSEMBLER__
+static_assert(MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP == 512);
+#endif
+#define MMU_KERNEL_PAGE_TABLE_ENTRIES (0x1 << (MMU_KERNEL_PAGE_SIZE_SHIFT - 3))
 
 #if MMU_IDENT_SIZE_SHIFT > MMU_LX_X(MMU_IDENT_PAGE_SIZE_SHIFT, 0)
 #define MMU_IDENT_TOP_SHIFT MMU_LX_X(MMU_IDENT_PAGE_SIZE_SHIFT, 0)
@@ -135,11 +145,11 @@
 
 #define MMU_PTE_DESCRIPTOR_BLOCK_MAX_SHIFT (30)
 
-#ifndef __ASSEMBLER__
+//#ifndef __ASSEMBLER__
 #define BM(base, count, val) (((val) & ((1UL << (count)) - 1)) << (base))
-#else
-#define BM(base, count, val) (((val) & ((0x1 << (count)) - 1)) << (base))
-#endif
+//#else
+//#define BM(base, count, val) (((val) & ((0x1 << (count)) - 1)) << (base))
+//#endif
 
 #define MMU_SH_NON_SHAREABLE   (0)
 #define MMU_SH_OUTER_SHAREABLE (2)
@@ -313,22 +323,24 @@
 #define MMU_PTE_KERNEL_RWX_FLAGS                                                                                       \
   (MMU_PTE_ATTR_AF | MMU_PTE_ATTR_SH_INNER_SHAREABLE | MMU_PTE_ATTR_NORMAL_MEMORY | MMU_PTE_ATTR_AP_P_RW_U_NA)
 #ifndef __ASSEMBLER__
-static_assert(MMU_PTE_KERNEL_RWX_FLAGS == ((((1) & ((1UL << (1)) - 1)) << (10)) | (((3) & ((1UL << (2)) - 1)) << (8)) |
-                                           (((2) & ((1UL << (3)) - 1)) << (2)) | (((0) & ((1UL << (2)) - 1)) << (6))));
+static_assert(MMU_PTE_KERNEL_RWX_FLAGS == 0x708);
+static_assert(MMU_PTE_KERNEL_RWX_FLAGS == 0b111'0000'1000);
 #endif
 
 #define MMU_PTE_KERNEL_RO_FLAGS                                                                                        \
   (MMU_PTE_ATTR_UXN | MMU_PTE_ATTR_AF | MMU_PTE_ATTR_SH_INNER_SHAREABLE | MMU_PTE_ATTR_NORMAL_MEMORY |                 \
    MMU_PTE_ATTR_AP_P_RO_U_NA)
+#ifndef __ASSEMBLER__
+static_assert(MMU_PTE_KERNEL_RO_FLAGS == 0x40'0000'0000'0788);
+static_assert(MMU_PTE_KERNEL_RO_FLAGS == 0b100'0000'0000'0000'0000'0000'0000'0000'0000'0000'0000'0111'1000'1000);
+#endif
 
 #define MMU_PTE_KERNEL_DATA_FLAGS                                                                                      \
   (MMU_PTE_ATTR_UXN | MMU_PTE_ATTR_PXN | MMU_PTE_ATTR_AF | MMU_PTE_ATTR_SH_INNER_SHAREABLE |                           \
    MMU_PTE_ATTR_NORMAL_MEMORY | MMU_PTE_ATTR_AP_P_RW_U_NA)
 #ifndef __ASSEMBLER__
-static_assert(MMU_PTE_KERNEL_DATA_FLAGS ==
-              ((((1) & ((1UL << (1)) - 1)) << (54)) | (((1) & ((1UL << (1)) - 1)) << (53)) |
-               (((1) & ((1UL << (1)) - 1)) << (10)) | (((3) & ((1UL << (2)) - 1)) << (8)) |
-               (((2) & ((1UL << (3)) - 1)) << (2)) | (((0) & ((1UL << (2)) - 1)) << (6))));
+static_assert(MMU_PTE_KERNEL_DATA_FLAGS == 0x60'0000'0000'0708);
+static_assert(MMU_PTE_KERNEL_DATA_FLAGS == 0b110'0000'0000'0000'0000'0000'0000'0000'0000'0000'0000'0111'0000'1000);
 #endif
 
 #define MMU_INITIAL_MAP_STRONGLY_ORDERED                                                                               \
@@ -344,18 +356,12 @@ static_assert(MMU_PTE_KERNEL_DATA_FLAGS ==
 #endif
 #define MMU_PTE_IDENT_FLAGS        (MMU_PTE_IDENT_DESCRIPTOR | MMU_PTE_KERNEL_RWX_FLAGS)
 #define MMU_PTE_IDENT_DEVICE_FLAGS (MMU_PTE_IDENT_DESCRIPTOR | MMU_INITIAL_MAP_DEVICE)
-// clang-format on
 
 #ifndef __ASSEMBLER__
-#if 0
-#include "assert.hh"
-#include "sys/types.hh"
-#endif
+#include "arch/arm64.hh"
 #include "kernel/compiler.hh"
 
-#include "arch/arm64.hh"
-
-using pte_t = uint64_t;
+// using pte_t = uint64_t;
 
 #define ARM64_TLBI_NOADDR(op)                                                                                          \
   ({                                                                                                                   \
@@ -385,16 +391,14 @@ const uint16_t MMU_ARM64_FIRST_USER_ASID = 2;
 const uint16_t MMU_ARM64_MAX_USER_ASID_8  = (1U << 8) - 1;
 const uint16_t MMU_ARM64_MAX_USER_ASID_16 = (1U << 16) - 1;
 
-pte_t* arm64_get_kernel_ptable();
+// pte_t* arm64_get_kernel_ptable();
 
-zx_status_t arm64_boot_map_v(const vaddr_t vaddr, const paddr_t paddr, const size_t len, const pte_t flags);
+// zx_status_t arm64_boot_map_v(const vaddr_t vaddr, const paddr_t paddr, const size_t len, const pte_t flags);
 
 // use built-in virtual to physical translation instructions to query
 // the physical address of a virtual address
-zx_status_t arm64_mmu_translate(vaddr_t va, paddr_t* pa, bool user, bool write);
+// zx_status_t arm64_mmu_translate(vaddr_t va, paddr_t* pa, bool user, bool write);
 
-void arm64_mmu_early_init();
+// void arm64_mmu_early_init();
 
 #endif // __ASSEMBLER__
-
-#endif // ZIRCON_KERNEL_ARCH_ARM64_INCLUDE_ARCH_ARM64_MMU_H_

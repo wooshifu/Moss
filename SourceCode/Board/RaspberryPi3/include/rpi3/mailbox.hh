@@ -176,7 +176,9 @@ namespace NS_rpi3::NS_mailbox {
   } // namespace _property
 
   namespace property {
-    template <typename T> requires std::is_class_v<T> struct Property {
+    template <typename T>
+    requires std::is_class_v<T>
+    struct Property {
     public:
       const u32 size; /*= sizeof(MailboxProperty); */ // todo: fix size, size is 16 aligned
       const u32 code = CODE_REQUEST;

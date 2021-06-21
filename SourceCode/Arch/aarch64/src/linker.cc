@@ -1,10 +1,10 @@
-#include <utility> // for forward
-
+// IWYU pragma: no_include "kconfig.hh"
 #include "aarch64/linker.hh"
-#include "array"         // for array
-#include "kconfig.hh"    // for CONFIG_KERNEL_PRINT_MEMORY_LAYOUT
 #include "libcxx/log.hh" // for log_d
-#include "tuple"         // for make_tuple, get
+
+#include <array>   // for array
+#include <tuple>   // for make_tuple, get
+#include <utility> // for forward
 
 void print_memory_layout() {
 #if CONFIG_KERNEL_PRINT_MEMORY_LAYOUT

@@ -1,33 +1,9 @@
 #include "arch/align.hh"
 #include "arch/defines.hh"
 #include "kernel/compiler.hh"
+#include "libcxx/macro.hh"
 #include "libcxx/types.hh"
 
-#if 0
-#include "vm/bootalloc.hh"
-
-#include "align.hh"
-#include "lib/instrumentation/asan.hh"
-#include "stdint.hh"
-#include "stdlib.hh"
-#include "sys/types.hh"
-#include "trace.hh"
-
-#include "vm/physmap.hh"
-#include "vm/pmm.hh"
-#include "vm/vm.hh"
-
-#include "vm_priv.hh"
-
-#define LOCAL_TRACE VM_GLOBAL_TRACE(0)
-
-// Simple boot time allocator that starts by allocating physical memory off
-// the end of wherever the kernel is loaded in physical space.
-//
-// Pointers are returned from the kernel's physmap
-#endif
-
-//using paddr_t = unsigned long;
 // store the start and current pointer to the boot allocator in physical address
 paddr_t boot_alloc_start;
 paddr_t boot_alloc_end;
@@ -38,7 +14,7 @@ paddr_t boot_alloc_end;
 #define __NO_ASAN __attribute__((no_sanitize_address))
 #endif
 #define NO_ASAN __NO_ASAN
-extern "C" __LOCAL const char __kernel_end[];               // End of the image, including ".bss"
+extern "C" __LOCAL const char __kernel_end[]; // End of the image, including ".bss"
 
 // run in physical space without the mmu set up, so by computing the address of __kernel_end
 // and saving it, we've effectively computed the physical address of the end of the
@@ -96,10 +72,9 @@ void* boot_alloc_mem(size_t len) {
 
 // called from arch start.S
 // run in physical space without the mmu set up, so stick to basic, relocatable code
-extern "C" __NO_SAFESTACK
-paddr_t boot_alloc_page_phys() {
-  paddr_t ptr = ALIGN(boot_alloc_end, PAGE_SIZE);
-  boot_alloc_end = ptr + PAGE_SIZE;
+extern_C __NO_SAFESTACK paddr_t boot_alloc_page_phys() {
+  paddr_t ptr    = align(boot_alloc_end, PAGE_SIZE);
+  boot_alloc_end = ptr + PAGE_SIZE; // 4K
 
   return ptr;
 }

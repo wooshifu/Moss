@@ -228,8 +228,7 @@ static_assert(offsetof(El2State, guest_state.far_el2) == GS_FAR_EL2);
 static_assert(offsetof(El2State, guest_state.hpfar_el2) == GS_HPFAR_EL2);
 
 static_assert(offsetof(El2State, host_state.x) == HS_XREGS);
-static_assert(offsetof(El2State, host_state.x[HS_NUM_REGS - 1]) ==
-              HS_XREGS + HS_X(HS_NUM_REGS - 1));
+static_assert(offsetof(El2State, host_state.x[HS_NUM_REGS - 1]) == HS_XREGS + HS_X(HS_NUM_REGS - 1));
 static_assert(offsetof(El2State, host_state.fp_state) == HS_FP_STATE);
 static_assert(offsetof(El2State, host_state.fp_state.q) == HS_FP_STATE + FS_Q0);
 static_assert(offsetof(El2State, host_state.system_state) == HS_SYSTEM_STATE);
@@ -255,6 +254,6 @@ extern zx_status_t arm64_el2_resume(zx_paddr_t vttbr, zx_paddr_t state, uint64_t
 
 __END_CDECLS
 
-#endif  // __ASSEMBLER__
+#endif // __ASSEMBLER__
 
-#endif  // ZIRCON_KERNEL_ARCH_ARM64_INCLUDE_ARCH_ARM64_HYPERVISOR_EL2_STATE_H_
+#endif // ZIRCON_KERNEL_ARCH_ARM64_INCLUDE_ARCH_ARM64_HYPERVISOR_EL2_STATE_H_

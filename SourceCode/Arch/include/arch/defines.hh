@@ -1,7 +1,8 @@
-#ifndef ZIRCON_KERNEL_ARCH_ARM64_INCLUDE_ARCH_DEFINES_H_
-#define ZIRCON_KERNEL_ARCH_ARM64_INCLUDE_ARCH_DEFINES_H_
+#pragma once
 
-#define SHIFT_4K (12)
+#include "libcxx/unit.hh"
+
+#define SHIFT_4K  (12)
 #define SHIFT_16K (14)
 #define SHIFT_64K (16)
 
@@ -16,6 +17,9 @@
 #define USER_PAGE_SIZE_SHIFT SHIFT_4K
 
 #define PAGE_SIZE (1L << PAGE_SIZE_SHIFT)
+#ifndef __ASSEMBLER__
+static_assert(PAGE_SIZE == 4_K);
+#endif
 #define PAGE_MASK (PAGE_SIZE - 1)
 
 #define USER_PAGE_SIZE (1L << USER_PAGE_SIZE_SHIFT)
@@ -24,25 +28,16 @@
 /* the maximum cache line seen on any known ARM hardware */
 #define MAX_CACHE_LINE 128
 
-#ifndef __ASSEMBLER__
-#define BM(base, count, val) (((val) & ((1UL << (count)) - 1)) << (base))
-#else
-//#define BM(base, count, val) (((val) & ((0x1 << (count)) - 1)) << (base))
-#endif
-
-#define ARM64_MMFR0_ASIDBITS_16 BM(4, 4, 2)
-#define ARM64_MMFR0_ASIDBITS_8 BM(4, 4, 0)
-#define ARM64_MMFR0_ASIDBITS_MASK BM(4, 4, 15)
+//#define ARM64_MMFR0_ASIDBITS_16   BM(4, 4, 2)
+//#define ARM64_MMFR0_ASIDBITS_8    BM(4, 4, 0)
+//#define ARM64_MMFR0_ASIDBITS_MASK BM(4, 4, 15)
 
 #define ARCH_DEFAULT_STACK_SIZE 8192
 
 /* map 512GB at the base of the kernel. this is the max that can be mapped with a
  * single level 1 page table using 1GB pages.
  */
+#define ARCH_PHYSIC_MAP_SIZE (1UL << 39) // (1<<39)/1024/1024/1024=512GB
 #ifndef __ASSEMBLER__
-#define ARCH_PHYSMAP_SIZE (1UL << 39)
-#else
-#define ARCH_PHYSMAP_SIZE (0x1 << 39)
+static_assert(ARCH_PHYSIC_MAP_SIZE == 512_GB);
 #endif
-
-#endif  // ZIRCON_KERNEL_ARCH_ARM64_INCLUDE_ARCH_DEFINES_H_

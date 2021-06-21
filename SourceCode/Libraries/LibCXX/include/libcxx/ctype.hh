@@ -60,14 +60,12 @@ static inline int __isdigit(int c) { return '0' <= c && c <= '9'; }
 #define toascii(c) (((unsigned char)(c)) & 0x7f)
 
 static inline unsigned char __tolower(unsigned char c) {
-  if (isupper(c))
-    c -= 'A' - 'a';
+  if (isupper(c)) c -= 'A' - 'a';
   return c;
 }
 
 static inline unsigned char __toupper(unsigned char c) {
-  if (islower(c))
-    c -= 'a' - 'A';
+  if (islower(c)) c -= 'a' - 'A';
   return c;
 }
 

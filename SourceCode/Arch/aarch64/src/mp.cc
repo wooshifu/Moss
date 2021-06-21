@@ -1,3 +1,4 @@
+// IWYU pragma: no_include "kconfig.hh"
 //#include "assert.hh"
 //#include "platform.hh"
 //#include "trace.hh"
@@ -11,7 +12,7 @@
 //#include "kernel/event.hh"
 //#include "ktl/iterator.hh"
 
-#define LOCAL_TRACE 0
+//#define LOCAL_TRACE 0
 
 namespace {
 #if 0
@@ -26,7 +27,7 @@ struct MpidCpuidPair {
 MpidCpuidPair arm64_cpu_list[SMP_MAX_CPUS];
 size_t arm64_cpu_list_count = 0;
 #endif
-}  // namespace
+} // namespace
 
 #if 0
 // cpu id to cluster and id within cluster map
@@ -38,8 +39,7 @@ uint arm_num_cpus = 1;
 #endif
 
 // per cpu structures, each cpu will point to theirs using the fixed register
-#define SMP_MAX_CPUS 16
-arm64_percpu arm64_percpu_array[SMP_MAX_CPUS];
+arm64_percpu arm64_percpu_array[CONFIG_SMP_MAX_CPUS];
 
 #if 0
 void arch_register_mpid(uint cpu_id, uint64_t mpid) {
@@ -153,4 +153,3 @@ void arch_setup_percpu(cpu_num_t cpu_num, struct percpu* percpu) {
   arch_percpu->high_level_percpu = percpu;
 }
 #endif
-
