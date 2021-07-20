@@ -23,6 +23,7 @@ set(COMMON_KERNEL_OBJECTS
         )
 
 ############ start link kernel ############
+# todo: enable iwyu check to all source files from ${KernelName}
 add_executable(${KernelName}
         $<TARGET_OBJECTS:ObjArch>
         ${COMMON_KERNEL_OBJECTS})

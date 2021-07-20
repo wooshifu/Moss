@@ -7,13 +7,13 @@ function(target_include_hal_header_files IN_target)
 endfunction()
 
 function(target_include_libcxx_header_files IN_target)
-    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Libraries/LibCXX/include)
+    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Libraries/lib_cxx/include)
 endfunction()
 
 function(target_include_libstdcxx_header_files IN_target)
-    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Libraries/LibCompatible/include)
-    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Libraries/LibGccStd/include/abi)
-    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Libraries/LibGccStd/include)
+    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Libraries/lib_compatible/include)
+    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Libraries/lib_std/include/abi)
+    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Libraries/lib_std/include)
 endfunction()
 
 function(target_include_kernel_header_files IN_target)
@@ -25,7 +25,7 @@ function(target_include_specific_arch_header_files IN_target IN_arch)
 endfunction()
 
 function(target_include_raspberry_pi3_header_files IN_target)
-    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Board/RaspberryPi3/include)
+    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Board/raspberry_pi3/include)
 endfunction()
 
 function(target_include_tests_header_files IN_target)
