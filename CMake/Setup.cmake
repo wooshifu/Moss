@@ -23,14 +23,14 @@ message(STATUS "********** setup began **********")
 message(STATUS ">>> setting up kconfig")
 setup_kconfig()
 
-setup_board(BOARD)
-message(STATUS ">>> building board: ${BOARD}")
+setup_board(CONFIG_BOARD)
+message(STATUS ">>> building board: ${CONFIG_BOARD}")
 
-setup_arch(${BOARD} ARCH)
+setup_arch(${CONFIG_BOARD} ARCH)
 message(STATUS ">>> building arch: ${ARCH}")
 
 disable_compiler_link_flags()
-setup_compiler_flags(${BOARD} ${ARCH})
+setup_compiler_flags(${CONFIG_BOARD} ${ARCH})
 print_compiler_flags()
 
 message(STATUS "********** setup ended **********")

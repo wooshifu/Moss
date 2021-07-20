@@ -39,7 +39,7 @@ jobs:
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/CMake/Toolchain/${{ matrix.toolchain }} ..
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/CMake/Toolchain/${{ matrix.toolchain }} -DCONFIG_BOARD=raspberry_pi3 ..
 
     - name: Build
       working-directory: ${{runner.workspace}}/build
@@ -88,7 +88,7 @@ jobs:
         # and build directories, but this is only available with CMake 3.13 and higher.
         # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
         if: ${{ matrix.toolchain == 'ToolchainMacAarch64.cmake' }}
-        run: export PATH="/usr/local/opt/llvm/bin:$PATH" && cmake $GITHUB_WORKSPACE -DDISABLE_CLANG_TIDY=1 -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/CMake/Toolchain/${{ matrix.toolchain }} ..
+        run: export PATH="/usr/local/opt/llvm/bin:$PATH" && cmake $GITHUB_WORKSPACE -DDISABLE_CLANG_TIDY=1 -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/CMake/Toolchain/${{ matrix.toolchain }} -DCONFIG_BOARD=raspberry_pi3 ..
 
       - name: Configure CMake if toolchain is not ToolchainMacAarch64.cmake
         # Use a bash shell so we can use the same syntax for environment variable
@@ -99,7 +99,7 @@ jobs:
         # and build directories, but this is only available with CMake 3.13 and higher.
         # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
         if: ${{ matrix.toolchain != 'ToolchainMacAarch64.cmake' }}
-        run: export PATH="/usr/local/opt/llvm/bin:$PATH" && cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/CMake/Toolchain/${{ matrix.toolchain }} ..
+        run: export PATH="/usr/local/opt/llvm/bin:$PATH" && cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/CMake/Toolchain/${{ matrix.toolchain }} -DCONFIG_BOARD=raspberry_pi3 ..
 
       - name: Build
         working-directory: ${{runner.workspace}}/build

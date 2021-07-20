@@ -1,19 +1,3 @@
-function(read_board_from_config_file)
-    if (NOT EXISTS ${Moss_SOURCE_DIR}/.config)
-        message(FATAL_ERROR "file .config not found in directory ${Moss_SOURCE_DIR}")
-    endif ()
-
-    message(STATUS "searching board information from ${Moss_SOURCE_DIR}/.config")
-    file(STRINGS ${Moss_SOURCE_DIR}/.config lines)
-    foreach (line IN LISTS lines)
-        if (line MATCHES "CONFIG_BOARD_USING_\([A-Za-z0-9_]+\)=y")
-            message(STATUS "found CONFIG_BOARD_USING_: ${CMAKE_MATCH_1}")
-            list(APPEND TestCaseName ${CMAKE_MATCH_1})
-            set(${OUT_board} "${CMAKE_MATCH_1}" PARENT_SCOPE)
-        endif ()
-    endforeach ()
-endfunction()
-
 function(list_subdirs OUT_result IN_current_dir)
     file(GLOB children RELATIVE ${IN_current_dir} ${IN_current_dir}/*)
     set(temp_dirlist "")
@@ -25,20 +9,17 @@ function(list_subdirs OUT_result IN_current_dir)
     set(${OUT_result} ${temp_dirlist} PARENT_SCOPE)
 endfunction()
 
-# 1. check variable BOARD is defined via cmake command line as parameter, use it if it's defined
-# 2. search BOARD_USING_${board} from .config as BOARD variable
 function(setup_board OUT_board)
     list_subdirs(supported_boards ${MOSS_SOURCE_CODE_DIR}/Board)
     foreach (supported_board ${supported_boards})
         message(STATUS "detected supported board list: ${supported_board}")
     endforeach ()
 
-    # read BOARD from cmake command line parameter
+    # check variable CONFIG_BOARD is defined via cmake command line as parameter, use it if it's defined
     if (DEFINED ${OUT_board})
         message(STATUS "DEFINED BOARD: ${OUT_board}")
     else ()
-        read_board_from_config_file(${OUT_board})
-        message(STATUS "READ BOARD FROM FILE: ${${OUT_board}}")
+        message(FATAL_ERROR "board not specified, please add -D${OUT_board}={the_board} to cmake command line parameter")
     endif ()
 
     list(FIND supported_boards ${${OUT_board}} index)
