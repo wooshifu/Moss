@@ -12,6 +12,7 @@ Welcome to Moss's documentation!
    :numbered:
 
    0.00-build_and_run
+   1.00-QA_and_Tips
 
 Indices and tables
 ==================
