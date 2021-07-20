@@ -1,4 +1,4 @@
-// IWYU pragma: no_include "kconfig.hh"
+#include "kconfig.hh"
 #include "kernel/compiler.hh"
 #include "libcxx/types.hh"
 

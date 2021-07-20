@@ -1,4 +1,4 @@
-// IWYU pragma: no_include "kconfig.hh"
+#include "kconfig.hh"
 //#include "assert.hh"
 //#include "platform.hh"
 //#include "trace.hh"

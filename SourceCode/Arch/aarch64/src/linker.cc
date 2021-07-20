@@ -1,5 +1,5 @@
-// IWYU pragma: no_include "kconfig.hh"
 #include "aarch64/linker.hh"
+#include "kconfig.hh"
 #include "libcxx/log.hh" // for log_d
 
 #include <array>   // for array

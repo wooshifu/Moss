@@ -1,5 +1,6 @@
 #include "arch/asm.hh"
 #include "aarch64/asm_macros.hh"
+#include "kconfig.hh"
 
 #ifndef __has_feature
 #define __has_feature(x) 0
