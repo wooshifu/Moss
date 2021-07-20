@@ -8,14 +8,9 @@
 #include "libcxx/macro.hh"      // for extern_C
 #include "libcxx/printf.hh"     // for printf
 
-extern KErrorCode init_exception_vector_table();
 extern_C [[noreturn]] void kernel_main() {
-  //  KErrorCode result = pre_kernel_main();
-  KErrorCode result = init_exception_vector_table();
-  if (not_ok(result)) { oops("oops!!! pre kernel main error"); }
-
   //  result = init_board_with_hooks();
-  result = init_board();
+  KErrorCode result = init_board();
   if (not_ok(result)) { oops("oops!!! init board error"); }
 
   printf(">>>>>>>>> entered kernel_main <<<<<<<<<\n");

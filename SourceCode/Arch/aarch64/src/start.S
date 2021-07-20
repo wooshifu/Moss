@@ -326,6 +326,7 @@ wfi
     sample_ticks
     store_ticks kernel_virtual_entry_ticks
 
+    bl init_exception_vector_table_asm
     bl  kernel_main
     // kernel_main should not return, if returned unexpected, stops here
     b   .
