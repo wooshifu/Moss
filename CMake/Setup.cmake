@@ -10,6 +10,7 @@ else ()
     message(FATAL_ERROR "unsupported compiler: CMAKE_C_COMPILER_ID:${CMAKE_C_COMPILER_ID} CMAKE_CXX_COMPILER_ID:${CMAKE_CXX_COMPILER_ID}")
 endif ()
 
+include(${Moss_SOURCE_DIR}/CMake/Options.cmake)
 # find all cmake files, and then include the file
 file(GLOB cmake_files LIST_DIRECTORIES false ${Moss_SOURCE_DIR}/CMake/Setup/*.cmake)
 message(STATUS "found CmakeFiles: ${cmake_files}")
