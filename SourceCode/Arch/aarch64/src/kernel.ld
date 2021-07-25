@@ -54,6 +54,7 @@ SECTIONS
         __stack_end = .;
     }
 
+    .note.gnu.build-id : { *(.note.gnu.build-id) }
     .interp : { *(.interp) }
 
     /* strip unnecessary stuff */
