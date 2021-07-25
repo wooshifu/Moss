@@ -281,4 +281,4 @@ static inline bool esr_is_data_abort(u32 esr) {
 
 const char* esr_get_class_string(u32 esr);
 #endif /* __cplusplus */
-#endif /* __ASSEMBLY */
+#endif /* __ASSEMBLY__ */
