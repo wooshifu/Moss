@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: moss
     ports:
       - "1234:1234"
       - "2222:2222"
