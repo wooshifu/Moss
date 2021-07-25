@@ -1,3 +1,5 @@
+message(FATAL_ERROR "gcc is not supported now")
+
 message(STATUS "using aarch64-unknown-elf, version 10.2.0")
 
 set(CMAKE_SYSTEM_NAME Darwin)
