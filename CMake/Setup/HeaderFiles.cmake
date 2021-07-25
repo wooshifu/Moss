@@ -12,7 +12,6 @@ endfunction()
 
 function(target_include_libstdcxx_header_files IN_target)
     target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Libraries/lib_compatible/include)
-    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Libraries/lib_std/include/abi)
     target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Libraries/lib_std/include)
 endfunction()
 

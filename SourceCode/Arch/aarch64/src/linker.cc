@@ -2,12 +2,12 @@
 #include "kconfig.hh"
 #include "libcxx/log.hh" // for log_d
 
-#include <array>   // for array
-#include <tuple>   // for make_tuple, get
-#include <utility> // for forward
+//#include <array>   // for array
+//#include <tuple>   // for make_tuple, get
+//#include <utility> // for forward
 
 void print_memory_layout() {
-#if CONFIG_KERNEL_PRINT_MEMORY_LAYOUT
+#if 0
   using std::make_tuple;
   const std::array sections = {
       make_tuple("text", get_text_start_address(), get_text_end_address(), get_text_size()),

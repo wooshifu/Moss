@@ -1,6 +1,5 @@
 #include "aarch64/esr.hh"       // for esr_get_class_string
 #include "aarch64/exception.hh" // for init_exception_vector_table_asm
-#include "array"                // for array
 #include "libcxx/error_code.hh" // for KErrorCode, KErrorCode::OK
 #include "libcxx/log.hh"        // for log_e
 #include "libcxx/macro.hh"      // for extern_C
@@ -12,7 +11,7 @@ KErrorCode init_exception_vector_table() {
 }
 // AS_INIT_HOOK_PRE_KERNEL_MAIN(init_exception_vector_table, InitHookPriority::HIGHEST);
 
-constexpr std::array entry_error_messages{
+constexpr const char* entry_error_messages[]{
     "SYNC_INVALID_EL1t",   "IRQ_INVALID_EL1t",   "FIQ_INVALID_EL1t",   "ERROR_INVALID_EL1T",
     "SYNC_INVALID_EL1h",   "IRQ_INVALID_EL1h",   "FIQ_INVALID_EL1h",   "ERROR_INVALID_EL1h",
     "SYNC_INVALID_EL0_64", "IRQ_INVALID_EL0_64", "FIQ_INVALID_EL0_64", "ERROR_INVALID_EL0_64",
