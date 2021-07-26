@@ -1,6 +1,6 @@
 find_program(OUT_path_to_iwyu NAMES include-what-you-use iwyu)
 
-if (DISABLE_IWYU)
+if (OPTION_DISABLE_IWYU)
     function(target_enable_iwyu IN_target)
     endfunction()
 

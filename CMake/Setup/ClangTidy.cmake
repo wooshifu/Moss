@@ -1,4 +1,4 @@
-if (DISABLE_CLANG_TIDY)
+if (OPTION_DISABLE_CLANG_TIDY)
     message(STATUS "clang-tidy checks disabled")
 else ()
     find_program(OUT_path_to_clang_tidy NAMES clang-tidy)

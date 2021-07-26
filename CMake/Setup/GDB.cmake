@@ -1,9 +1,9 @@
 function(write_gdbinit)
     file(WRITE $ENV{HOME}/.gdbinit "add-symbol-file ${CMAKE_BINARY_DIR}/bin/kernel.elf 0xffffffff00000000\n")
-    message(STATUS ".gdbinit has been copied to $ENV{HOME}, if you don't want to copy this .gdbinit file define add -DDISABLE_GDBINIT=ON to cmake parameter")
+    message(STATUS ".gdbinit has been copied to $ENV{HOME}, if you don't want to copy this .gdbinit file define add -DOPTION_DISABLE_GDBINIT=ON to cmake parameter")
 endfunction()
 
-if (NOT DISABLE_GDBINIT)
+if (NOT OPTION_DISABLE_GDBINIT)
     if (EXISTS $ENV{HOME}/.gdbinit)
         if (NOT EXISTS $ENV{HOME}/.gdbinit.backup_by_moss)
             file(RENAME $ENV{HOME}/.gdbinit $ENV{HOME}/.gdbinit.backup_by_moss)
