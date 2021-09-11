@@ -58,15 +58,10 @@ function(setup_compiler_flags IN_board IN_arch)
 
 
     set(ignore_specific_warnings
-            "-Wno-unused-variable"
             "-Wno-unused-parameter"
-            "-Wno-unused-function"
-            "-Wno-unknown-attributes"
             "-Wno-unused-command-line-argument"
             "-Wno-initializer-overrides"
             )
-
-    set(c_ignore_specific_warnings "-Wno-override-init")
 
     get_debug_flag(debug_flag)
     message(STATUS "debug_flag :${debug_flag}")
@@ -79,10 +74,7 @@ function(setup_compiler_flags IN_board IN_arch)
 
     set(cxx_specific_flags "-nostdinc++")
 
-    if (USING_CLANG_COMPILER)
-        set(compiler_specific_flags "-fuse-ld=lld")
-    endif ()
-
+    set(compiler_specific_flags "-fuse-ld=lld")
     include_kconfig_header_file_globally(kconfig_flags)
     message(STATUS kconfig_flags: "${kconfig_flags}")
 
@@ -110,7 +102,7 @@ function(setup_compiler_flags IN_board IN_arch)
             "-nostartfiles"
             )
 
-    set(CMAKE_C_FLAGS "-std=c11 ${c_ignore_specific_warnings} ${common_compiler_flags}" PARENT_SCOPE)
+    set(CMAKE_C_FLAGS "-std=c11 ${common_compiler_flags}" PARENT_SCOPE)
     set(CMAKE_CXX_FLAGS "-std=c++20 ${cxx_specific_flags} ${common_compiler_flags}" PARENT_SCOPE)
     set(CMAKE_ASM_FLAGS "-std=c11 ${common_compiler_flags}" PARENT_SCOPE)
 endfunction()
