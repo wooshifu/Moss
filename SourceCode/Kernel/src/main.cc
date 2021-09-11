@@ -8,7 +8,7 @@
 #include "libcxx/macro.hh"      // for extern_C
 #include "libcxx/printf.hh"     // for printf
 
-extern_C [[noreturn]] [[used]] void kernel_main() {
+extern_C [[noreturn]] [[gnu::used]] void kernel_main() {
   //  result = init_board_with_hooks();
   KErrorCode result = init_board();
   if (not_ok(result)) { oops("oops!!! init board error"); }

@@ -36,18 +36,18 @@ static KErrorCode run_init_hook(const InitHookType& init_hook_type) {
   return KErrorCode::OK;
 }
 
-static KErrorCode pre_init_board() { return run_init_hook(InitHookType::PRE_INIT_BOARD); }
-static KErrorCode post_init_board() { return run_init_hook(InitHookType::POST_INIT_BOARD); }
+[[maybe_unused]] static KErrorCode pre_init_board() { return run_init_hook(InitHookType::PRE_INIT_BOARD); }
+[[maybe_unused]] static KErrorCode post_init_board() { return run_init_hook(InitHookType::POST_INIT_BOARD); }
 
-static KErrorCode pre_init_cpu() { return run_init_hook(InitHookType::PRE_INIT_CPU); }
-static KErrorCode post_init_cpu() { return run_init_hook(InitHookType::POST_INIT_CPU); }
+[[maybe_unused]] static KErrorCode pre_init_cpu() { return run_init_hook(InitHookType::PRE_INIT_CPU); }
+[[maybe_unused]] static KErrorCode post_init_cpu() { return run_init_hook(InitHookType::POST_INIT_CPU); }
 
-static KErrorCode pre_init_mmu() { return run_init_hook(InitHookType::PRE_INIT_MMU); };
-static KErrorCode post_init_mmu() { return run_init_hook(InitHookType::POST_INIT_MMU); };
+[[maybe_unused]] static KErrorCode pre_init_mmu() { return run_init_hook(InitHookType::PRE_INIT_MMU); };
+[[maybe_unused]] static KErrorCode post_init_mmu() { return run_init_hook(InitHookType::POST_INIT_MMU); };
 
-KErrorCode pre_kernel_main() { return run_init_hook(InitHookType::PRE_KERNEL_MAIN); }
+[[maybe_unused]] KErrorCode pre_kernel_main() { return run_init_hook(InitHookType::PRE_KERNEL_MAIN); }
 
-[[noreturn]] KErrorCode post_kernel_main() {
+[[maybe_unused]] [[noreturn]] KErrorCode post_kernel_main() {
   KErrorCode result = run_init_hook(InitHookType::POST_KERNEL_MAIN);
   if (not_ok(result)) {
     log_f("post kernel main hook failed");
