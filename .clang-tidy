@@ -4,6 +4,7 @@ Checks: >
   clang-diagnostic-*,
   -clang-diagnostic-format,
   -clang-diagnostic-unknown-attributes,
+  -clang-diagnostic-unused-command-line-argument,
 
   clang-analyzer-*,
 
@@ -38,6 +39,7 @@ Checks: >
   -readability-implicit-bool-conversion,
   -readability-magic-numbers,
   -readability-function-cognitive-complexity,
+  -readability-suspicious-call-argument,
 
 WarningsAsErrors: '*'
 HeaderFilterRegex: ''
