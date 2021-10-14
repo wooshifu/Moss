@@ -9,12 +9,6 @@ SECTIONS
         __text_start = .;
             *(.text.boot)
             *(.text)
-
-        . = ALIGN(8);
-        __init_hooks_start = .;
-            *(.init_hook)
-        __init_hooks_end = .;
-
         __text_end = .;
     }
 

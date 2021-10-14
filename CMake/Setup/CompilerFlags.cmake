@@ -87,6 +87,7 @@ function(setup_compiler_flags IN_board IN_arch)
             ${debug_flag}
             ${macro_flags}
             # "-save-temps" # this flag will break iwyu
+            "-Wpedantic"
             "-Wall"
             "-Wextra"
             "-Werror"
