@@ -46,6 +46,7 @@ Checks: >
   -readability-magic-numbers,
   -readability-function-cognitive-complexity,
   -readability-suspicious-call-argument,
+  -readability-identifier-length,
 
 WarningsAsErrors: '*'
 HeaderFilterRegex: ''

@@ -14,6 +14,8 @@ services:
     volumes:
       - ../:/root/Moss
     privileged: true
+    entrypoint:
+      - /root/Moss/Scripts/BuildAndRun/raspi3.linux.build.sh
 
 networks:
   os_share_network:
