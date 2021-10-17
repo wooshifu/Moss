@@ -4,7 +4,7 @@ Language: Cpp
 BasedOnStyle: LLVM
 ColumnLimit: 120
 SortIncludes: CaseInsensitive
-IncludeBlocks: Regroup
+IncludeBlocks: Merge
 AlignOperands: AlignAfterOperator
 AlignConsecutiveMacros: AcrossEmptyLinesAndComments
 AlignConsecutiveBitFields: AcrossEmptyLinesAndComments

@@ -1,3 +1,12 @@
 config KERNEL_ENABLE_GUI
     bool "enable GUI"
     default y
+
+config KERNEL_DISABLE_KASLR
+    bool "disable kaslr"
+    default y
+
+config SMP_MAX_CPUS
+    int "smp max cpus"
+    range 1 32
+    default 16

@@ -61,6 +61,7 @@ function(setup_compiler_flags IN_board IN_arch)
             "-Wno-unused-parameter"
             "-Wno-unused-command-line-argument"
             "-Wno-initializer-overrides"
+            "-Wno-unused-const-variable"
             )
 
     get_debug_flag(debug_flag)
@@ -86,7 +87,7 @@ function(setup_compiler_flags IN_board IN_arch)
             "-O${optimization_level}"
             ${debug_flag}
             ${macro_flags}
-            # "-save-temps" # this flag will break iwyu
+            # "-save-temps" # this flag will break iwyu, inline assembly code include will failed if -save-temps, change include to absolute path will work
             "-Wpedantic"
             "-Wall"
             "-Wextra"
