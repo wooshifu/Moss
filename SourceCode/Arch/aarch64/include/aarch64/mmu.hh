@@ -18,24 +18,20 @@ constexpr auto MMU_USER_PAGE_SIZE_SHIFT = USER_PAGE_SIZE_SHIFT;
 //
 // Currently if between 30 and 39 the code will automatically use 4K base page
 // granules, which is maximally compatible with all cores.
-#ifndef MMU_IDENT_SIZE_SHIFT
-#define MMU_IDENT_SIZE_SHIFT 39
-// constexpr auto MMU_IDENT_SIZE_SHIFT= 39;
-#endif
+constexpr auto MMU_IDENT_SIZE_SHIFT     = 39;
 
-#if MMU_IDENT_SIZE_SHIFT < 25
-#error MMU_IDENT_SIZE_SHIFT too small
-#elif MMU_IDENT_SIZE_SHIFT <= 29 // Use 2MB block mappings (4K page size)
-#define MMU_IDENT_PAGE_SIZE_SHIFT (SHIFT_4K)
-#elif MMU_IDENT_SIZE_SHIFT <= 30 // Use 512MB block mappings (64K page size)
-#define MMU_IDENT_PAGE_SIZE_SHIFT (SHIFT_64K)
-#elif MMU_IDENT_SIZE_SHIFT <= 39 // Use 1GB block mappings (4K page size)
-#define MMU_IDENT_PAGE_SIZE_SHIFT (SHIFT_4K)
-#elif MMU_IDENT_SIZE_SHIFT <= 42 // Use 512MB block mappings (64K page size)
-#define MMU_IDENT_PAGE_SIZE_SHIFT (SHIFT_64K)
-#else
-#error MMU_IDENT_SIZE_SHIFT too large
-#endif
+consteval auto MMU_IDENT_PAGE_SIZE_SHIFT() {
+  // Use 2MB block mappings (4K page size)
+  if (MMU_IDENT_SIZE_SHIFT <= 29) { return SHIFT_4K; }
+  // Use 512MB block mappings (64K page size)
+  if (MMU_IDENT_SIZE_SHIFT <= 30) { return SHIFT_64K; }
+  // Use 1GB block mappings (4K page size)
+  if (MMU_IDENT_SIZE_SHIFT <= 39) { return SHIFT_4K; }
+  // Use 512MB block mappings (64K page size)
+  if (MMU_IDENT_SIZE_SHIFT <= 42) { return SHIFT_64K; }
+  return 0;
+}
+static_assert(MMU_IDENT_PAGE_SIZE_SHIFT() != 0, "MMU_IDENT_SIZE_SHIFT too small");
 
 // TCR TGx values
 //
@@ -43,13 +39,15 @@ constexpr auto MMU_USER_PAGE_SIZE_SHIFT = USER_PAGE_SIZE_SHIFT;
 // TG0:         0       2       1
 // TG1:         2       1       3
 
-#define MMU_TG0(page_size_shift) ((((page_size_shift == 14) & 1) << 1) | ((page_size_shift == 16) & 1))
+consteval auto MMU_TG0(auto page_size_shift) {
+  return (((page_size_shift == 14) & 1) << 1) | ((page_size_shift == 16) & 1);
+}
 
-#define MMU_TG1(page_size_shift)                                                                                       \
-  ((((page_size_shift == 12) & 1) << 1) | ((page_size_shift == 14) & 1) | ((page_size_shift == 16) & 1) |              \
-   (((page_size_shift == 16) & 1) << 1))
+consteval auto MMU_TG1(auto page_size_shift) {
+  return (((page_size_shift == 12) & 1) << 1) | ((page_size_shift == 14) & 1) | ((page_size_shift == 16) & 1) |
+         (((page_size_shift == 16) & 1) << 1);
+}
 
-#if 1
 //#define MMU_LX_X(page_shift, level) ((4 - (level)) * ((page_shift)-3) + 3)
 consteval auto MMU_LX_X(auto page_shift, auto level) { return (4 - (level)) * ((page_shift)-3) + 3; }
 
@@ -62,37 +60,19 @@ consteval auto MMU_USER_TOP_SHIFT() {
 }
 static_assert(MMU_USER_TOP_SHIFT() != 0, "MMU_USER_TOP_SHIFT should not return 0");
 
-//#if MMU_USER_SIZE_SHIFT > MMU_LX_X(MMU_USER_PAGE_SIZE_SHIFT, 0)
-//#define MMU_USER_TOP_SHIFT MMU_LX_X(MMU_USER_PAGE_SIZE_SHIFT, 0)
-//#elif MMU_USER_SIZE_SHIFT > MMU_LX_X(MMU_USER_PAGE_SIZE_SHIFT, 1)
-//#define MMU_USER_TOP_SHIFT MMU_LX_X(MMU_USER_PAGE_SIZE_SHIFT, 1)
-//#elif MMU_USER_SIZE_SHIFT > MMU_LX_X(MMU_USER_PAGE_SIZE_SHIFT, 2)
-//#define MMU_USER_TOP_SHIFT MMU_LX_X(MMU_USER_PAGE_SIZE_SHIFT, 2)
-//#elif MMU_USER_SIZE_SHIFT > MMU_LX_X(MMU_USER_PAGE_SIZE_SHIFT, 3)
-//#define MMU_USER_TOP_SHIFT MMU_LX_X(MMU_USER_PAGE_SIZE_SHIFT, 3)
-//#else
-//#error User address space size must be larger than page size
-//#endif
-#define MMU_USER_PAGE_TABLE_ENTRIES_TOP (0x1 << (MMU_USER_SIZE_SHIFT - MMU_USER_TOP_SHIFT))
-#define MMU_USER_PAGE_TABLE_ENTRIES     (0x1 << (MMU_USER_PAGE_SIZE_SHIFT - 3))
-
 consteval auto MMU_IDENT_TOP_SHIFT() {
-  if (auto value = MMU_LX_X(MMU_IDENT_PAGE_SIZE_SHIFT, 0); MMU_IDENT_SIZE_SHIFT > value) { return value; }
-  if (auto value = MMU_LX_X(MMU_IDENT_PAGE_SIZE_SHIFT, 1); MMU_IDENT_SIZE_SHIFT > value) { return value; }
-  if (auto value = MMU_LX_X(MMU_IDENT_PAGE_SIZE_SHIFT, 2); MMU_IDENT_SIZE_SHIFT > value) { return value; }
-  if (auto value = MMU_LX_X(MMU_IDENT_PAGE_SIZE_SHIFT, 3); MMU_IDENT_SIZE_SHIFT > value) { return value; }
+  if (auto value = MMU_LX_X(MMU_IDENT_PAGE_SIZE_SHIFT(), 0); MMU_IDENT_SIZE_SHIFT > value) { return value; }
+  if (auto value = MMU_LX_X(MMU_IDENT_PAGE_SIZE_SHIFT(), 1); MMU_IDENT_SIZE_SHIFT > value) { return value; }
+  if (auto value = MMU_LX_X(MMU_IDENT_PAGE_SIZE_SHIFT(), 2); MMU_IDENT_SIZE_SHIFT > value) { return value; }
+  if (auto value = MMU_LX_X(MMU_IDENT_PAGE_SIZE_SHIFT(), 3); MMU_IDENT_SIZE_SHIFT > value) { return value; }
   return 0;
 }
 static_assert(MMU_IDENT_TOP_SHIFT() != 0, "MMU_IDENT_TOP_SHIFT should not return 0");
 
-//#define MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT (MMU_IDENT_SIZE_SHIFT - MMU_IDENT_TOP_SHIFT)
 constexpr auto MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT = (MMU_IDENT_SIZE_SHIFT - MMU_IDENT_TOP_SHIFT());
 static_assert(MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT == 9);
-//#define MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT (MMU_IDENT_SIZE_SHIFT - MMU_IDENT_TOP_SHIFT)
-//#define MMU_IDENT_PAGE_TABLE_ENTRIES_TOP (0x1 << MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT)
 constexpr auto MMU_IDENT_PAGE_TABLE_ENTRIES_TOP = (0x1 << MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT);
 static_assert(MMU_IDENT_PAGE_TABLE_ENTRIES_TOP == 512);
-#define MMU_IDENT_PAGE_TABLE_ENTRIES (0x1 << (MMU_IDENT_PAGE_SIZE_SHIFT - 3))
 
 constexpr auto MMU_KERNEL_SIZE_SHIFT      = 48;
 constexpr auto MMU_KERNEL_PAGE_SIZE_SHIFT = 12;
@@ -104,23 +84,10 @@ consteval auto MMU_KERNEL_TOP_SHIFT() {
   return 0;
 }
 static_assert(MMU_KERNEL_TOP_SHIFT() != 0, "MMU_KERNEL_TOP_SHIFT should not return 0");
-//#if MMU_KERNEL_SIZE_SHIFT > MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 0)
-//#define MMU_KERNEL_TOP_SHIFT MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 0)
-//#elif MMU_KERNEL_SIZE_SHIFT > MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 1)
-//#define MMU_KERNEL_TOP_SHIFT MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 1)
-//#elif MMU_KERNEL_SIZE_SHIFT > MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 2)
-//#define MMU_KERNEL_TOP_SHIFT MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 2)
-//#elif MMU_KERNEL_SIZE_SHIFT > MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 3)
-//#define MMU_KERNEL_TOP_SHIFT MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 3)
-//#else
-//#error Kernel address space size must be larger than page size
-//#endif
-//#define MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP (0x1 << (MMU_KERNEL_SIZE_SHIFT - MMU_KERNEL_TOP_SHIFT))
-//#define MMU_KERNEL_PAGE_TABLE_ENTRIES     (0x1 << (MMU_KERNEL_PAGE_SIZE_SHIFT - 3))
-#endif
 constexpr auto MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP = 512;
 
-//#define MMU_PTE_KERNEL_RWX_FLAGS                                                                                       \
+// todo: add MMU_PTE_ATTR_AF | MMU_PTE_ATTR_SH_INNER_SHAREABLE | MMU_PTE_ATTR_NORMAL_MEMORY | MMU_PTE_ATTR_AP_P_RW_U_NA
+//#define MMU_PTE_KERNEL_RWX_FLAGS \
 //  (MMU_PTE_ATTR_AF | MMU_PTE_ATTR_SH_INNER_SHAREABLE | MMU_PTE_ATTR_NORMAL_MEMORY | MMU_PTE_ATTR_AP_P_RW_U_NA)
 constexpr auto MMU_PTE_KERNEL_RWX_FLAGS          = 0x708;
 
@@ -197,7 +164,7 @@ constexpr auto MMU_TCR_FLAGS0 = (MMU_TCR_TG0(MMU_TG0(MMU_USER_PAGE_SIZE_SHIFT)) 
                                  MMU_TCR_ORGN0(MMU_RGN_WRITE_BACK_ALLOCATE) |
                                  MMU_TCR_IRGN0(MMU_RGN_WRITE_BACK_ALLOCATE) | MMU_TCR_T0SZ(64 - MMU_USER_SIZE_SHIFT));
 constexpr auto MMU_TCR_FLAGS0_IDENT =
-    (MMU_TCR_TG0(MMU_TG0(MMU_IDENT_PAGE_SIZE_SHIFT)) | MMU_TCR_SH0(MMU_SH_INNER_SHAREABLE) |
+    (MMU_TCR_TG0(MMU_TG0(MMU_IDENT_PAGE_SIZE_SHIFT())) | MMU_TCR_SH0(MMU_SH_INNER_SHAREABLE) |
      MMU_TCR_ORGN0(MMU_RGN_WRITE_BACK_ALLOCATE) | MMU_TCR_IRGN0(MMU_RGN_WRITE_BACK_ALLOCATE) |
      MMU_TCR_T0SZ(64 - MMU_IDENT_SIZE_SHIFT));
 

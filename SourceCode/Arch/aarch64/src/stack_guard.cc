@@ -5,7 +5,6 @@
 #include "libcxx/macros.hh"
 #include "libcxx/types.hh"
 
-
 // Hardware RNG interface.
 struct hw_rng_ops {
   size_t (*hw_rng_get_entropy)(void* buf, size_t len);

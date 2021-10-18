@@ -14,15 +14,14 @@
 
 constexpr auto ARCH_DEFAULT_STACK_SIZE = 8192;
 constexpr auto ARCH_PHYSIC_MAP_SIZE    = 1UL << 39; // (1<<39)/1024/1024/1024=512GB
-static_assert(ARCH_PHYSIC_MAP_SIZE == 512_GB);
+static_assert(ARCH_PHYSIC_MAP_SIZE == 512_GiB);
 constexpr auto MMU_PTE_KERNEL_DATA_FLAGS    = 0x60'0000'0000'0708UL;
-// constexpr auto MMU_PTE_KERNEL_RWX_FLAGS  = 0x708;
 constexpr auto MMU_PAGE_TABLE_ENTRIES_IDENT = 512;
-constexpr auto ZX_TLS_STACK_GUARD_OFFSET= -0x10;
-
+constexpr auto ZX_TLS_STACK_GUARD_OFFSET    = -0x10;
 
 extern_C [[gnu::used]] [[gnu::naked]] void _start() {
-  asm volatile(R"asm_code(
+  asm volatile(
+      R"asm_code(
 .include "aarch64/asm_macros.hh"
 
 
@@ -331,19 +330,18 @@ DATA translation_table_trampoline
   .skip 8 * %[MMU_IDENT_PAGE_TABLE_ENTRIES_TOP] // 8*512=4096
 END_DATA translation_table_trampoline
 )asm_code"
-               :
-               : [MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT] "i"(MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT),
-                 [MMU_IDENT_PAGE_TABLE_ENTRIES_TOP] "i"(MMU_IDENT_PAGE_TABLE_ENTRIES_TOP),
-                 [ARCH_DEFAULT_STACK_SIZE] "i"(ARCH_DEFAULT_STACK_SIZE),
-                 [MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP] "i"(MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP),
-                 [KERNEL_ASPACE_BASE] "i"(KERNEL_ASPACE_BASE), [ARCH_PHYSIC_MAP_SIZE] "i"(ARCH_PHYSIC_MAP_SIZE),
-                 [MMU_PTE_KERNEL_DATA_FLAGS] "i"(MMU_PTE_KERNEL_DATA_FLAGS),
-                 [MMU_PTE_KERNEL_RWX_FLAGS] "i"(MMU_PTE_KERNEL_RWX_FLAGS),
-                 [MMU_PAGE_TABLE_ENTRIES_IDENT] "i"(MMU_PAGE_TABLE_ENTRIES_IDENT),
-                 [MMU_IDENT_TOP_SHIFT] "i"(MMU_IDENT_TOP_SHIFT()), [MMU_PTE_IDENT_FLAGS] "i"(MMU_PTE_IDENT_FLAGS),
-                 [MMU_MAIR_VAL] "i"(MMU_MAIR_VAL),[MMU_TCR_FLAGS_IDENT]"i"(MMU_TCR_FLAGS_IDENT),
-                 [MMU_TCR_FLAGS_KERNEL]"i"(MMU_TCR_FLAGS_KERNEL),
-                 [ZX_TLS_STACK_GUARD_OFFSET]"i"(ZX_TLS_STACK_GUARD_OFFSET)
+      :
+      : [MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT] "i"(MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT),
+        [MMU_IDENT_PAGE_TABLE_ENTRIES_TOP] "i"(MMU_IDENT_PAGE_TABLE_ENTRIES_TOP),
+        [ARCH_DEFAULT_STACK_SIZE] "i"(ARCH_DEFAULT_STACK_SIZE),
+        [MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP] "i"(MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP),
+        [KERNEL_ASPACE_BASE] "i"(KERNEL_ASPACE_BASE), [ARCH_PHYSIC_MAP_SIZE] "i"(ARCH_PHYSIC_MAP_SIZE),
+        [MMU_PTE_KERNEL_DATA_FLAGS] "i"(MMU_PTE_KERNEL_DATA_FLAGS),
+        [MMU_PTE_KERNEL_RWX_FLAGS] "i"(MMU_PTE_KERNEL_RWX_FLAGS),
+        [MMU_PAGE_TABLE_ENTRIES_IDENT] "i"(MMU_PAGE_TABLE_ENTRIES_IDENT),
+        [MMU_IDENT_TOP_SHIFT] "i"(MMU_IDENT_TOP_SHIFT()), [MMU_PTE_IDENT_FLAGS] "i"(MMU_PTE_IDENT_FLAGS),
+        [MMU_MAIR_VAL] "i"(MMU_MAIR_VAL), [MMU_TCR_FLAGS_IDENT] "i"(MMU_TCR_FLAGS_IDENT),
+        [MMU_TCR_FLAGS_KERNEL] "i"(MMU_TCR_FLAGS_KERNEL), [ZX_TLS_STACK_GUARD_OFFSET] "i"(ZX_TLS_STACK_GUARD_OFFSET)
 
-               : "cc", "memory"); // todo: clobber should be set
+      : "cc", "memory"); // todo: clobber should be set
 }

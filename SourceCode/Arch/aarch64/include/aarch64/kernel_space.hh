@@ -4,8 +4,6 @@
 
 #pragma once
 
-#pragma once
-
 // Virtual address where the kernel address space begins.
 // Below this is the user address space.
 constexpr auto KERNEL_ASPACE_BASE = 0xffff'0000'0000'0000UL;

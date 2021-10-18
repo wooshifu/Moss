@@ -3,6 +3,7 @@
 //
 
 #include "kconfig.hh"
+#include "libcxx/macros.hh"
 #include "libcxx/types.hh"
 
 #if CONFIG_KERNEL_DISABLE_KASLR
@@ -11,10 +12,7 @@
 #error "KASLR currently not implementated"
 #endif
 
-#define __EXPORT __attribute__((__visibility__("default")))
-#define __LOCAL  __attribute__((__visibility__("hidden")))
-
-extern "C" __LOCAL const char __kernel_end[]; // End of the image, including ".bss"
+extern_C [[gnu::visibility("hidden")]] const char __kernel_end[]; // End of the image, including ".bss"
 
 // store the start and current pointer to the boot allocator in physical address
 u64 boot_alloc_start;
