@@ -17,6 +17,7 @@ SECTIONS
         . = ALIGN(8);
         __rodata_start = .;
             *(.rodata)
+            *(.rodata.*)
         __rodata_end = .;
     }
 
