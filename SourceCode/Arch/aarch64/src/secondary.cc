@@ -9,7 +9,7 @@
 
 [[gnu::naked]] extern_C u64 arm64_get_secondary_sp() {
   asm volatile(R"asm_code(
-.include "aarch64/asm.hh"
+.include "aarch64/asm_macros.hh"
 
   mrs     x9, mpidr_el1
   ldr     x10, =0xff00ffffff  /* Mask for AFFx (cluster) ids */

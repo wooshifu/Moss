@@ -23,7 +23,7 @@ constexpr auto ZX_TLS_STACK_GUARD_OFFSET= -0x10;
 
 extern_C [[gnu::used]] [[gnu::naked]] void _start() {
   asm volatile(R"asm_code(
-.include "aarch64/asm.hh"
+.include "aarch64/asm_macros.hh"
 
 
 /*

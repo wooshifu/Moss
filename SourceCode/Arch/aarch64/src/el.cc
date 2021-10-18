@@ -28,7 +28,7 @@ constexpr auto SPSR_ELX_EL1H        = (0b0101);
 extern_C [[gnu::used]] [[gnu::naked]] void arm64_elX_to_el1() {
   asm volatile(
       R"asm_code(
-.include "aarch64/asm.hh"
+.include "aarch64/asm_macros.hh"
 
 
   mrs x9, CurrentEL

@@ -3,7 +3,7 @@
 //
 
 asm(R"asm_code(
-.include "aarch64/asm.hh"
+.include "aarch64/asm_macros.hh"
 
 .macro entry_invalid_exception
 .align 7
