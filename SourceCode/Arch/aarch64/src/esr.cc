@@ -8,9 +8,6 @@
   In ISO C99 you can give the elements in any order, specifying the array indices or structure field names they apply
   to, and GNU C allows this as an extension in C90 mode as well. This extension is not implemented in GNU C++.
  */
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc99-designator"
-#pragma clang diagnostic ignored "-Wgnu-designator"
 const char* esr_class_str[] = {
     [0 ... ESR_ELx_EC_MAX]   = "UNRECOGNIZED EC",
     [ESR_ELx_EC_UNKNOWN]     = "Unknown/Uncategorized",
@@ -54,7 +51,6 @@ const char* esr_class_str[] = {
     [ESR_ELx_EC_VECTOR32]    = "Vector catch (AArch32)",
     [ESR_ELx_EC_BRK64]       = "BRK (AArch64)",
 };
-#pragma clang diagnostic pop
 static_assert(sizeof(esr_class_str) / sizeof(esr_class_str[0]) == ESR_ELx_EC_MAX + 1);
 
 const char* esr_get_class_string(u32 esr) { return esr_class_str[ESR_ELx_EC(esr)]; }

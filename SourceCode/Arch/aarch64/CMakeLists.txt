@@ -7,6 +7,7 @@ add_library(${PROJECT_NAME}
         OBJECT
         ${ObjArchSrc}
         ${ASM_SOURCE_FILES})
+set_source_files_properties(${ObjArch_SOURCE_DIR}/src/esr.cc PROPERTIES COMPILE_FLAGS "-Wno-c99-designator -Wno-gnu-designator -Wno-initializer-overrides")
 target_include_kernel_header_files(${PROJECT_NAME})
 target_include_libcxx_header_files(${PROJECT_NAME})
 target_include_libstdcxx_header_files(${PROJECT_NAME})

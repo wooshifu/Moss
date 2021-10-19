@@ -27,7 +27,7 @@ set(COMMON_KERNEL_OBJECTS
 add_executable(${KernelName}
         $<TARGET_OBJECTS:ObjArch>
         ${COMMON_KERNEL_OBJECTS})
-target_link_options(${KernelName} PRIVATE "LINKER:SHELL:-T ${ObjArch_SOURCE_DIR}/src/kernel.ld --Map=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/KernelArm64.map")
+target_link_options(${KernelName} PRIVATE "LINKER:-T,${ObjArch_SOURCE_DIR}/src/kernel.ld,--Map=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/KernelArm64.map")
 
 add_custom_command(TARGET ${KernelName} POST_BUILD
         COMMENT "making kernel8.img, wait a moment"
@@ -40,19 +40,3 @@ add_custom_target(run
         WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 add_dependencies(run ${KernelName})
 ############ end link kernel ############
-
-
-############ start link kernel unit tests ############
-set(KernelUnitTestsElf KernelUnitTests.elf)
-add_executable(${KernelUnitTestsElf}
-        $<TARGET_OBJECTS:ObjArchUnitTests>
-        $<TARGET_OBJECTS:ObjUnitTests>
-        ${COMMON_KERNEL_OBJECTS})
-target_link_options(${KernelUnitTestsElf} PRIVATE "LINKER:SHELL:-T ${ObjArch_SOURCE_DIR}/src/kernel.ld --Map=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/KernelUnitTestsArm64.map")
-
-add_custom_target(test
-        COMMENT "run tests"
-        COMMAND qemu-system-aarch64 -M raspi3 -kernel ${KernelUnitTestsElf} -nographic -serial mon:stdio
-        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-add_dependencies(test ${KernelUnitTestsElf})
-############ end link kernel unit tests ############

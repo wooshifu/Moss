@@ -56,26 +56,17 @@ function(setup_compiler_flags IN_board IN_arch)
     read_compiler_flags_from_flags_cmake_file(${board_flag_file} board_compiler_flags)
     message(STATUS "[board] board_compiler_flags is: ${board_compiler_flags}")
 
-
-    set(ignore_specific_warnings
-            "-Wno-unused-parameter"
-            "-Wno-unused-command-line-argument"
-            "-Wno-initializer-overrides"
-            "-Wno-unused-const-variable"
-            )
+    set(ignore_specific_warnings "")
 
     get_debug_flag(debug_flag)
     message(STATUS "debug_flag :${debug_flag}")
     get_optimization_level(optimization_level)
     message(STATUS "OPTIMIZATION_LEVEL :${optimization_level}")
 
-    set(macro_flags
-            "-D_GLIBCXX_HOSTED=0" # override glibc macro
-            )
+    set(macro_flags "")
 
     set(cxx_specific_flags "-nostdinc++")
 
-    set(compiler_specific_flags "-fuse-ld=lld")
     include_kconfig_header_file_globally(kconfig_flags)
     message(STATUS kconfig_flags: "${kconfig_flags}")
 
@@ -99,14 +90,12 @@ function(setup_compiler_flags IN_board IN_arch)
             "-fno-builtin"
             "-fno-exceptions"
             "-nostdinc"
-            "-nostdlib"
-            ${compiler_specific_flags}
-            "-nostartfiles"
             )
 
     set(CMAKE_C_FLAGS "-std=c11 ${common_compiler_flags}" PARENT_SCOPE)
     set(CMAKE_CXX_FLAGS "-std=c++20 ${cxx_specific_flags} ${common_compiler_flags}" PARENT_SCOPE)
     set(CMAKE_ASM_FLAGS "-std=c11 ${common_compiler_flags}" PARENT_SCOPE)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wno-unused-command-line-argument -fuse-ld=lld -nostartfiles -nostdlib" PARENT_SCOPE)
 endfunction()
 
 macro(print_compiler_flags)
@@ -116,6 +105,7 @@ macro(print_compiler_flags)
     message(STATUS "CMAKE_ASM_FLAGS:  ${CMAKE_ASM_FLAGS}")
     message(STATUS "CMAKE_C_FLAGS:    ${CMAKE_C_FLAGS}")
     message(STATUS "CMAKE_CXX_FLAGS:  ${CMAKE_CXX_FLAGS}")
+    message(STATUS "CMAKE_EXE_LINKER_FLAGS:  ${CMAKE_EXE_LINKER_FLAGS}")
     message(STATUS "CMAKE_OBJCOPY:    ${CMAKE_OBJCOPY}")
     message(STATUS "${compiler_flags_separator}")
     message(STATUS "${compiler_flags_separator}")

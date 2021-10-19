@@ -34,10 +34,14 @@ constexpr const char* entry_error_messages[]{
     "SYNC_INVALID_EL0_32", "IRQ_INVALID_EL0_32", "FIQ_INVALID_EL0_32", "ERROR_INVALID_EL0_32"};
 static_assert(sizeof(entry_error_messages) / sizeof(entry_error_messages[0]) == 16);
 
+// todo: remove #pragma
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-parameter"
 [[gnu::used]] extern_C void show_invalid_entry_message(int type, u64 far_el1, u64 sp, u64 esr_el1, u64 elr_el1) {
   //  log_e("[%s] far_el1: 0x%lx, sp: 0x%lx, esr_el1: 0x%lx, elr_el1: 0x%lx, exception class: %s",
   //        entry_error_messages[type], far_el1, sp, esr_el1, elr_el1, esr_get_class_string(esr_el1));
 }
+#pragma clang diagnostic pop
 
 // todo: not implemented
 extern_C void oops() {}

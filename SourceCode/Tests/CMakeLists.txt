@@ -46,3 +46,25 @@ target_include_tests_header_files(${PROJECT_NAME})
 target_include_hal_header_files(${PROJECT_NAME})
 
 target_enable_iwyu(${PROJECT_NAME})
+
+
+############ start link kernel unit tests ############
+set(COMMON_KERNEL_OBJECTS
+        $<TARGET_OBJECTS:ObjKernel>
+        $<TARGET_OBJECTS:ObjLibCXX>
+        $<TARGET_OBJECTS:ObjHAL>
+        $<TARGET_OBJECTS:ObjBoardRaspberryPi3>
+        )
+set(KernelUnitTestsElf KernelUnitTests.elf)
+add_executable(${KernelUnitTestsElf}
+        $<TARGET_OBJECTS:ObjArchUnitTests>
+        $<TARGET_OBJECTS:ObjUnitTests>
+        ${COMMON_KERNEL_OBJECTS})
+target_link_options(${KernelUnitTestsElf} PRIVATE "LINKER:-T,${ObjArch_SOURCE_DIR}/src/kernel.ld,--Map=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/KernelUnitTestsArm64.map")
+
+add_custom_target(test
+        COMMENT "run tests"
+        COMMAND qemu-system-aarch64 -M raspi3 -kernel ${KernelUnitTestsElf} -nographic -serial mon:stdio
+        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+add_dependencies(test ${KernelUnitTestsElf})
+############ end link kernel unit tests ############
