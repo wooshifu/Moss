@@ -12,3 +12,7 @@ else ()
 endif ()
 
 set(CMAKE_OBJCOPY llvm-objcopy)
+
+# remove macos --sysroot compile flags
+set(CMAKE_OSX_SYSROOT "")
+set(CMAKE_CXX_SYSROOT_FLAG "" FORCE)
