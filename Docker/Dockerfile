@@ -45,15 +45,11 @@ RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -  && \
     apt autoremove && \
     rm -rf /var/cache/apt/archives
 
-ENV PATH=/usr/lib/llvm-13/bin:$PATH
+ENV PATH=/usr/lib/llvm-13/bin:$PATH CC=clang CXX=clang++ LD=lld
 
-RUN mkdir /run/sshd
-RUN yes password | passwd root
-RUN echo 'password of root has been changed to "password"'
-RUN echo 'set completion-ignore-case On' >> ~/.inputrc
-
-ENV CC=clang
-ENV CXX=clang++
-ENV LD=lld
+RUN mkdir /run/sshd && \
+    yes password | passwd root && \
+    echo 'password of root has been changed to "password"' && \
+    echo 'set completion-ignore-case On' >> ~/.inputrc
 
 CMD ["/usr/sbin/sshd", "-D"]
