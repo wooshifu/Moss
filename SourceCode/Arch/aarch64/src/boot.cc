@@ -12,19 +12,24 @@
 #error "KASLR currently not implementated"
 #endif
 
-extern_C [[gnu::visibility("hidden")]] const char __kernel_end[]; // End of the image, including ".bss"
-
-// store the start and current pointer to the boot allocator in physical address
 u64 boot_alloc_start;
 u64 boot_alloc_end;
+extern_C /*[[gnu::visibility("hidden")]]*/ const char __kernel_end[]; // End of the image, including ".bss"
+
+// store the start and current pointer to the boot allocator in physical address
 // run in physical space without the mmu set up, so by computing the address of __kernel_end
 // and saving it, we've effectively computed the physical address of the end of the
 // kernel.
 // We can't allow asan to check the globals here as it happens on a different
 // aspace where asan shadow isn't mapped.
+// todo: boot_alloc_init not shown in objdump output,
+//       so put unused above boot_alloc_init to output the name boot_alloc_init
+extern_C void unused() {}
+
 // todo: what's this???
+// todo: it's a little bit difficult to understand!!!
 /*[[gnu::visibility("hidden")]]*/
-[[gnu::used]] extern "C" /*NO_ASAN*/ /*__NO_SAFESTACK*/ void boot_alloc_init() {
+[[gnu::used]] extern_C /*NO_ASAN*/ /*__NO_SAFESTACK*/ void boot_alloc_init() {
   boot_alloc_start = reinterpret_cast<u64>(__kernel_end);
   // TODO(fxbug.dev/32414): This is a compile-time no-op that defeats any compiler
   // optimizations based on its knowledge/assumption that `&__kernel_end` is a

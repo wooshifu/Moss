@@ -12,7 +12,7 @@
 [[gnu::used]] u64 _arch_boot_el        = 0;
 [[gnu::used]] u64 _kernel_base_phys    = 0;
 
-constexpr auto ARCH_DEFAULT_STACK_SIZE = 8192;
+constexpr auto ARCH_DEFAULT_STACK_SIZE = 8_KiB;
 constexpr auto ARCH_PHYSIC_MAP_SIZE    = 1UL << 39; // (1<<39)/1024/1024/1024=512GB
 static_assert(ARCH_PHYSIC_MAP_SIZE == 512_GiB);
 constexpr auto MMU_PTE_KERNEL_DATA_FLAGS    = 0x60'0000'0000'0708UL;
@@ -21,7 +21,7 @@ constexpr auto ZX_TLS_STACK_GUARD_OFFSET    = -0x10;
 
 extern_C [[gnu::used]] [[gnu::naked]] void _start() {
   asm volatile(
-      R"asm_code(
+      R"(
 .include "aarch64/asm_macros.hh"
 
 
@@ -74,7 +74,7 @@ _text_boot:
   orr     tmp, tmp, #(1<<2)  /* Enable dcache/ucache */
   msr     sctlr_el1, tmp
 
-  // This can be any arbitrary (page-aligned) address >= KERNEL_ASPACE_BASE.
+  // This can be any arbitrary (page-aligned) address >= KERNEL_SPACE_START.
   adr_global  tmp, kernel_relocated_base
   ldr     kernel_vaddr, [tmp]
 
@@ -102,10 +102,10 @@ _text_boot:
   adr_global tmp, boot_cpu_kstack_end
   mov     sp, tmp
 
-  /* make sure the boot allocator is given a chance to figure out where
-   * we are loaded in physical memory. */
+  /* make sure the boot allocator is given a chance to figure out where we are loaded in physical memory. */
   bl      boot_alloc_init
 
+  // todo: maybe unimportant code
   /* save the physical address the kernel is loaded at */
   adr_global x0, __kernel_start
   adr_global x1, _kernel_base_phys
@@ -113,7 +113,7 @@ _text_boot:
 
   /* clear out the kernel translation table */
   mov     tmp, #0
-// for(int tmp = 0;tmp < MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP;tmp++) { page_table1[tmp] = 0; }
+// for(int tmp = 0;tmp < MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP;tmp++) { arm64_kernel_translation_table[tmp] = 0; }
 .Lclear_top_page_table_loop:
   str     xzr, [page_table1, tmp, lsl #3]
   add     tmp, tmp, #1
@@ -125,7 +125,7 @@ _text_boot:
    * TODO: Only map the arenas. */
   /* void arm64_boot_map(pte_t* kernel_table0, vaddr_t vaddr, paddr_t paddr, size_t len, pte_t flags); */
   mov     x0, page_table1
-  mov     x1, %[KERNEL_ASPACE_BASE]
+  mov     x1, %[KERNEL_SPACE_START]
   mov     x2, 0
   mov     x3, %[ARCH_PHYSIC_MAP_SIZE] // 512GB
   movlit  x4, %[MMU_PTE_KERNEL_DATA_FLAGS] // TODO: why use movlit, could use ldr???
@@ -153,6 +153,7 @@ _text_boot:
      * this will identity map the 1GB page holding the physical address of this code.
      * Used to temporarily help us get switched to the upper virtual address. */
     /* Zero translate_table_trampoline translation tables */
+//todo: validate!!!
     mov     tmp, #0
 .Lclear_translate_table_trampoline:
     str     xzr, [page_table0, tmp, lsl#3]
@@ -295,7 +296,7 @@ _text_boot:
     bl      arm64_secondary_entry
 
 .Lunsupported_cpu_trap:
-    wfe
+    wfi
     b       .Lunsupported_cpu_trap
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -318,7 +319,7 @@ END_DATA boot_cpu_fake_arch_thread
 
 .bss
 LOCAL_DATA boot_cpu_kstack
-  .skip %[ARCH_DEFAULT_STACK_SIZE]
+  .skip %[ARCH_DEFAULT_STACK_SIZE] // 8KiB
   .balign 16
 LOCAL_DATA boot_cpu_kstack_end
 END_DATA boot_cpu_kstack
@@ -329,13 +330,13 @@ END_DATA boot_cpu_kstack
 DATA translation_table_trampoline
   .skip 8 * %[MMU_IDENT_PAGE_TABLE_ENTRIES_TOP] // 8*512=4096
 END_DATA translation_table_trampoline
-)asm_code"
+)"
       :
       : [MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT] "i"(MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT),
         [MMU_IDENT_PAGE_TABLE_ENTRIES_TOP] "i"(MMU_IDENT_PAGE_TABLE_ENTRIES_TOP),
         [ARCH_DEFAULT_STACK_SIZE] "i"(ARCH_DEFAULT_STACK_SIZE),
         [MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP] "i"(MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP),
-        [KERNEL_ASPACE_BASE] "i"(KERNEL_ASPACE_BASE), [ARCH_PHYSIC_MAP_SIZE] "i"(ARCH_PHYSIC_MAP_SIZE),
+        [KERNEL_SPACE_START] "i"(KERNEL_SPACE_START), [ARCH_PHYSIC_MAP_SIZE] "i"(ARCH_PHYSIC_MAP_SIZE),
         [MMU_PTE_KERNEL_DATA_FLAGS] "i"(MMU_PTE_KERNEL_DATA_FLAGS),
         [MMU_PTE_KERNEL_RWX_FLAGS] "i"(MMU_PTE_KERNEL_RWX_FLAGS),
         [MMU_PAGE_TABLE_ENTRIES_IDENT] "i"(MMU_PAGE_TABLE_ENTRIES_IDENT),

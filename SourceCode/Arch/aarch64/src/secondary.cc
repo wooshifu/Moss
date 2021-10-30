@@ -8,7 +8,7 @@
 #include "libcxx/types.hh"
 
 [[gnu::naked]] extern_C u64 arm64_get_secondary_sp() {
-  asm volatile(R"asm_code(
+  asm volatile(R"(
 .include "aarch64/asm_macros.hh"
 
   mrs     x9, mpidr_el1
@@ -35,7 +35,7 @@
   ldr     x2, [x11, #16]
   add     x1, x11, #40
   ret
-)asm_code"
+)"
                :
                : [_CONFIG_SMP_MAX_CPUS] "i"(CONFIG_SMP_MAX_CPUS)
                :);
@@ -65,8 +65,8 @@ arm64_sp_info_t arm64_secondary_sp_list[CONFIG_SMP_MAX_CPUS];
 // todo: not implemented
 extern "C" [[noreturn]] void arm64_secondary_entry() {
   while (true) {
-    asm volatile(R"asm_code(
+    asm volatile(R"(
       wfi
-    )asm_code");
+    )");
   }
 }

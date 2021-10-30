@@ -50,7 +50,7 @@ extern_C void oops() {}
 extern_C void handle_el1_irq(void) {}
 
 [[gnu::used]] extern_C void init_exception_vector_table() {
-  asm volatile(R"asm_code(
+  asm volatile(R"(
   b init_exception_vector_table_asm
 
 
@@ -211,7 +211,7 @@ err_hang:
 init_exception_vector_table_asm:
   adr    x0, exception_vectors_table        // load VBAR_EL1 with virtual
   msr    vbar_el1, x0 /* Vector Base Address Register (EL1) */
-)asm_code"
+)"
                :
                : [S_FRAME_SIZE] "i"(S_FRAME_SIZE),
 

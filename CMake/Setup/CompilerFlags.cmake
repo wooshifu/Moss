@@ -79,9 +79,9 @@ function(setup_compiler_flags IN_board IN_arch)
             ${debug_flag}
             ${macro_flags}
             # "-save-temps" # this flag will break iwyu, inline assembly code include will failed if -save-temps, change include to absolute path will work
-            "-Wpedantic"
             "-Wall"
             "-Wextra"
+            "-Wpedantic"
             "-Werror"
             ${ignore_specific_warnings}
             "-MD"

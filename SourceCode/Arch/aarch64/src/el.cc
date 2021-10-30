@@ -27,7 +27,7 @@ constexpr auto SPSR_ELX_EL1H        = (0b0101);
 
 extern_C [[gnu::used]] [[gnu::naked]] void arm64_elX_to_el1() {
   asm volatile(
-      R"asm_code(
+      R"(
 .include "aarch64/asm_macros.hh"
 
 
@@ -107,7 +107,7 @@ extern_C [[gnu::used]] [[gnu::naked]] void arm64_elX_to_el1() {
 
 .Ltarget:
   ret
-  )asm_code"
+  )"
       :
       : [CURRENTEL_EL1] "i"(CURRENTEL_EL1), [CURRENTEL_EL2] "i"(CURRENTEL_EL2), [SCR_EL3_NS] "i"(SCR_EL3_NS),
         [SCR_EL3_HCE] "i"(SCR_EL3_HCE), [SCR_EL3_RW] "i"(SCR_EL3_RW), [SPSR_ELX_DAIF] "i"(SPSR_ELX_DAIF),

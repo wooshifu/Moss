@@ -2,7 +2,7 @@
 // Created by shifu on 2021/10/17.
 //
 
-asm(R"asm_code(
+asm(R"(
 .include "aarch64/asm_macros.hh"
 
 .macro entry_invalid_exception
@@ -39,4 +39,4 @@ asm(R"asm_code(
     entry_invalid_exception
     entry_invalid_exception
     entry_invalid_exception
-)asm_code");
+)");

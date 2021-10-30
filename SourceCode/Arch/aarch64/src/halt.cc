@@ -6,7 +6,8 @@
 
 extern_C [[noreturn]] [[gnu::naked]] void hal_never_return() {
   asm volatile(R"(
+  1:
     wfi
-    b hal_never_return
+    b 1b
   )");
 }
