@@ -15,7 +15,7 @@ services:
       - ../:/root/Moss
     privileged: true
     entrypoint:
-      - /root/Moss/Scripts/BuildAndRun/rpi3.build.sh
+      - /root/Moss/Scripts/Build/rpi3.build.sh
 
 networks:
   os_share_network:
