@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
-BASEDIR=$(dirname "$0")
+# run this bash script to format all source code under SourceCode directory
 
-files=$(find "${BASEDIR}/SourceCode" -type file \( -name '*.h' -o -name '*.hh' -o -name '*.hpp' -o -name '*.c' -o -name '*.cc' -o -name '*.cpp' \) | grep -v .git | grep  -v LibGccStd)
+current_dir=$(dirname "$0")
 
-for file in ${files}; do
-  echo "clang-format: ${file}"
-  clang-format -i "${file}"
-done
+source_code_files=$(find "${current_dir}/SourceCode" -type f \( -name '*.c' -o -name '*.cc' -o -name '*.cpp' -o -name '*.h' -o -name '*.hh' -o -name '*.hpp' \))
+echo -e "will format following files:\n$source_code_files"
+files=$(echo "${source_code_files}" | awk -v d=" " '{s=(NR==1?s:s d)$0}END{print s}')
+# shellcheck disable=SC2086
+clang-format -i ${files}
