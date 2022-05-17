@@ -1,12 +1,9 @@
 project(ObjArch C CXX ASM)
 
-
-find_asm_source_files(ASM_SOURCE_FILES ${ObjArch_SOURCE_DIR}/src)
 aux_source_directory(${ObjArch_SOURCE_DIR}/src ObjArchSrc)
 add_library(${PROJECT_NAME}
         OBJECT
-        ${ObjArchSrc}
-        ${ASM_SOURCE_FILES})
+        ${ObjArchSrc})
 set_source_files_properties(${ObjArch_SOURCE_DIR}/src/esr.cc PROPERTIES COMPILE_FLAGS "-Wno-c99-designator -Wno-gnu-designator -Wno-initializer-overrides")
 target_include_kernel_header_files(${PROJECT_NAME})
 target_include_libcxx_header_files(${PROJECT_NAME})
@@ -21,8 +18,7 @@ target_enable_iwyu(${PROJECT_NAME})
 set(ObjArchUnitTests ObjArchUnitTests)
 add_library(${ObjArchUnitTests}
         OBJECT
-        ${ObjArchSrc}
-        ${ASM_SOURCE_FILES})
+        ${ObjArchSrc})
 target_compile_definitions(${ObjArchUnitTests} PRIVATE ENV_KERNEL_UNIT_TESTS=1)
 target_include_kernel_header_files(${ObjArchUnitTests})
 target_include_libcxx_header_files(${ObjArchUnitTests})
