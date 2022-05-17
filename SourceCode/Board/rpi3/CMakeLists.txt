@@ -6,7 +6,7 @@ add_library(${PROJECT_NAME}
         ${ObjBoardRaspberryPi3Src}
         ${ASM_SOURCE_FILES})
 
-target_include_raspberry_pi3_header_files(${PROJECT_NAME})
+target_include_rpi3_header_files(${PROJECT_NAME})
 target_include_libcxx_header_files(${PROJECT_NAME})
 target_include_libstdcxx_header_files(${PROJECT_NAME})
 target_include_hal_header_files(${PROJECT_NAME})

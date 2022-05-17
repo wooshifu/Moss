@@ -23,8 +23,8 @@ function(target_include_specific_arch_header_files IN_target IN_arch)
     target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Arch/${IN_arch}/include)
 endfunction()
 
-function(target_include_raspberry_pi3_header_files IN_target)
-    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Board/raspberry_pi3/include)
+function(target_include_rpi3_header_files IN_target)
+    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Board/rpi3/include)
 endfunction()
 
 function(target_include_tests_header_files IN_target)

@@ -60,7 +60,7 @@ jobs:
         # Note the current convention is to use the -S and -B options here to specify source
         # and build directories, but this is only available with CMake 3.13 and higher.
         # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-        run: export PATH="/usr/local/opt/llvm/bin:$PATH" && cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/CMake/Toolchain/ToolchainClang.cmake -DCONFIG_BOARD=raspberry_pi3 ..
+        run: export PATH="/usr/local/opt/llvm/bin:$PATH" && cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/CMake/Toolchain/ToolchainClang.cmake -DCONFIG_BOARD=rpi3 ..
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
