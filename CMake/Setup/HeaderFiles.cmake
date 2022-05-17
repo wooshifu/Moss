@@ -7,12 +7,11 @@ function(target_include_hal_header_files IN_target)
 endfunction()
 
 function(target_include_libcxx_header_files IN_target)
-    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Libraries/lib_cxx/include)
+    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Libraries/libcxx/include)
 endfunction()
 
-function(target_include_libstdcxx_header_files IN_target)
-    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Libraries/lib_compatible/include)
-    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Libraries/lib_std/include)
+function(target_include_libstd_header_files IN_target)
+    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Libraries/libstd/include)
 endfunction()
 
 function(target_include_kernel_header_files IN_target)
