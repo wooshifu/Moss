@@ -12,6 +12,6 @@ rm -rf "${BUILD_DIR}"
 mkdir -p "${BUILD_DIR}"
 
 cd "${BUILD_DIR}" || exit
-cmake -DCMAKE_TOOLCHAIN_FILE="${THIS_DIR}"/../../CMake/Toolchain/ToolchainClang.cmake -DCONFIG_BOARD=raspberry_pi3 "${THIS_DIR}/../.."
+cmake -DCMAKE_TOOLCHAIN_FILE="${THIS_DIR}"/../../CMake/Toolchain/ToolchainClang.cmake -DCONFIG_BOARD=raspberry_pi3 -GNinja "${THIS_DIR}/../.."
 cmake --build . -j"$(nproc)"
 cd - || exit
