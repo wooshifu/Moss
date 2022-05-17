@@ -9,14 +9,14 @@ BBlue="\033[1;34m"   # Blue
 MSG_FILE=$1
 FILE_CONTENT="$(cat "$MSG_FILE")"
 REGEX="\[.+\]\s.+"
-ERROR_MSG="Commit message format must match regex \"${REGEX}\""
+ERROR_MSG="Commit message format must match regex \"${REGEX}\", for example: [xxx] yyy"
 
 if grep -iqE "${REGEX}" "${MSG_FILE}"; then
-  printf "${BGreen}Good commit!${Color_Off}\n"
+  chco -e "${BGreen}Good commit!${Color_Off}\n"
 else
-  printf "${BRed}Bad commit message: ${BBlue}\"$FILE_CONTENT\"\n"
-  printf "${BYellow}$ERROR_MSG\n"
-  printf "commit-msg hook failed (add --no-verify to bypass)\n"
+  echo -e "${BRed}Bad commit message: ${BBlue}\"$FILE_CONTENT\"\n"
+  echo -e "${BYellow}$ERROR_MSG\n"
+  echo -e "commit-msg hook failed (add --no-verify to bypass)\n"
 
   exit 1
 fi
