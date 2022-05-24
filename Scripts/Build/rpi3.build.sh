@@ -34,13 +34,9 @@ while getopts 'hrcq:' OPT; do
     print_help
     exit 0
     ;;
-  :)
-    echo "This option -$OPTARG requires an argument."
+  *)
+    echo "unexpected $OPT -$OPTARG"
     exit 1
-    ;;
-  ?)
-    echo "-$OPTARG is not an option"
-    exit 2
     ;;
   esac
 done
@@ -52,8 +48,12 @@ if [ ${opt_reset_cmake} == "1" ]; then
   rm -rf "${BUILD_DIR:?}"/*
 fi
 
-cmake -DCMAKE_TOOLCHAIN_FILE="${THIS_DIR}"/../../CMake/Toolchain/ToolchainClang.cmake -DCONFIG_BOARD=rpi3 -GNinja "${THIS_DIR}/../.."
-cmake --build . -j"$(nproc)"
+cmake_config_command="cmake -DCMAKE_TOOLCHAIN_FILE=${THIS_DIR}/../../CMake/Toolchain/ToolchainClang.cmake -DCONFIG_BOARD=rpi3 -GNinja ${THIS_DIR}/../.."
+echo "${cmake_config_command}"
+${cmake_config_command}
+cmake_build_command="cmake --build . -j$(nproc)"
+echo "${cmake_build_command}"
+${cmake_build_command}
 
 if [ ${opt_run_qemu} == "1" ]; then
   rpi3_qemu_command="qemu-system-aarch64 -M raspi3b -kernel bin/kernel.elf -nographic -serial mon:stdio $opt_qemu_args"
