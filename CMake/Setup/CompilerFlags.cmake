@@ -89,12 +89,13 @@ function(setup_compiler_flags IN_board IN_arch)
             "-ffreestanding"
             "-fno-builtin"
             "-fno-exceptions"
+            "-fno-common"
             "-nostdinc"
             )
 
     set(CMAKE_C_FLAGS "-std=c11 ${common_compiler_flags}" PARENT_SCOPE)
     set(CMAKE_CXX_FLAGS "-std=c++20 ${cxx_specific_flags} ${common_compiler_flags}" PARENT_SCOPE)
-    set(CMAKE_ASM_FLAGS "-std=c11 ${common_compiler_flags}" PARENT_SCOPE)
+    set(CMAKE_ASM_FLAGS "-std=c11 -DASSEMBLY ${common_compiler_flags}" PARENT_SCOPE)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wno-unused-command-line-argument -fuse-ld=lld -nostartfiles -nostdlib" PARENT_SCOPE)
 endfunction()
 

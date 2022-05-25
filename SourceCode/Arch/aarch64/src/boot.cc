@@ -2,6 +2,7 @@
 // Created by shifu on 2021/10/17.
 //
 
+#if 0
 #include "kconfig.hh"
 #include "libcxx/macros.hh"
 #include "libcxx/types.hh"
@@ -50,3 +51,5 @@ extern_C void unused() {}
   __asm__("" : "=g"(boot_alloc_start) : "0"(boot_alloc_start));
   boot_alloc_end = reinterpret_cast<u64>(__kernel_end);
 }
+
+#endif

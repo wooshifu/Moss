@@ -1,59 +1,123 @@
-ENTRY(__text_start)
+OUTPUT_FORMAT("elf64-littleaarch64", "elf64-bigaarch64", "elf64-littleaarch64")
+OUTPUT_ARCH(aarch64)
 
+ENTRY(_start)
 SECTIONS
 {
-    . = 0x80000;
-    .text :
-    {
-        __kernel_start = .;
-        __text_start = .;
-            *(.text.boot)
-            *(.text)
-        __text_end = .;
+    . = 0xffff000000000000 + 0x00080000;
+
+    /* text/read-only data */
+    /* set the load address to physical MEMBASE */
+    .text : AT(0x00000000 + 0x00080000) {
+        __code_start = .;
+        KEEP(*(.text.boot))
+        KEEP(*(.text.boot.vectab))
+        *(.text* .sram.text.glue_7* .gnu.linkonce.t.*)
     }
 
-    .rodata :
-    {
-        . = ALIGN(8);
+    .interp : { *(.interp) }
+    .hash : { *(.hash) }
+    .dynsym : { *(.dynsym) }
+    .dynstr : { *(.dynstr) }
+    .rel.text : { *(.rel.text) *(.rel.gnu.linkonce.t*) }
+    .rela.text : { *(.rela.text) *(.rela.gnu.linkonce.t*) }
+    .rel.data : { *(.rel.data) *(.rel.gnu.linkonce.d*) }
+    .rela.data : { *(.rela.data) *(.rela.gnu.linkonce.d*) }
+    .rel.rodata : { *(.rel.rodata) *(.rel.gnu.linkonce.r*) }
+    .rela.rodata : { *(.rela.rodata) *(.rela.gnu.linkonce.r*) }
+    .rel.got : { *(.rel.got) }
+    .rela.got : { *(.rela.got) }
+    .rel.ctors : { *(.rel.ctors) }
+    .rela.ctors : { *(.rela.ctors) }
+    .rel.dtors : { *(.rel.dtors) }
+    .rela.dtors : { *(.rela.dtors) }
+    .rel.init : { *(.rel.init) }
+    .rela.init : { *(.rela.init) }
+    .rel.fini : { *(.rel.fini) }
+    .rela.fini : { *(.rela.fini) }
+    .rel.bss : { *(.rel.bss) }
+    .rela.bss : { *(.rela.bss) }
+    .rel.plt : { *(.rel.plt) }
+    .rela.plt : { *(.rela.plt) }
+    .init : { *(.init) } =0x9090
+    .plt : { *(.plt) }
+
+    /* .ARM.exidx is sorted, so has to go in its own output section.  */
+    __exidx_start = .;
+    .ARM.exidx : { *(.ARM.exidx* .gnu.linkonce.armexidx.*) }
+    __exidx_end = .;
+
+    .dummy_post_text : {
+	    __code_end = .;
+    }
+
+    .rodata : ALIGN(4096) {
         __rodata_start = .;
-            *(.rodata)
-            *(.rodata.*)
+        __fault_handler_table_start = .;
+        KEEP(*(.rodata.fault_handler_table))
+        __fault_handler_table_end = .;
+        *(.rodata .rodata.* .gnu.linkonce.r.*)
+    }
+
+    /*
+     * extra linker scripts tend to insert sections just after .rodata,
+     * so we want to make sure this symbol comes after anything inserted above,
+     * but not aligned to the next section necessarily.
+     */
+    .dummy_post_rodata : {
         __rodata_end = .;
     }
 
-    .data :
-    {
-        . = ALIGN(8);
+    .data : ALIGN(4096) {
+        /* writable data  */
+        __data_start_rom = .;
+        /* in one segment binaries, the rom data address is on top of the ram data address */
         __data_start = .;
-            *(.data)
+        *(.data .data.* .gnu.linkonce.d.*)
+    }
+
+    .ctors : ALIGN(8) {
+        __ctor_list = .;
+        KEEP(*(.ctors .init_array))
+        __ctor_end = .;
+    }
+    .dtors : ALIGN(8) {
+        __dtor_list = .;
+        KEEP(*(.dtors .fini_array))
+        __dtor_end = .;
+    }
+    .got : { *(.got.plt) *(.got) }
+    .dynamic : { *(.dynamic) }
+
+    /*
+     * extra linker scripts tend to insert sections just after .data,
+     * so we want to make sure this symbol comes after anything inserted above,
+     * but not aligned to the next section necessarily.
+     */
+    .dummy_post_data : {
         __data_end = .;
     }
 
-    /* must be aligned */
-    .bss :
-    {
-        /* align 64 bytes to fit assembly code .Lbss_loop */
-        . = ALIGN(64);
+    /* unintialized data (in same segment as writable data) */
+    .bss : ALIGN(4096) {
         __bss_start = .;
-            *(.bss)
-        . = ALIGN(64);
+        KEEP(*(.bss.prebss.*))
+        . = ALIGN(8);
+        __post_prebss_bss_start = .;
+        *(.bss .bss.*)
+        *(.gnu.linkonce.b.*)
+        *(COMMON)
+        . = ALIGN(8);
         __bss_end = .;
     }
 
-    .stack :
-    {
-        . = ALIGN(8);
-        __stack_start = .;
-        . += 40960;
-        . = ALIGN(8);
-        __stack_end = .;
-    }
+    /* Align the end to ensure anything after the kernel ends up on its own pages */
+    . = ALIGN(4096);
+    _end = .;
 
-    .note.gnu.build-id : { *(.note.gnu.build-id) }
-    .interp : { *(.interp) }
+    . = 0xffff000000000000 + 0x40000000 ;
+    _end_of_ram = .;
 
-    /* strip unnecessary stuff */
+    /* Strip unnecessary stuff */
     /DISCARD/ : { *(.comment .note .eh_frame) }
-
-    __kernel_end = .;
 }

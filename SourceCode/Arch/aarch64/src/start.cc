@@ -2,7 +2,7 @@
 // Created by shifu on 2021/10/14.
 //
 
-#if 1
+#if 0
 #include "aarch64/kernel_space.hh"
 #include "aarch64/mmu.hh"
 #include "libcxx/macros.hh"
