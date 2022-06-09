@@ -1,74 +1,13 @@
 #pragma once
-#define LK 1
-#define ARM_ARCH_WAIT_FOR_SECONDARIES 1
-#define MEMBASE 0x00000000
-#define MEMSIZE 0x40000000
-#define MMU_WITH_TRAMPOLINE 1
-#define BCM2837 1
-#define ARM64_CPU_CORTEX_A53 1
-#define ARM_ISA_ARMV8 1
-#define IS_64BIT 1
-#define ARCH_DEFAULT_STACK_SIZE 4096
-#define WITH_SMP 1
-#define SMP_MAX_CPUS 4
-#define SMP_CPU_CLUSTER_SHIFT 8
-#define SMP_CPU_ID_BITS 24
-#define KERNEL_ASPACE_BASE 0xffff000000000000
-#define KERNEL_ASPACE_SIZE 0x0001000000000000
-#define USER_ASPACE_BASE 0x0000000001000000
-#define USER_ASPACE_SIZE 0x0000fffffe000000
-#define ARCH_HAS_MMU 1
-#define KERNEL_BASE 0xffff000000000000
-#define KERNEL_LOAD_OFFSET 0x00080000
-#define MEMBASE 0x00000000
-#define MEMSIZE 0x40000000
-#define PLATFORM_HAS_DYNAMIC_TIMER 1
-#define LK_HEAP_IMPLEMENTATION miniheap
-#define PROJECT_RPI3_TEST 1
-#define PROJECT "rpi3-test"
-#define TARGET_RPI3 1
-#define TARGET "rpi3"
-#define PLATFORM_BCM28XX 1
-#define PLATFORM "bcm28xx"
-#define ARCH_ARM64 1
-#define ARCH "arm64"
-#define WITH_APP 1
-#define WITH_APP_SHELL 1
-#define WITH_APP_STRINGTESTS 1
-#define WITH_APP_TESTS 1
-#define WITH_ARCH 1
-#define WITH_DEV 1
-#define WITH_DEV_TIMER_ARM_GENERIC 1
-#define WITH_KERNEL 1
-#define WITH_KERNEL_VM 1
-#define WITH_LIB_CBUF 1
-#define WITH_LIB_CKSUM 1
-#define WITH_LIB_CONSOLE 1
-#define WITH_LIB_DEBUG 1
-#define WITH_LIB_DEBUGCOMMANDS 1
-#define WITH_LIB_FDT 1
-#define WITH_LIB_FIXED_POINT 1
-#define WITH_LIB_FONT 1
-#define WITH_LIB_GFX 1
-#define WITH_LIB_GFXCONSOLE 1
-#define WITH_LIB_HEAP 1
-#define WITH_LIB_HEAP_MINIHEAP 1
-#define WITH_LIB_IO 1
-#define WITH_LIB_LIBC 1
-#define WITH_PLATFORM 1
-#define WITH_TARGET 1
-#define LK_DEBUGLEVEL 2
-#define GLOBAL_INCLUDES "-I./build-rpi3-test_-I./include_-Iexternal/include_-Itarget/rpi3/include_-Iplatform/bcm28xx/include_-Iarch/arm64/include_-Itop/include_-Iapp/include_-Iapp/shell/include_-Iapp/stringtests/include_-Iapp/tests/include_-Iarch/include_-Idev/include_-Idev/timer/arm_generic/include_-Ikernel/include_-Ilib/cbuf/include_-Iexternal/lib/cksum/include_-Ilib/debugcommands/include_-Iexternal/lib/fdt/include_-Ilib/gfx/include_-Ilib/gfxconsole/include_-Iplatform/include_-Itarget/include_-Ikernel/vm/include_-Ilib/console/include_-Ilib/debug/include_-Ilib/fixed_point/include_-Ilib/font/include_-Ilib/heap/include_-Ilib/heap/include_-Ilib/libc/include_-Ilib/heap/miniheap/include_-Ilib/heap/miniheap/include_-Ilib/io/include"
-#define GLOBAL_COMPILEFLAGS "-g_-include_./build-rpi3-test/config.h_-save-temps_-Wextra_-Wall_-Werror=return-type_-Wshadow_-Wdouble-promotion_-Wno-multichar_-Wno-unused-parameter_-Wno-unused-function_-Wno-unused-label_-Wno-nonnull-compare_-fno-common"
-#define GLOBAL_OPTFLAGS "-O2"
-#define GLOBAL_CFLAGS "--std=gnu11_-Werror-implicit-function-declaration_-Wstrict-prototypes_-Wwrite-strings"
-#define GLOBAL_CPPFLAGS "--std=c++14_-fno-exceptions_-fno-rtti_-fno-threadsafe-statics"
-#define GLOBAL_ASMFLAGS "-DASSEMBLY"
-#define GLOBAL_LDFLAGS "-L._-Lexternal"
-#define ARCH_COMPILEFLAGS "-fno-omit-frame-pointer"
-#define ARCH_CFLAGS ""
-#define ARCH_CPPFLAGS ""
-#define ARCH_ASMFLAGS ""
-#define ARCH_LDFLAGS "-z_max-page-size=4096"
-#define TOOLCHAIN_PREFIX "aarch64-elf-"
 
+constexpr auto IS_64BIT                = 1;
+constexpr auto ARCH_DEFAULT_STACK_SIZE = 4096;
+constexpr auto SMP_MAX_CPUS            = 4;
+constexpr auto SMP_CPU_CLUSTER_SHIFT   = 8;
+constexpr auto SMP_CPU_ID_BITS         = 24;
+constexpr auto KERNEL_ASPACE_BASE      = 0xffff000000000000;
+// constexpr auto KERNEL_ASPACE_SIZE      = 0x0001000000000000;
+// constexpr auto USER_ASPACE_BASE        = 0x0000000001000000;
+// constexpr auto USER_ASPACE_SIZE        = 0x0000fffffe000000;
+// constexpr auto ARCH_HAS_MMU            = 1;
+constexpr auto KERNEL_BASE             = 0xffff000000000000;

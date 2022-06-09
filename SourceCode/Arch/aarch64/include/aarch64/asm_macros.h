@@ -1,13 +1,7 @@
-/*
- * Copyright (c) 2014 Travis Geiselbrecht
- *
- * Use of this source code is governed by a MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT
- */
 #pragma once
 
-/* *INDENT-OFF* */
+// clang-format off
+
 .macro push ra, rb
 stp \ra, \rb, [sp,#-16]!
 .endm
@@ -16,6 +10,7 @@ stp \ra, \rb, [sp,#-16]!
 ldp \ra, \rb, [sp], #16
 .endm
 
+/* this macro ensures that mask must be value of 1<<n, if not, compile failed */
 .macro tbzmask, reg, mask, label, shift=0
 .if \shift >= 64
     .error "tbzmask: unsupported mask, \mask"
@@ -36,7 +31,7 @@ ldp \ra, \rb, [sp], #16
 .endif
 .endm
 
-.macro calloc_bootmem_aligned, new_ptr, new_ptr_end, tmp, size_shift, phys_offset=0
+.macro calloc_bootmem_aligned, new_ptr, new_ptr_end, tmp, size_shift, phys_offset
 .if \size_shift < 4
     .error "calloc_bootmem_aligned: Unsupported size_shift, \size_shift"
 .endif
@@ -81,3 +76,14 @@ ldp \ra, \rb, [sp], #16
 .popsection
 .endm
 
+
+.macro adr_g reg, symbol, hwaddress_sanitizer_enabled=0
+.if \hwaddress_sanitizer_enabled != 0
+  adrp \reg, :pg_hi21_nc:\symbol
+  movk \reg, #:prel_g3:\symbol+0x100000000
+  add \reg, \reg, #:lo12:\symbol
+.else
+  adrp \reg, \symbol
+  add \reg, \reg, #:lo12:\symbol
+.endif
+.endm  // adr_g

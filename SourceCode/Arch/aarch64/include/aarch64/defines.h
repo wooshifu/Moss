@@ -1,31 +1,14 @@
-/*
-* Copyright (c) 2008 Travis Geiselbrecht
-*
-* Use of this source code is governed by a MIT-style
-* license that can be found in the LICENSE file or at
-* https://opensource.org/licenses/MIT
-*/
 #pragma once
 
-#define SHIFT_4K        (12)
-#define SHIFT_16K       (14)
-#define SHIFT_64K       (16)
+#include "libcxx/compiler.hh"
 
-/* arm specific stuff */
-#ifdef ARM64_LARGE_PAGESIZE_64K
-#define PAGE_SIZE_SHIFT (SHIFT_64K)
-#elif ARM64_LARGE_PAGESIZE_16K
-#define PAGE_SIZE_SHIFT (SHIFT_16K)
-#else
-#define PAGE_SIZE_SHIFT (SHIFT_4K)
-#endif
-#define USER_PAGE_SIZE_SHIFT SHIFT_4K
+constexpr auto SHIFT_4K  = 12;
+constexpr auto SHIFT_16K = 14;
+constexpr auto SHIFT_64K = 16;
 
-#define PAGE_SIZE (1UL << PAGE_SIZE_SHIFT)
-#define USER_PAGE_SIZE (1UL << USER_PAGE_SIZE_SHIFT)
+consteval auto PAGE_SIZE_SHIFT() { return SHIFT_4K; }
 
-#if ARM64_CPU_CORTEX_A53 || ARM64_CPU_CORTEX_A57 || ARM64_CPU_CORTEX_A72
-#define CACHE_LINE 64
-#else
-#define CACHE_LINE 32
-#endif
+constexpr auto USER_PAGE_SIZE_SHIFT = SHIFT_4K;
+
+constexpr auto PAGE_SIZE            = 1UL << PAGE_SIZE_SHIFT();
+constexpr auto USER_PAGE_SIZE       = 1UL << USER_PAGE_SIZE_SHIFT;

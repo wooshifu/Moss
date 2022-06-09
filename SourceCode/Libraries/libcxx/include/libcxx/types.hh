@@ -1,7 +1,3 @@
-//
-// Created by shifu on 2021/10/16.
-//
-
 #pragma once
 
 using i8 = __INT8_TYPE__;
