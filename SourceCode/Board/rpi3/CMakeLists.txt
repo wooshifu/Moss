@@ -3,8 +3,7 @@ project(ObjBoardRaspberryPi3 CXX ASM)
 aux_source_directory(${ObjBoardRaspberryPi3_SOURCE_DIR}/src ObjBoardRaspberryPi3Src)
 add_library(${PROJECT_NAME}
         OBJECT
-        ${ObjBoardRaspberryPi3Src}
-        ${ASM_SOURCE_FILES})
+        ${ObjBoardRaspberryPi3Src})
 
 target_include_rpi3_header_files(${PROJECT_NAME})
 target_include_libcxx_header_files(${PROJECT_NAME})
