@@ -1,0 +1,17 @@
+==================================================================
+aarch64 instruction and register
+==================================================================
+- instructions
+    - ``mrs`` 从系统寄存器移动到通用寄存器(move to register from system register)
+    - ``msr`` 从通用寄存器移动到系统寄存器(move to system register from register)
+    - ``orr`` bitwise or, 示例：orr w8, wzr, #0x3 ; 3与零寄存器取或，得到的值存到w8寄存器，这里就是把3放到w8寄存器
+    - ``bic`` Bitwise Bit Clear，bic{条件}{S}  Rd，Rn，operand，bic指令将Rn 的值与操作数operand2 的反码按位逻辑”与”，结果存放到目的寄存器Rd 中。指令示例：bic R0,R0,#0x1F，//将R0最低5位清零，其余位不变
+    - ``ubfx`` 无符号位域选取指令：UBFX（提取指定位），示例：ubfx x11, x0, #60, #4; 从源寄存器x0中提取4位，位置从60开始。即将x0中的60-63位复制到目标寄存器x11的最低有效位，并将该x11上的其他高位设置为零
+    - ``stp`` stp x29, x30, [sp, #0x10]; 将 x29, x30 的值存入 sp 偏移 16 个字节的位置
+    - ``str`` str x9, [sp, #0x8]; 将寄存器 x9 中的值保存到栈内存 [sp + 0x8] 处
+    - ``str`` 示例：str x0, [x1, x2, lsl #2] ; stores x0 to an address equal to sum of x1; and four times x2.
+    - ``tbz`` tbz，示例：tbz x1, #3, label; 如果x1寄存器的第三位等于0，则跳转到label
+    - ``tbnz`` tbnz，示例：tbnz x1, #3, label; 如果x1寄存器的第三位不等于0，则跳转到label
+- registers
+    - ``cpacr_el1`` FPEN flag[21:20]，This control does not cause execution of any instructions to be trapped
+    - ``xzr/wzr`` xzr/wzr分别代表 64/32 位，其作用就是 0，写进去代表丢弃结果，读出来是 0
