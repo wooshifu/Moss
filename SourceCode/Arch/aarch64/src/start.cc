@@ -3,6 +3,8 @@
 #include "libstd/vm.h"
 
 [[clang::optnone]] [[gnu::naked]] [[noreturn]] void _() {
+  // todo: remove all pic related `ldr` instruction to avoid following error:
+  //       ld.lld: error: relocation R_AARCH64_ABS64 cannot be used against local symbol
   asm volatile(
       R"(
 .include "libstd/asm.hh"
