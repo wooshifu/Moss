@@ -36,7 +36,8 @@ target_link_options(${KernelName} PRIVATE "LINKER:-T,${ObjArch_SOURCE_DIR}/src/k
 
 add_custom_target(run
         COMMENT "run kernel"
-        COMMAND qemu-system-aarch64 -M raspi3 -kernel kernel.elf -nographic -serial mon:stdio
+        USES_TERMINAL
+        COMMAND qemu-system-aarch64 -M raspi3b -kernel kernel.elf -semihosting -serial null -serial mon:stdio -nographic -d in_asm
         WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 add_dependencies(run ${KernelName})
 ############ end link kernel ############
