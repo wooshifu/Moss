@@ -11,6 +11,7 @@ Checks: >
   -clang-diagnostic-unknown-attributes,
   -clang-diagnostic-unused-command-line-argument,
   -clang-diagnostic-unused-const-variable,
+  -clang-diagnostic-gnu-statement-expression,
 
   clang-analyzer-*,
 

@@ -4,17 +4,17 @@ OUTPUT_ARCH(aarch64)
 ENTRY(_start)
 SECTIONS
 {
-    . = 0xffff000000000000 + 0x00080000;
+    . = 0x00080000;
 
     /* text/read-only data */
     /* set the load address to physical MEMBASE */
-    .text : AT(0x00000000 + 0x00080000) {
+    .text : {
         __code_start = .;
         KEEP(*(.text.boot))
-        KEEP(*(.text.boot.vectab))
-        *(.text* .sram.text.glue_7* .gnu.linkonce.t.*)
+        *(.text* .gnu.linkonce.t.*)
     }
 
+    .note.gnu.build-id : { *(.note.gnu.build-id) }
     .interp : { *(.interp) }
     .hash : { *(.hash) }
     .dynsym : { *(.dynsym) }
@@ -39,13 +39,7 @@ SECTIONS
     .rela.bss : { *(.rela.bss) }
     .rel.plt : { *(.rel.plt) }
     .rela.plt : { *(.rela.plt) }
-    .init : { *(.init) } =0x9090 /* todo: 0x9090???*/
     .plt : { *(.plt) }
-
-    /* .ARM.exidx is sorted, so has to go in its own output section.  */
-    __exidx_start = .;
-    .ARM.exidx : { *(.ARM.exidx* .gnu.linkonce.armexidx.*) }
-    __exidx_end = .;
 
     .dummy_post_text : {
 	    __code_end = .;
@@ -53,9 +47,6 @@ SECTIONS
 
     .rodata : ALIGN(4096) {
         __rodata_start = .;
-        __fault_handler_table_start = .;
-        KEEP(*(.rodata.fault_handler_table))
-        __fault_handler_table_end = .;
         *(.rodata .rodata.* .gnu.linkonce.r.*)
     }
 
@@ -70,7 +61,6 @@ SECTIONS
 
     .data : ALIGN(4096) {
         /* writable data  */
-        __data_start_rom = .;
         /* in one segment binaries, the rom data address is on top of the ram data address */
         __data_start = .;
         *(.data .data.* .gnu.linkonce.d.*)
@@ -114,9 +104,6 @@ SECTIONS
     /* Align the end to ensure anything after the kernel ends up on its own pages */
     . = ALIGN(4096);
     _end = .;
-
-    . = 0xffff000000000000 + 0x40000000 ;
-    _end_of_ram = .;
 
     /* Strip unnecessary stuff */
     /DISCARD/ : { *(.comment .note .eh_frame) }

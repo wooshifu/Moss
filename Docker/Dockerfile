@@ -1,7 +1,9 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 # uncomment following line to speedup docker image build
 COPY sshd_config /etc/ssh/sshd_config
+
+USER root
 
 WORKDIR /root/Moss
 
@@ -14,6 +16,10 @@ RUN apt update && \
         build-essential \
         binutils \
         qemu-system-aarch64 \
+        clang \
+        clang-tidy \
+        lld \
+        llvm \
         gcc-aarch64-linux-gnu \
         g++-aarch64-linux-gnu \
         gdb-multiarch \
@@ -26,30 +32,23 @@ RUN apt update && \
         rsync \
         less \
         vim \
+        git \
+        zsh \
+        autojump \
         iwyu && \
     apt clean && \
     apt autoremove && \
     rm -rf /var/cache/apt/archives
 
-ARG LLVM_VERSION=-13
-COPY sources.list /etc/apt/sources.list
-RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -  && \
-    apt update && \
-    apt install -y \
-        clang${LLVM_VERSION} \
-        llvm${LLVM_VERSION} \
-        lld${LLVM_VERSION} \
-        clang-tidy${LLVM_VERSION} \
-        clang-format${LLVM_VERSION} && \
-    apt clean && \
-    apt autoremove && \
-    rm -rf /var/cache/apt/archives
-
-ENV PATH=/usr/lib/llvm-13/bin:$PATH CC=clang CXX=clang++ LD=lld
-
 RUN mkdir /run/sshd && \
     yes password | passwd root && \
     echo 'password of root has been changed to "password"' && \
     echo 'set completion-ignore-case On' >> ~/.inputrc
+
+RUN wget -P ~ https://git.io/.gdbinit
+RUN sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+RUN git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+RUN echo "[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh" >> ~/.zshrc
+RUN sed -i 's/plugins=(git)/plugins=(git autojump zsh-autosuggestions)/g' ~/.zshrc
 
 CMD ["/usr/sbin/sshd", "-D"]

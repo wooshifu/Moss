@@ -10,10 +10,11 @@ mkdir -p "${BUILD_DIR}"
 
 function print_help() {
   echo "Example Usage:"
-  echo "rpi3.build.sh -r -c -q \"-d in_asm\""
+  echo "rpi3.build.sh -d -r -c -q \"-d in_asm\""
   echo
   echo "Options:"
   echo "-h  show this help"
+  echo "-d  build debug version"
   echo "-r  run qemu after build"
   echo "-c  delete all cmake configuration caches"
   echo "-q  append qemu command args"
@@ -24,9 +25,11 @@ function print_help() {
 opt_run_qemu=0
 opt_reset_cmake=0
 opt_qemu_args=
+opt_build_type="Release"
 
-while getopts 'hrcq:' OPT; do
+while getopts 'hdrcq:' OPT; do
   case $OPT in
+  d) opt_build_type="Debug" ;;
   r) opt_run_qemu=1 ;;
   c) opt_reset_cmake=1 ;;
   q) opt_qemu_args=$OPTARG ;;
@@ -48,7 +51,7 @@ if [ ${opt_reset_cmake} == "1" ]; then
   rm -rf "${BUILD_DIR:?}"/*
 fi
 
-cmake_config_command="cmake -DCMAKE_TOOLCHAIN_FILE=${THIS_DIR}/../../CMake/Toolchain/ToolchainClang.cmake -DCONFIG_BOARD=rpi3 -GNinja ${THIS_DIR}/../.."
+cmake_config_command="cmake -DCMAKE_BUILD_TYPE=${opt_build_type} -DCMAKE_TOOLCHAIN_FILE=${THIS_DIR}/../../CMake/Toolchain/ToolchainClang.cmake -DCONFIG_BOARD=rpi3 -GNinja ${THIS_DIR}/../.."
 echo "${cmake_config_command}"
 ${cmake_config_command}
 cmake_build_command="cmake --build . -j$(nproc)"

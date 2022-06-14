@@ -28,11 +28,10 @@ add_executable(${KernelName}
         ${COMMON_KERNEL_OBJECTS})
 target_link_options(${KernelName} PRIVATE "LINKER:-T,${ObjArch_SOURCE_DIR}/src/kernel.ld,--Map=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/KernelArm64.map")
 
-#todo: disabled because of "LLVM ERROR: out of memory" when running llvm-objcopy
-#add_custom_command(TARGET ${KernelName} POST_BUILD
-#        COMMENT "making kernel8.img, wait a moment"
-#        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-#        COMMAND ${CMAKE_OBJCOPY} ${KernelName} -O binary kernel8.img)
+add_custom_command(TARGET ${KernelName} POST_BUILD
+        COMMENT "making kernel8.img, wait a moment"
+        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+        COMMAND ${CMAKE_OBJCOPY} ${KernelName} -O binary kernel8.img)
 
 add_custom_target(run
         COMMENT "run kernel"

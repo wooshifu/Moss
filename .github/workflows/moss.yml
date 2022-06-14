@@ -22,7 +22,7 @@ jobs:
     - name: Build In Docker
       shell: bash
       working-directory: ${{runner.workspace}}/${{github.event.repository.name}}/Docker
-      run: docker-compose run moss
+      run: docker-compose run moss -c
 
     - uses: actions/upload-artifact@v2
       with:
