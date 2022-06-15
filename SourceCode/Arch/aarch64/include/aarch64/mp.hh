@@ -1,7 +1,7 @@
 #pragma once
 
 #include "feature.hh"      // for arm64_microarch
-#include "libcxx/attr.hh"  // for ATTR_ALIGNED
+#include "libcxx/attr.hh"  // for attr_aligned
 #include "libcxx/types.hh" // for u32
 
 using cpu_mask_t = u32;
@@ -13,7 +13,7 @@ struct percpu {};
 // Aligned on the maximum architectural cache line to avoid cache
 // line sharing between cpus.
 constexpr auto MAX_CACHE_LINE = 64;
-struct ATTR_ALIGNED(MAX_CACHE_LINE) arm64_percpu {
+struct attr_aligned(MAX_CACHE_LINE) arm64_percpu {
   // cpu number
   cpu_num_t cpu_num;
 

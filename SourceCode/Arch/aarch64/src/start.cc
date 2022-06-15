@@ -14,7 +14,7 @@ constexpr auto ARCH_PHYSMAP_SIZE         = 1UL << 39;
 
 constexpr auto ZX_TLS_STACK_GUARD_OFFSET = -0x10;
 
-ATTR_OPTNONE ATTR_NAKED ATTR_NORETURN ATTR_USED void __start() {
+attr_optnone attr_naked attr_noreturn attr_used void __start() {
   asm volatile(
       R"(
 .include "aarch64/asm_macros.hh"

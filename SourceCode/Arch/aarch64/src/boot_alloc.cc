@@ -23,7 +23,7 @@ paddr_t boot_alloc_end;
 // kernel.
 // We can't allow asan to check the globals here as it happens on a different
 // aspace where asan shadow isn't mapped.
-ATTR_NO_ASAN ATTR_NO_SAFESTACK extern_C void boot_alloc_init() {
+attr_no_asan attr_no_safestack extern_C void boot_alloc_init() {
   // todo: error, _end is at 0xffff'0000'0008'xxxx
   boot_alloc_start = reinterpret_cast<paddr_t>(_end);
   // TODO(fxbug.dev/32414): This is a compile-time no-op that defeats any compiler
@@ -48,8 +48,7 @@ ATTR_NO_ASAN ATTR_NO_SAFESTACK extern_C void boot_alloc_init() {
 
 // called from arch start.S
 // run in physical space without the mmu set up, so stick to basic, relocatable code
-ATTR_NO_SAFESTACK
-paddr_t boot_alloc_page_phys() {
+attr_no_safestack paddr_t boot_alloc_page_phys() {
   paddr_t ptr    = ALIGN(boot_alloc_end, PAGE_SIZE);
   boot_alloc_end = ptr + PAGE_SIZE;
 

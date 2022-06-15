@@ -41,8 +41,7 @@ using zx_status_t = i32;
 #define ZX_ERR_BAD_STATE (-20)
 
 // inner mapping routine passed two helper routines
-ATTR_NO_SAFESTACK
-static inline zx_status_t _arm64_boot_map(pte_t* kernel_table0, const vaddr_t vaddr, const paddr_t paddr,
+attr_no_safestack static inline zx_status_t _arm64_boot_map(pte_t* kernel_table0, const vaddr_t vaddr, const paddr_t paddr,
                                           const size_t len, const pte_t flags, paddr_t (*alloc_func)(),
                                           pte_t* phys_to_virt(paddr_t)) {
   // loop through the virtual range and map each physical page, using the largest
@@ -57,7 +56,7 @@ static inline zx_status_t _arm64_boot_map(pte_t* kernel_table0, const vaddr_t va
       paddr_t pa            = alloc_func();
 
       kernel_table0[index0] = (pa & MMU_PTE_OUTPUT_ADDR_MASK) | MMU_PTE_L012_DESCRIPTOR_TABLE;
-      ATTR_FALLTHROUGH;
+      attr_fallthrough;
     }
     case MMU_PTE_L012_DESCRIPTOR_TABLE:
       kernel_table1 = phys_to_virt(kernel_table0[index0] & MMU_PTE_OUTPUT_ADDR_MASK);
@@ -85,7 +84,7 @@ static inline zx_status_t _arm64_boot_map(pte_t* kernel_table0, const vaddr_t va
       paddr_t pa            = alloc_func();
 
       kernel_table1[index1] = (pa & MMU_PTE_OUTPUT_ADDR_MASK) | MMU_PTE_L012_DESCRIPTOR_TABLE;
-      ATTR_FALLTHROUGH;
+      attr_fallthrough;
     }
     case MMU_PTE_L012_DESCRIPTOR_TABLE:
       kernel_table2 = phys_to_virt(kernel_table1[index1] & MMU_PTE_OUTPUT_ADDR_MASK);
@@ -113,7 +112,7 @@ static inline zx_status_t _arm64_boot_map(pte_t* kernel_table0, const vaddr_t va
       paddr_t pa            = alloc_func();
 
       kernel_table2[index2] = (pa & MMU_PTE_OUTPUT_ADDR_MASK) | MMU_PTE_L012_DESCRIPTOR_TABLE;
-      ATTR_FALLTHROUGH;
+      attr_fallthrough;
     }
     case MMU_PTE_L012_DESCRIPTOR_TABLE:
       kernel_table3 = phys_to_virt(kernel_table2[index2] & MMU_PTE_OUTPUT_ADDR_MASK);
@@ -135,11 +134,11 @@ static inline zx_status_t _arm64_boot_map(pte_t* kernel_table0, const vaddr_t va
 
 // called from start.S to configure level 1-3 page tables to map the kernel wherever it is located
 // physically to KERNEL_BASE
-ATTR_NO_SAFESTACK extern_C u64 arm64_boot_map(pte_t* kernel_table0, const vaddr_t vaddr, const paddr_t paddr,
+attr_no_safestack extern_C u64 arm64_boot_map(pte_t* kernel_table0, const vaddr_t vaddr, const paddr_t paddr,
                                               const size_t len, const pte_t flags) {
   // the following helper routines assume that code is running in physical addressing mode (mmu
   // off). any physical addresses calculated are assumed to be the same as virtual
-  auto alloc = []() /*ATTR_NO_SAFESTACK*/ -> paddr_t {
+  auto alloc = []() /*attr_no_safestack*/ -> paddr_t {
     // allocate a page out of the boot allocator, asking for a physical address
     paddr_t pa           = boot_alloc_page_phys();
 
@@ -154,7 +153,7 @@ ATTR_NO_SAFESTACK extern_C u64 arm64_boot_map(pte_t* kernel_table0, const vaddr_
     return pa;
   };
 
-  auto phys_to_virt = [](paddr_t pa) /*ATTR_NO_SAFESTACK*/ -> pte_t* { return reinterpret_cast<pte_t*>(pa); };
+  auto phys_to_virt = [](paddr_t pa) /*attr_no_safestack*/ -> pte_t* { return reinterpret_cast<pte_t*>(pa); };
 
   return _arm64_boot_map(kernel_table0, vaddr, paddr, len, flags, alloc, phys_to_virt);
 }
