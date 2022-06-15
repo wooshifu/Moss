@@ -41,9 +41,9 @@ using zx_status_t = i32;
 #define ZX_ERR_BAD_STATE (-20)
 
 // inner mapping routine passed two helper routines
-attr_no_safestack static inline zx_status_t _arm64_boot_map(pte_t* kernel_table0, const vaddr_t vaddr, const paddr_t paddr,
-                                          const size_t len, const pte_t flags, paddr_t (*alloc_func)(),
-                                          pte_t* phys_to_virt(paddr_t)) {
+attr_no_safestack static inline zx_status_t _arm64_boot_map(pte_t* kernel_table0, const vaddr_t vaddr,
+                                                            const paddr_t paddr, const size_t len, const pte_t flags,
+                                                            paddr_t (*alloc_func)(), pte_t* phys_to_virt(paddr_t)) {
   // loop through the virtual range and map each physical page, using the largest
   // page size supported. Allocates necessar page tables along the way.
   size_t off = 0;
