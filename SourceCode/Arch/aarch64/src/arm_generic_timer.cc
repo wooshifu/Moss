@@ -1,4 +1,5 @@
 #include "aarch64/intrin.hh"
+#include "libcxx/attr.hh"
 #include "libcxx/macros.hh"
 #include "libcxx/types.hh"
 
@@ -8,11 +9,12 @@ namespace arch {
   // Higher-level kernel code knows how to translate this into the Zircon
   // monotonic clock's zx_ticks_t.
   struct EarlyTicks {
-    u64 cntpct_el0, cntvct_el0;
+    u64 cntpct_el0;
+    u64 cntvct_el0;
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wgnu-statement-expression"
-    [[gnu::always_inline]] static EarlyTicks Get() {
+    attr_always_inline static EarlyTicks Get() {
       return {
           __arm_rsr64("cntpct_el0"),
           __arm_rsr64("cntvct_el0"),
@@ -20,7 +22,7 @@ namespace arch {
     }
 #pragma clang diagnostic pop
 
-    [[gnu::always_inline]] static EarlyTicks Zero() { return {0, 0}; }
+    attr_always_inline static EarlyTicks Zero() { return {0, 0}; }
   };
 } // namespace arch
 

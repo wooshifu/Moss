@@ -1,6 +1,7 @@
-#include "aarch64/mp.hh"
+#include "aarch64/mp.hh"  // for SMP_MAX_CPUS
+#include "libcxx/attr.hh" // for attr_naked, attr_noreturn, attr_optnone
 
-[[clang::optnone]] [[gnu::naked]] [[noreturn]] void _arm64_get_secondary_sp() {
+attr_optnone attr_naked attr_noreturn void _arm64_get_secondary_sp() {
   asm volatile(
       R"(
 .include "libstd/asm.hh"

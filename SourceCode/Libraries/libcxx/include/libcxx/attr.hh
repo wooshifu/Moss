@@ -16,6 +16,10 @@
 #define attr_used [[gnu::used]]
 #endif
 
+#ifndef attr_maybe_unused
+#define attr_maybe_unused [[maybe_unused]]
+#endif
+
 #ifndef attr_optnone
 #define attr_optnone [[clang::optnone]]
 #endif
@@ -30,4 +34,8 @@
 
 #ifndef attr_fallthrough
 #define attr_fallthrough [[fallthrough]]
+#endif
+
+#ifndef attr_always_inline
+#define attr_always_inline [[gnu::always_inline]]
 #endif

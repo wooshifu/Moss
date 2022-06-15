@@ -1,3 +1,5 @@
+#include "libcxx/attr.hh"
+
 constexpr auto CURRENTEL_EL1        = 0b01 << 2;
 constexpr auto CURRENTEL_EL2        = 0b10 << 2;
 
@@ -22,7 +24,7 @@ constexpr auto SPSR_ELX_EL1H        = 0b0101;
 // constexpr auto ICH_HCR_EL2 = "S3_4_C12_C11_0";
 // constexpr auto ICC_SRE_EL2 = "S3_4_C12_C9_5";
 
-[[clang::optnone]] [[gnu::naked]] [[noreturn]] void _arm64_elX_to_el1() {
+attr_optnone attr_naked attr_noreturn void _arm64_elX_to_el1() {
   asm volatile(
       R"(
 .include "libstd/asm.hh"
