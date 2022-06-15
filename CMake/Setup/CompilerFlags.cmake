@@ -78,7 +78,6 @@ function(setup_compiler_flags IN_board IN_arch)
             "-O${optimization_level}"
             ${debug_flag}
             ${macro_flags}
-            # "-save-temps" # this flag will cause inline assembly code inclusion failed, change include to absolute path will work
             "-Wall"
             "-Wextra"
             "-Wpedantic"
@@ -91,6 +90,7 @@ function(setup_compiler_flags IN_board IN_arch)
             "-fno-exceptions"
             "-fno-common"
             "-nostdinc"
+            # "-save-temps" # this flag will cause inline assembly code inclusion failed, run `Script/fix_asm_includes.py` to change the include path to absolute path
             )
 
     set(CMAKE_C_FLAGS "-std=c11 ${common_compiler_flags}" PARENT_SCOPE)
