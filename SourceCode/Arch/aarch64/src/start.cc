@@ -154,7 +154,7 @@ FUNCTION _start
 .Lclear_top_page_table_loop:
     str     xzr, [page_table1, tmp, lsl #3]
     add     tmp, tmp, #1
-    cmp     tmp, #%[MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP]
+    cmp     tmp, #%[MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP] // 512
     bne     .Lclear_top_page_table_loop
 
     /* void arm64_boot_map(pte_t* kernel_table0, vaddr_t vaddr, paddr_t paddr, size_t len, pte_t flags); */
@@ -162,10 +162,10 @@ FUNCTION _start
     /* map a large run of physical memory at the base of the kernel's address space
      * TODO(fxbug.dev/47856): Only map the arenas. */
     mov     x0, page_table1
-    mov     x1, %[KERNEL_ASPACE_BASE]
+    mov     x1, %[KERNEL_ASPACE_BASE] // 0xffff'0000'0000'0000
     mov     x2, 0
-    mov     x3, %[ARCH_PHYSMAP_SIZE]
-    movlit  x4, %[MMU_PTE_KERNEL_DATA_FLAGS]
+    mov     x3, %[ARCH_PHYSMAP_SIZE] // 1<<39=512G
+    movlit  x4, %[MMU_PTE_KERNEL_DATA_FLAGS] // 0x60'0000'0000'0708
     bl      arm64_boot_map
 
     /* map the kernel to a fixed address */
@@ -175,7 +175,7 @@ FUNCTION _start
     adr_g   x2, __code_start
     adr_g   x3, _end
     sub     x3, x3, x2
-    movlit  x4, %[MMU_PTE_KERNEL_RWX_FLAGS]
+    movlit  x4, %[MMU_PTE_KERNEL_RWX_FLAGS] // 0x40'0000'0000'0708
     bl      arm64_boot_map
 
     /* Prepare tt_trampoline page table.
@@ -187,14 +187,14 @@ FUNCTION _start
 .Lclear_tt_trampoline:
     str     xzr, [page_table0, tmp, lsl#3]
     add     tmp, tmp, #1
-    cmp     tmp, #%[MMU_IDENT_PAGE_TABLE_ENTRIES_TOP]
+    cmp     tmp, #%[MMU_IDENT_PAGE_TABLE_ENTRIES_TOP] // 512
     blt     .Lclear_tt_trampoline
 
     /* Setup mapping at phys -> phys */
     adr     tmp, .Lmmu_on_pc
-    lsr     tmp, tmp, #%[MMU_IDENT_TOP_SHIFT]    /* tmp = paddr index */
-    movlit  tmp2, %[MMU_PTE_IDENT_FLAGS]
-    add     tmp2, tmp2, tmp, lsl #%[MMU_IDENT_TOP_SHIFT]  /* tmp2 = pt entry */
+    lsr     tmp, tmp, #%[MMU_IDENT_TOP_SHIFT] // 30   /* tmp = paddr index */
+    movlit  tmp2, %[MMU_PTE_IDENT_FLAGS] // 0x40'0000'0000'0709
+    add     tmp2, tmp2, tmp, lsl #%[MMU_IDENT_TOP_SHIFT] // 30 /* tmp2 = pt entry */
 
     str     tmp2, [page_table0, tmp, lsl #3]  /* tt_trampoline[paddr index] = pt entry */
 
@@ -224,14 +224,14 @@ FUNCTION _start
     isb
 
     /* Initialize Memory Attribute Indirection Register */
-    movlit  tmp, %[MMU_MAIR_VAL]
+    movlit  tmp, %[MMU_MAIR_VAL] // 0x44ff'0400
     msr     mair_el1, tmp
 
     /* Initialize TCR_EL1 */
     /* set cacheable attributes on translation walk */
     /* (SMP extensions) non-shareable, inner write-back write-allocate */
     /* both aspaces active, current ASID in TTBR1 */
-    movlit  tmp, %[MMU_TCR_FLAGS_IDENT]
+    movlit  tmp, %[MMU_TCR_FLAGS_IDENT] // 0x12'b550'3519
     msr     tcr_el1, tmp
     isb
 
@@ -263,7 +263,7 @@ FUNCTION _start
 
 .Lmmu_on_vaddr:
     /* Disable trampoline page-table in ttbr0 */
-    movlit  tmp, %[MMU_TCR_FLAGS_KERNEL]
+    movlit  tmp, %[MMU_TCR_FLAGS_KERNEL] // 0x12'b550'3590
     msr     tcr_el1, tmp
     isb
 
@@ -298,7 +298,7 @@ FUNCTION _start
     // Choose a good (ideally random) stack-guard value as early as possible.
     bl      choose_stack_guard
     mrs     tmp, tpidr_el1
-    str     x0, [tmp, #%[ZX_TLS_STACK_GUARD_OFFSET]]
+    str     x0, [tmp, #%[ZX_TLS_STACK_GUARD_OFFSET]] // -0x10
     // Don't leak the value to other code.
     mov     x0, xzr
 
@@ -360,14 +360,14 @@ END_DATA boot_cpu_fake_arch_thread
 
 .bss
 LOCAL_DATA boot_cpu_kstack
-    .skip %[ARCH_DEFAULT_STACK_SIZE]
+    .skip %[ARCH_DEFAULT_STACK_SIZE] // 8192
     .balign 16
 LOCAL_DATA boot_cpu_kstack_end
 END_DATA boot_cpu_kstack
 
 #if __has_feature(safe_stack)
 LOCAL_DATA boot_cpu_unsafe_kstack
-    .skip %[ARCH_DEFAULT_STACK_SIZE]
+    .skip %[ARCH_DEFAULT_STACK_SIZE] // 8192
     .balign 16
 LOCAL_DATA boot_cpu_unsafe_kstack_end
 END_DATA boot_cpu_unsafe_kstack
@@ -376,34 +376,34 @@ END_DATA boot_cpu_unsafe_kstack
 .if %[HAS_FEATURE_SHADOW_CALL_STACK]
     .balign 8
 LOCAL_DATA boot_cpu_shadow_call_kstack
-    .skip %[PAGE_SIZE]
+    .skip %[PAGE_SIZE] // 4096
 END_DATA boot_cpu_shadow_call_kstack
 .endif
 
 .section .bss.prebss.translation_table, "aw", @nobits
-.align 3 + %[MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT]
+.align 3 + %[MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT] // 9
 DATA tt_trampoline
-    .skip 8 * %[MMU_IDENT_PAGE_TABLE_ENTRIES_TOP]
+    .skip 8 * %[MMU_IDENT_PAGE_TABLE_ENTRIES_TOP] // 512
 END_DATA tt_trampoline
 
 )"
       :
-      : [MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP] "i"(MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP),           //
-        [KERNEL_ASPACE_BASE] "i"(KERNEL_ASPACE_BASE),                                         //
-        [MMU_PTE_KERNEL_RWX_FLAGS] "i"(MMU_PTE_KERNEL_RWX_FLAGS),                             //
-        [MMU_PTE_KERNEL_DATA_FLAGS] "i"(MMU_PTE_KERNEL_DATA_FLAGS),                           //
-        [ARCH_PHYSMAP_SIZE] "i"(ARCH_PHYSMAP_SIZE),                                           //
-        [MMU_IDENT_PAGE_TABLE_ENTRIES_TOP] "i"(MMU_IDENT_PAGE_TABLE_ENTRIES_TOP),             //
-        [MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT] "i"(MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT), //
-        [MMU_IDENT_TOP_SHIFT] "i"(MMU_IDENT_TOP_SHIFT()),                                     //
-        [MMU_PTE_IDENT_FLAGS] "i"(MMU_PTE_IDENT_FLAGS),                                       //
-        [MMU_MAIR_VAL] "i"(MMU_MAIR_VAL),                                                     //
-        [MMU_TCR_FLAGS_IDENT] "i"(MMU_TCR_FLAGS_IDENT),                                       //
-        [MMU_TCR_FLAGS_KERNEL] "i"(MMU_TCR_FLAGS_KERNEL),                                     //
-        [ZX_TLS_STACK_GUARD_OFFSET] "i"(ZX_TLS_STACK_GUARD_OFFSET),                           //
-        [ARCH_DEFAULT_STACK_SIZE] "i"(ARCH_DEFAULT_STACK_SIZE),                               //
-        [PAGE_SIZE] "i"(PAGE_SIZE),                                                           //
-        [HAS_FEATURE_SHADOW_CALL_STACK] "i"(HAS_FEATURE_SHADOW_CALL_STACK)                    //
+      : [MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP] "i"(MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP),           // 512
+        [KERNEL_ASPACE_BASE] "i"(KERNEL_ASPACE_BASE),                                         // 0xffff'0000'0000'0000UL
+        [MMU_PTE_KERNEL_RWX_FLAGS] "i"(MMU_PTE_KERNEL_RWX_FLAGS),                             // 0x40'0000'0000'0708
+        [MMU_PTE_KERNEL_DATA_FLAGS] "i"(MMU_PTE_KERNEL_DATA_FLAGS),                           // 0x60'0000'0000'0708
+        [ARCH_PHYSMAP_SIZE] "i"(ARCH_PHYSMAP_SIZE),                                           // 0x80'0000'0000=512G
+        [MMU_IDENT_PAGE_TABLE_ENTRIES_TOP] "i"(MMU_IDENT_PAGE_TABLE_ENTRIES_TOP),             // 512
+        [MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT] "i"(MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT), // 9
+        [MMU_IDENT_TOP_SHIFT] "i"(MMU_IDENT_TOP_SHIFT),                                       // 30
+        [MMU_PTE_IDENT_FLAGS] "i"(MMU_PTE_IDENT_FLAGS),                                       // 0x40'0000'0000'0709
+        [MMU_MAIR_VAL] "i"(MMU_MAIR_VAL),                                                     // 0x44ff'0400
+        [MMU_TCR_FLAGS_IDENT] "i"(MMU_TCR_FLAGS_IDENT),                                       // 0x12'b550'3519
+        [MMU_TCR_FLAGS_KERNEL] "i"(MMU_TCR_FLAGS_KERNEL),                                     // 0x12'b550'3590
+        [ZX_TLS_STACK_GUARD_OFFSET] "i"(ZX_TLS_STACK_GUARD_OFFSET),                           // -0x10
+        [ARCH_DEFAULT_STACK_SIZE] "i"(ARCH_DEFAULT_STACK_SIZE),                               // 8192
+        [PAGE_SIZE] "i"(PAGE_SIZE),                                                           // 4096
+        [HAS_FEATURE_SHADOW_CALL_STACK] "i"(HAS_FEATURE_SHADOW_CALL_STACK)                    // 0
 
       : "cc", "memory");
 }

@@ -7,22 +7,22 @@ consteval auto BM(auto base, auto count, auto val) { return (val & ((1UL << coun
 // Block/Page attrs
 constexpr auto MMU_PTE_ATTR_RES_SOFTWARE       = BM(55, 4, 0xf);
 constexpr auto MMU_PTE_ATTR_XN                 = BM(54, 1, 1); // for single translation regimes
-constexpr auto MMU_PTE_ATTR_UXN                = BM(54, 1, 1);
-constexpr auto MMU_PTE_ATTR_PXN                = BM(53, 1, 1);
-constexpr auto MMU_PTE_ATTR_CONTIGUOUS         = BM(52, 1, 1);
+constexpr auto MMU_PTE_ATTR_UXN                = BM(54, 1, 1); // 1<<54
+constexpr auto MMU_PTE_ATTR_PXN                = BM(53, 1, 1); // 1<<53
+constexpr auto MMU_PTE_ATTR_CONTIGUOUS         = BM(52, 1, 1); // 1<<52
 
-constexpr auto MMU_PTE_ATTR_NON_GLOBAL         = BM(11, 1, 1);
-constexpr auto MMU_PTE_ATTR_AF                 = BM(10, 1, 1);
+constexpr auto MMU_PTE_ATTR_NON_GLOBAL         = BM(11, 1, 1); // 1<<11
+constexpr auto MMU_PTE_ATTR_AF                 = BM(10, 1, 1); // 1<<10
 
-constexpr auto MMU_PTE_ATTR_SH_NON_SHAREABLE   = BM(8, 2, 0);
-constexpr auto MMU_PTE_ATTR_SH_OUTER_SHAREABLE = BM(8, 2, 2);
-constexpr auto MMU_PTE_ATTR_SH_INNER_SHAREABLE = BM(8, 2, 3);
+constexpr auto MMU_PTE_ATTR_SH_NON_SHAREABLE   = BM(8, 2, 0); // 0
+constexpr auto MMU_PTE_ATTR_SH_OUTER_SHAREABLE = BM(8, 2, 2); // 2<<8
+constexpr auto MMU_PTE_ATTR_SH_INNER_SHAREABLE = BM(8, 2, 3); // 3<<8
 
-constexpr auto MMU_PTE_ATTR_AP_P_RW_U_NA       = BM(6, 2, 0);
-constexpr auto MMU_PTE_ATTR_AP_P_RW_U_RW       = BM(6, 2, 1);
-constexpr auto MMU_PTE_ATTR_AP_P_RO_U_NA       = BM(6, 2, 2);
-constexpr auto MMU_PTE_ATTR_AP_P_RO_U_RO       = BM(6, 2, 3);
-constexpr auto MMU_PTE_ATTR_AP_MASK            = BM(6, 2, 3);
+constexpr auto MMU_PTE_ATTR_AP_P_RW_U_NA       = BM(6, 2, 0); // 0
+constexpr auto MMU_PTE_ATTR_AP_P_RW_U_RW       = BM(6, 2, 1); // 1<<6
+constexpr auto MMU_PTE_ATTR_AP_P_RO_U_NA       = BM(6, 2, 2); // 2<<6
+constexpr auto MMU_PTE_ATTR_AP_P_RO_U_RO       = BM(6, 2, 3); // 3<<6
+constexpr auto MMU_PTE_ATTR_AP_MASK            = BM(6, 2, 3); // 3<<6
 
 constexpr auto MMU_PTE_ATTR_NON_SECURE         = BM(5, 1, 1);
 
@@ -32,9 +32,12 @@ constexpr auto MMU_PTE_ATTR_ATTR_INDEX_MASK = MMU_PTE_ATTR_ATTR_INDEX(7);
 constexpr auto MMU_PTE_PERMISSION_MASK      = (MMU_PTE_ATTR_AP_MASK | MMU_PTE_ATTR_UXN | MMU_PTE_ATTR_PXN);
 
 constexpr auto MMU_PTE_ATTR_NORMAL_MEMORY   = MMU_PTE_ATTR_ATTR_INDEX(2);
+static_assert(MMU_PTE_ATTR_NORMAL_MEMORY == 8);
 
-constexpr auto MMU_PTE_KERNEL_RWX_FLAGS     = (MMU_PTE_ATTR_UXN | MMU_PTE_ATTR_AF | MMU_PTE_ATTR_SH_INNER_SHAREABLE |
+constexpr auto MMU_PTE_KERNEL_RWX_FLAGS = (MMU_PTE_ATTR_UXN | MMU_PTE_ATTR_AF | MMU_PTE_ATTR_SH_INNER_SHAREABLE |
                                            MMU_PTE_ATTR_NORMAL_MEMORY | MMU_PTE_ATTR_AP_P_RW_U_NA);
+static_assert(MMU_PTE_KERNEL_RWX_FLAGS == ((1ULL << 54) | (1 << 10) | (3 << 8) | (8) | (0)));
+static_assert(MMU_PTE_KERNEL_RWX_FLAGS == 0x40000000000708);
 
 constexpr auto MMU_PTE_KERNEL_RO_FLAGS =
     (MMU_PTE_ATTR_UXN | MMU_PTE_ATTR_PXN | MMU_PTE_ATTR_AF | MMU_PTE_ATTR_SH_INNER_SHAREABLE |
@@ -43,6 +46,8 @@ constexpr auto MMU_PTE_KERNEL_RO_FLAGS =
 constexpr auto MMU_PTE_KERNEL_DATA_FLAGS =
     (MMU_PTE_ATTR_UXN | MMU_PTE_ATTR_PXN | MMU_PTE_ATTR_AF | MMU_PTE_ATTR_SH_INNER_SHAREABLE |
      MMU_PTE_ATTR_NORMAL_MEMORY | MMU_PTE_ATTR_AP_P_RW_U_NA);
+static_assert(MMU_PTE_KERNEL_DATA_FLAGS == ((1ULL << 54) | (1ULL << 53) | (1 << 10) | (3 << 8) | (8) | (0)));
+static_assert(MMU_PTE_KERNEL_DATA_FLAGS == 0x60000000000708);
 
 #define IFTE(c, t, e) (!!(c) * (t) | !(c) * (e))
 #define NBITS01(n)    IFTE(n, 1, 0)
@@ -113,7 +118,7 @@ consteval auto MMU_IDENT_PAGE_SIZE_SHIFT() {
     return (SHIFT_64K);
 }
 
-consteval auto MMU_IDENT_TOP_SHIFT() {
+consteval auto _MMU_IDENT_TOP_SHIFT() {
   if (MMU_IDENT_SIZE_SHIFT > MMU_LX_X(MMU_IDENT_PAGE_SIZE_SHIFT(), 0)) return MMU_LX_X(MMU_IDENT_PAGE_SIZE_SHIFT(), 0);
 
   if (MMU_IDENT_SIZE_SHIFT > MMU_LX_X(MMU_IDENT_PAGE_SIZE_SHIFT(), 1)) return MMU_LX_X(MMU_IDENT_PAGE_SIZE_SHIFT(), 1);
@@ -122,8 +127,10 @@ consteval auto MMU_IDENT_TOP_SHIFT() {
 
   if (MMU_IDENT_SIZE_SHIFT > MMU_LX_X(MMU_IDENT_PAGE_SIZE_SHIFT(), 3)) return MMU_LX_X(MMU_IDENT_PAGE_SIZE_SHIFT(), 3);
 }
+constexpr auto MMU_IDENT_TOP_SHIFT = _MMU_IDENT_TOP_SHIFT();
+static_assert(MMU_IDENT_TOP_SHIFT == 30);
 
-constexpr auto MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT = (MMU_IDENT_SIZE_SHIFT - MMU_IDENT_TOP_SHIFT());
+constexpr auto MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT = (MMU_IDENT_SIZE_SHIFT - MMU_IDENT_TOP_SHIFT);
 static_assert(MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT == 9);
 constexpr auto MMU_IDENT_PAGE_TABLE_ENTRIES_TOP = 0x1 << MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT;
 static_assert(MMU_IDENT_PAGE_TABLE_ENTRIES_TOP == 512);
@@ -148,34 +155,41 @@ consteval auto MMU_PTE_IDENT_DESCRIPTOR() {
   return MMU_PTE_L3_DESCRIPTOR_PAGE;
 }
 constexpr auto MMU_PTE_IDENT_FLAGS = (MMU_PTE_IDENT_DESCRIPTOR() | MMU_PTE_KERNEL_RWX_FLAGS);
+static_assert(MMU_PTE_IDENT_FLAGS == (1 | 0x40000000000708));
+static_assert(MMU_PTE_IDENT_FLAGS == 0x40000000000709);
 
 //------------
-consteval auto MMU_MAIR_ATTR(auto index, auto attr) { return BM(index * 8, 8, (attr)); }
+consteval auto MMU_MAIR_ATTR(auto index, auto attr) { return BM(index * 8, 8, attr); }
 // Device-nGnRnE memory
-constexpr auto MMU_MAIR_ATTR0                = MMU_MAIR_ATTR(0, 0x00);
+constexpr auto MMU_MAIR_ATTR0 = MMU_MAIR_ATTR(0, 0x00);
+static_assert(MMU_MAIR_ATTR0 == 0);
 constexpr auto MMU_PTE_ATTR_STRONGLY_ORDERED = MMU_PTE_ATTR_ATTR_INDEX(0);
 
 // Device-nGnRE memory
 constexpr auto MMU_MAIR_ATTR1                = MMU_MAIR_ATTR(1, 0x04);
-constexpr auto MMU_PTE_ATTR_DEVICE           = MMU_PTE_ATTR_ATTR_INDEX(1);
+static_assert(MMU_MAIR_ATTR1 == 0x400);
+constexpr auto MMU_PTE_ATTR_DEVICE = MMU_PTE_ATTR_ATTR_INDEX(1);
 
 // Normal Memory, Outer Write-back non-transient Read/Write allocate,
 // Inner Write-back non-transient Read/Write allocate
 //
-constexpr auto MMU_MAIR_ATTR2                = MMU_MAIR_ATTR(2, 0xff);
+constexpr auto MMU_MAIR_ATTR2      = MMU_MAIR_ATTR(2, 0xff);
+static_assert(MMU_MAIR_ATTR2 == 0xff0000);
 // constexpr auto MMU_PTE_ATTR_NORMAL_MEMORY    = MMU_PTE_ATTR_ATTR_INDEX(2);
 
 // Normal Memory, Inner/Outer uncached, Write Combined
-constexpr auto MMU_MAIR_ATTR3                = MMU_MAIR_ATTR(3, 0x44);
-constexpr auto MMU_PTE_ATTR_NORMAL_UNCACHED  = MMU_PTE_ATTR_ATTR_INDEX(3);
+constexpr auto MMU_MAIR_ATTR3 = MMU_MAIR_ATTR(3, 0x44);
+static_assert(MMU_MAIR_ATTR3 == 0x44000000);
+constexpr auto MMU_PTE_ATTR_NORMAL_UNCACHED = MMU_PTE_ATTR_ATTR_INDEX(3);
 
-constexpr auto MMU_MAIR_ATTR4                = (0);
-constexpr auto MMU_MAIR_ATTR5                = (0);
-constexpr auto MMU_MAIR_ATTR6                = (0);
-constexpr auto MMU_MAIR_ATTR7                = (0);
+constexpr auto MMU_MAIR_ATTR4               = 0;
+constexpr auto MMU_MAIR_ATTR5               = 0;
+constexpr auto MMU_MAIR_ATTR6               = 0;
+constexpr auto MMU_MAIR_ATTR7               = 0;
 
 constexpr auto MMU_MAIR_VAL = MMU_MAIR_ATTR0 | MMU_MAIR_ATTR1 | MMU_MAIR_ATTR2 | MMU_MAIR_ATTR3 | MMU_MAIR_ATTR4 |
                               MMU_MAIR_ATTR5 | MMU_MAIR_ATTR6 | MMU_MAIR_ATTR7;
+static_assert(MMU_MAIR_VAL == 0x44ff0400);
 
 //------------
 
@@ -202,14 +216,14 @@ constexpr auto MMU_TCR_EL2_RES1                  = (BM(31, 1, 1) | BM(23, 1, 1))
 // TODO: read at runtime, or configure per platform
 constexpr auto MMU_TCR_IPS_DEFAULT               = MMU_TCR_IPS(2); // 40 bits;
 
-constexpr auto MMU_SH_NON_SHAREABLE              = (0);
-constexpr auto MMU_SH_OUTER_SHAREABLE            = (2);
-constexpr auto MMU_SH_INNER_SHAREABLE            = (3);
+constexpr auto MMU_SH_NON_SHAREABLE              = 0;
+constexpr auto MMU_SH_OUTER_SHAREABLE            = 2;
+constexpr auto MMU_SH_INNER_SHAREABLE            = 3;
 
-constexpr auto MMU_RGN_NON_CACHEABLE             = (0);
-constexpr auto MMU_RGN_WRITE_BACK_ALLOCATE       = (1);
-constexpr auto MMU_RGN_WRITE_THROUGH_NO_ALLOCATE = (2);
-constexpr auto MMU_RGN_WRITE_BACK_NO_ALLOCATE    = (3);
+constexpr auto MMU_RGN_NON_CACHEABLE             = 0;
+constexpr auto MMU_RGN_WRITE_BACK_ALLOCATE       = 1;
+constexpr auto MMU_RGN_WRITE_THROUGH_NO_ALLOCATE = 2;
+constexpr auto MMU_RGN_WRITE_BACK_NO_ALLOCATE    = 3;
 
 // TCR TGx values
 //
@@ -239,16 +253,14 @@ constexpr auto MMU_TCR_FLAGS0_IDENT =
      MMU_TCR_ORGN0(MMU_RGN_WRITE_BACK_ALLOCATE) | MMU_TCR_IRGN0(MMU_RGN_WRITE_BACK_ALLOCATE) |
      MMU_TCR_T0SZ(64 - MMU_IDENT_SIZE_SHIFT));
 
-// TCR while using the boot trampoline.
-// Both TTBRs active, ASID set to kernel, ident page granule selected for user half.
+// TCR while using the boot trampoline. Both TTBRs active, ASID set to kernel, ident page granule selected for user half
 constexpr auto MMU_TCR_FLAGS_IDENT =
     (MMU_TCR_IPS_DEFAULT | MMU_TCR_FLAGS1 | MMU_TCR_FLAGS0_IDENT | MMU_TCR_AS | MMU_TCR_A1);
+static_assert(MMU_TCR_FLAGS_IDENT == 0x12'b550'3519);
 
-// TCR while a kernel only (no user address space) thread is active.
-// User page walks disabled, ASID set to kernel.
+// TCR while a kernel only (no user address space) thread is active. User page walks disabled, ASID set to kernel
 constexpr auto MMU_TCR_FLAGS_KERNEL =
     (MMU_TCR_IPS_DEFAULT | MMU_TCR_FLAGS1 | MMU_TCR_FLAGS0 | MMU_TCR_EPD0 | MMU_TCR_AS | MMU_TCR_A1);
-
-// TCR while a user mode thread is active in user or kernel space.
-// Both TTBrs active, ASID set to user.
+static_assert(MMU_TCR_FLAGS_KERNEL == 0x12'b550'3590);
+// TCR while a user mode thread is active in user or kernel space. Both TTBrs active, ASID set to user
 constexpr auto MMU_TCR_FLAGS_USER = (MMU_TCR_IPS_DEFAULT | MMU_TCR_FLAGS1 | MMU_TCR_FLAGS0 | MMU_TCR_TBI0 | MMU_TCR_AS);
