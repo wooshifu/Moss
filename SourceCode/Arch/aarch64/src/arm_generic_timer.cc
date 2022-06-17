@@ -6,21 +6,17 @@
 namespace arch {
 
   // This is the C++ type that the assembly macro `sample_ticks` delivers.
-  // Higher-level kernel code knows how to translate this into the Zircon
-  // monotonic clock's zx_ticks_t.
+  // Higher-level kernel code knows how to translate this into the Zircon monotonic clock's zx_ticks_t.
   struct EarlyTicks {
     u64 cntpct_el0;
     u64 cntvct_el0;
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wgnu-statement-expression"
     attr_always_inline static EarlyTicks Get() {
       return {
           __arm_rsr64("cntpct_el0"),
           __arm_rsr64("cntvct_el0"),
       };
     }
-#pragma clang diagnostic pop
 
     attr_always_inline static EarlyTicks Zero() { return {0, 0}; }
   };
