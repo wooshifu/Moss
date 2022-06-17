@@ -4,11 +4,14 @@ OUTPUT_ARCH(aarch64)
 ENTRY(_start)
 SECTIONS
 {
-    . = 0x00080000;
+    /* kernel_relocated_base=0xffffffff00000000 */
+    /* the load address is kernel.elf entrypoint */
+    /* because all code is (position independent code)pic, os the address is mainly for gdb debugging */
+    . = 0xffffffff00000000;
 
     /* text/read-only data */
     /* set the load address to physical MEMBASE */
-    .text : {
+    .text : AT(0x80000) {
         __code_start = .;
         KEEP(*(.text.boot))
         *(.text* .gnu.linkonce.t.*)
