@@ -84,7 +84,8 @@ function(setup_compiler_flags IN_board IN_arch)
             "-Werror"
             ${ignore_specific_warnings}
             "-MD"
-            "-fpic"
+            "-fPIC"
+            "-fPIE"
             "-ffreestanding"
             "-fno-builtin"
             "-fno-exceptions"
