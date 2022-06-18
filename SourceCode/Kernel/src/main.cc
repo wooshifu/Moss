@@ -1,13 +1,9 @@
 #include "libcxx/attr.hh"
 #include "libcxx/macros.hh"
-#include "libcxx/types.hh" // for u64
+#include "libcxx/types.hh"
 
-u64 xxx = 0x1122334455667788;
-
-attr_used attr_noreturn extern_C void kernel_main() {
+attr_noreturn extern_C void kernel_main(attr_maybe_unused paddr_t handoff_paddr) {
   while (true) {
-    attr_maybe_unused u64 xx = xxx;
+    asm("wfe");
   }
-
-  while (true) {}
 }

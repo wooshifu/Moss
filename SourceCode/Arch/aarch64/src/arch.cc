@@ -1,6 +1,7 @@
-#include "aarch64/mp.hh"    // for SMP_MAX_CPUS
-#include "libcxx/macros.hh" // for extern_C
-#include "libcxx/types.hh"  // for uintptr_t, u64
+#include "aarch64/mp.hh"      // for CONF_SMP_MAX_CPUS
+#include "libcxx/compiler.hh" // for offsetof
+#include "libcxx/macros.hh"   // for extern_C
+#include "libcxx/types.hh"    // for uintptr_t, u64
 
 struct arm64_sp_info_t {
   u64 mpid;
@@ -15,7 +16,11 @@ struct arm64_sp_info_t {
   void* unsafe_sp;
 };
 
+static_assert(sizeof(arm64_sp_info_t) == 40, "check arm64_get_secondary_sp assembly");
+static_assert(offsetof(arm64_sp_info_t, sp) == 8, "check arm64_get_secondary_sp assembly");
+static_assert(offsetof(arm64_sp_info_t, mpid) == 0, "check arm64_get_secondary_sp assembly");
+
 // one for each CPU
-arm64_sp_info_t arm64_secondary_sp_list[SMP_MAX_CPUS];
+arm64_sp_info_t arm64_secondary_sp_list[CONF_SMP_MAX_CPUS];
 
 extern_C void arm64_secondary_entry() {}

@@ -1,18 +1,19 @@
-#include "aarch64/mp.hh"  // for SMP_MAX_CPUS
+#include "aarch64/mp.hh"  // for CONF_SMP_MAX_CPUS
 #include "libcxx/attr.hh" // for attr_naked, attr_noreturn, attr_optnone
 
 attr_optnone attr_naked attr_noreturn void _arm64_get_secondary_sp() {
   asm volatile(
       R"(
 .include "libstd/asm.hh"
-.include "aarch64/asm_macros.hh"
+.include "aarch64/asm.hh"
 
 FUNCTION arm64_get_secondary_sp
     mrs     x9, mpidr_el1
     movlit  x10, 0xff00ffffff  // Mask for AFFx (cluster) IDs.
     and     x9, x9, x10
-    mov     x10, #%[SMP_MAX_CPUS]
+    mov     x10, #%[CONF_SMP_MAX_CPUS]
 
+    // todo: arm64_secondary_sp_list currently is empty, spin here to wait arm64_secondary_sp_list not empty
     adr_g   x11, arm64_secondary_sp_list
 
 .Lsp_loop:
@@ -36,6 +37,6 @@ FUNCTION arm64_get_secondary_sp
 END_FUNCTION arm64_get_secondary_sp
        )"
       :
-      : [SMP_MAX_CPUS] "i"(SMP_MAX_CPUS)
+      : [CONF_SMP_MAX_CPUS] "i"(CONF_SMP_MAX_CPUS)
       : "cc", "memory");
 }

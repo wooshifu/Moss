@@ -49,14 +49,14 @@ constexpr auto MMU_PTE_KERNEL_DATA_FLAGS =
 static_assert(MMU_PTE_KERNEL_DATA_FLAGS == ((1ULL << 54) | (1ULL << 53) | (1 << 10) | (3 << 8) | (8) | (0)));
 static_assert(MMU_PTE_KERNEL_DATA_FLAGS == 0x60000000000708);
 
-#define IFTE(c, t, e) (!!(c) * (t) | !(c) * (e))
-#define NBITS01(n)    IFTE(n, 1, 0)
-#define NBITS02(n)    IFTE((n) >> 1, 1 + NBITS01((n) >> 1), NBITS01(n))
-#define NBITS04(n)    IFTE((n) >> 2, 2 + NBITS02((n) >> 2), NBITS02(n))
-#define NBITS08(n)    IFTE((n) >> 4, 4 + NBITS04((n) >> 4), NBITS04(n))
-#define NBITS16(n)    IFTE((n) >> 8, 8 + NBITS08((n) >> 8), NBITS08(n))
-#define NBITS32(n)    IFTE((n) >> 16, 16 + NBITS16((n) >> 16), NBITS16(n))
-#define NBITS(n)      IFTE((n) >> 32, 32 + NBITS32((n) >> 32), NBITS32(n))
+consteval auto IFTE(auto c, auto t, auto e) { return ((!!c) * t | !c * e); }
+consteval auto NBITS01(auto n) { return IFTE(n, 1, 0); }
+consteval auto NBITS02(auto n) { return IFTE(n >> 1, 1 + NBITS01(n >> 1), NBITS01(n)); }
+consteval auto NBITS04(auto n) { return IFTE(n >> 2, 2 + NBITS02(n >> 2), NBITS02(n)); }
+consteval auto NBITS08(auto n) { return IFTE(n >> 4, 4 + NBITS04(n >> 4), NBITS04(n)); }
+consteval auto NBITS16(auto n) { return IFTE(n >> 8, 8 + NBITS08(n >> 8), NBITS08(n)); }
+consteval auto NBITS32(auto n) { return IFTE(n >> 16, 16 + NBITS16(n >> 16), NBITS16(n)); }
+consteval auto NBITS(auto n) { return IFTE(n >> 32, 32 + NBITS32(n >> 32), NBITS32(n)); }
 
 constexpr auto KERNEL_ASPACE_BITS = NBITS(0xffffffffffffffff - KERNEL_ASPACE_BASE);
 static_assert(KERNEL_ASPACE_BITS == 48);

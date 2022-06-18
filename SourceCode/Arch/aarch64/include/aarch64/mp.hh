@@ -1,6 +1,7 @@
 #pragma once
 
 #include "feature.hh"      // for arm64_microarch
+#include "kconfig.hh"      // for CONFIG_SMP_MAX_CPUS
 #include "libcxx/attr.hh"  // for attr_aligned
 #include "libcxx/types.hh" // for u32
 
@@ -34,4 +35,4 @@ struct attr_aligned(MAX_CACHE_LINE) arm64_percpu {
   percpu* high_level_percpu;
 };
 
-constexpr auto SMP_MAX_CPUS = 64; // todo: what value should SMP_MAX_CPUS be???
+constexpr auto CONF_SMP_MAX_CPUS = CONFIG_SMP_MAX_CPUS;

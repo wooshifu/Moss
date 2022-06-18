@@ -1,23 +1,12 @@
+#include "aarch64/arch.hh"
 #include "aarch64/mmu.hh"
 #include "kernel/space.hh"
 #include "libcxx/attr.hh"
 
-constexpr auto HAS_FEATURE_SHADOW_CALL_STACK = __has_feature(shadow_call_stack);
-static_assert(!HAS_FEATURE_SHADOW_CALL_STACK);
-
-constexpr auto ARCH_DEFAULT_STACK_SIZE   = 8192;
-
-/* map 512GB at the base of the kernel.
- * this is the max that can be mapped with a single level 1 page table using 1GB pages.
- */
-constexpr auto ARCH_PHYSMAP_SIZE         = 1UL << 39;
-
-constexpr auto ZX_TLS_STACK_GUARD_OFFSET = -0x10;
-
-attr_optnone attr_naked attr_noreturn attr_used void __start() {
+attr_optnone attr_naked attr_noreturn attr_maybe_unused void __start() {
+  // all asm code must be position independent code(pic) code
   asm volatile(
       R"(
-.include "aarch64/asm_macros.hh"
 .include "aarch64/asm.hh"
 .include "libstd/asm.hh"
 
@@ -111,12 +100,6 @@ FUNCTION _start
     // Send secondary cpus over to a waiting spot for the primary to finish.
     cbnz    cpuid, .Lmmu_enable_secondary
 
-    // The fixup code appears right after the kernel image (at __data_end in
-    // our view).  Note this code overlaps with the kernel's bss!  It
-    // expects x0 to contain the actual runtime address of __code_start.
-//    mov     x0, kernel_vaddr
-//    bl      __data_end
-
     /* clear out the kernel's bss using current physical location */
     /* NOTE: Relies on __bss_start and _end being 16 byte aligned */
 .Ldo_bss:
@@ -134,9 +117,12 @@ FUNCTION _start
     adr_g   tmp, boot_cpu_kstack_end
     mov     sp, tmp
 
-    /* make sure the boot allocator is given a chance to figure out where
-     * we are loaded in physical memory. */
-//    bl      boot_alloc_init // todo: replace with assembly code
+    /* make sure the boot allocator is given a chance to figure out where we are loaded in physical memory. */
+    adr_g   tmp, boot_alloc_start
+    adr_g   tmp2, _end
+    str     tmp2, [tmp]
+    adr_g   tmp, boot_alloc_end
+    str     tmp2, [tmp]
 
     /* save the physical address the kernel is loaded at */
     adr_g   x0, __code_start
@@ -160,7 +146,7 @@ FUNCTION _start
     /* void arm64_boot_map(pte_t* kernel_table0, vaddr_t vaddr, paddr_t paddr, size_t len, pte_t flags); */
 
     /* map a large run of physical memory at the base of the kernel's address space
-     * TODO(fxbug.dev/47856): Only map the arenas. */
+    /* from 0xffff'0000'0000'0000 to 0xffff'0080'0000'0000 */
     mov     x0, page_table1
     mov     x1, %[KERNEL_ASPACE_BASE] // 0xffff'0000'0000'0000
     mov     x2, 0
@@ -170,8 +156,9 @@ FUNCTION _start
 
     /* map the kernel to a fixed address */
     /* note: mapping the kernel here with full rwx, this will get locked down later in vm initialization; */
+    /* from 0xffff'ffff'0000'0000 to 0xffff'ffff'0000'0000+(sizeof kernel.elf) */
     mov     x0, page_table1
-    mov     x1, kernel_vaddr
+    mov     x1, kernel_vaddr // kernel_relocated_base==0xffff'ffff'0000'0000
     adr_g   x2, __code_start
     adr_g   x3, _end
     sub     x3, x3, x2
@@ -287,20 +274,9 @@ FUNCTION _start
     // path, which (unlike on x86, e.g.) is enough to get annoying.
     adr_g   tmp, boot_cpu_fake_thread_pointer_location
     msr     tpidr_el1, tmp
-.if %[HAS_FEATURE_SHADOW_CALL_STACK]
-    // The shadow call stack grows up.
-    adr_g   shadow_call_sp, boot_cpu_shadow_call_kstack
-.endif
 
     // set the per cpu pointer for cpu 0
     adr_g   percpu_ptr, arm64_percpu_array
-
-    // Choose a good (ideally random) stack-guard value as early as possible.
-    bl      choose_stack_guard
-    mrs     tmp, tpidr_el1
-    str     x0, [tmp, #%[ZX_TLS_STACK_GUARD_OFFSET]] // -0x10
-    // Don't leak the value to other code.
-    mov     x0, xzr
 
     // Collect the time stamp of entering "normal" C++ code in virtual space.
     sample_ticks
@@ -311,13 +287,10 @@ FUNCTION _start
     b   .
 
 .Lsecondary_boot:
-    bl      arm64_get_secondary_sp
+    bl      arm64_get_secondary_sp // todo: arm64_get_secondary_sp currently not processed, arm64_get_secondary_sp currently will always return 0
     cbz     x0, .Lunsupported_cpu_trap
     mov     sp, x0
     msr     tpidr_el1, x1
-.if %[HAS_FEATURE_SHADOW_CALL_STACK]
-    mov     shadow_call_sp, x2
-.endif
 
     bl      arm64_secondary_entry
 
@@ -350,11 +323,7 @@ END_DATA page_tables_not_ready
     .balign 8
 LOCAL_DATA boot_cpu_fake_arch_thread
     .quad 0xdeadbeef1ee2d00d // stack_guard
-//.if __has_feature(safe_stack)
-//    .quad boot_cpu_unsafe_kstack_end
-//.else
     .quad 0
-//.endif
 LOCAL_DATA boot_cpu_fake_thread_pointer_location
 END_DATA boot_cpu_fake_arch_thread
 
@@ -364,21 +333,6 @@ LOCAL_DATA boot_cpu_kstack
     .balign 16
 LOCAL_DATA boot_cpu_kstack_end
 END_DATA boot_cpu_kstack
-
-#if __has_feature(safe_stack)
-LOCAL_DATA boot_cpu_unsafe_kstack
-    .skip %[ARCH_DEFAULT_STACK_SIZE] // 8192
-    .balign 16
-LOCAL_DATA boot_cpu_unsafe_kstack_end
-END_DATA boot_cpu_unsafe_kstack
-#endif
-
-.if %[HAS_FEATURE_SHADOW_CALL_STACK]
-    .balign 8
-LOCAL_DATA boot_cpu_shadow_call_kstack
-    .skip %[PAGE_SIZE] // 4096
-END_DATA boot_cpu_shadow_call_kstack
-.endif
 
 .section .bss.prebss.translation_table, "aw", @nobits
 .align 3 + %[MMU_IDENT_PAGE_TABLE_ENTRIES_TOP_SHIFT] // 9
@@ -400,10 +354,7 @@ END_DATA tt_trampoline
         [MMU_MAIR_VAL] "i"(MMU_MAIR_VAL),                                                     // 0x44ff'0400
         [MMU_TCR_FLAGS_IDENT] "i"(MMU_TCR_FLAGS_IDENT),                                       // 0x12'b550'3519
         [MMU_TCR_FLAGS_KERNEL] "i"(MMU_TCR_FLAGS_KERNEL),                                     // 0x12'b550'3590
-        [ZX_TLS_STACK_GUARD_OFFSET] "i"(ZX_TLS_STACK_GUARD_OFFSET),                           // -0x10
-        [ARCH_DEFAULT_STACK_SIZE] "i"(ARCH_DEFAULT_STACK_SIZE),                               // 8192
-        [PAGE_SIZE] "i"(PAGE_SIZE),                                                           // 4096
-        [HAS_FEATURE_SHADOW_CALL_STACK] "i"(HAS_FEATURE_SHADOW_CALL_STACK)                    // 0
+        [ARCH_DEFAULT_STACK_SIZE] "i"(ARCH_DEFAULT_STACK_SIZE)                                // 8192
 
       : "cc", "memory");
 }
