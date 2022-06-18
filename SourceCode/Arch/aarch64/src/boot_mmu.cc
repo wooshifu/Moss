@@ -36,9 +36,9 @@ static size_t vaddr_to_l3_index(uintptr_t addr) {
   return (addr >> MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 3)) & (MMU_KERNEL_PAGE_TABLE_ENTRIES - 1);
 }
 
-using zx_status_t = i32;
-#define ZX_OK            (0)
-#define ZX_ERR_BAD_STATE (-20)
+using zx_status_t               = i32;
+constexpr auto ZX_OK            = 0;
+constexpr auto ZX_ERR_BAD_STATE = -20;
 
 // inner mapping routine passed two helper routines
 attr_no_safestack static inline zx_status_t _arm64_boot_map(pte_t* kernel_table0, const vaddr_t vaddr,
@@ -140,12 +140,12 @@ attr_no_safestack extern_C u64 arm64_boot_map(pte_t* kernel_table0, const vaddr_
   // off). any physical addresses calculated are assumed to be the same as virtual
   auto alloc = []() /*attr_no_safestack*/ -> paddr_t {
     // allocate a page out of the boot allocator, asking for a physical address
-    paddr_t pa           = boot_alloc_page_phys();
+    paddr_t pa          = boot_alloc_page_phys();
 
     // avoid using memset, since this relies on dc zva instruction, which isn't set up at
     // this point in the boot process
     // use a volatile pointer to make sure the compiler doesn't emit a memset call
-    volatile pte_t* vptr = reinterpret_cast<volatile pte_t*>(pa);
+    volatile auto* vptr = reinterpret_cast<volatile pte_t*>(pa);
     for (auto i = 0; i < MMU_KERNEL_PAGE_TABLE_ENTRIES; i++) {
       vptr[i] = 0;
     }

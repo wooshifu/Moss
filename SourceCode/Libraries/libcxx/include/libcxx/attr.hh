@@ -39,3 +39,11 @@
 #ifndef attr_always_inline
 #define attr_always_inline [[gnu::always_inline]]
 #endif
+
+#ifndef attr_likely
+#define attr_likely [[likely]]
+#endif
+
+#ifndef attr_unlikely
+#define attr_unlikely [[unlikely]]
+#endif
