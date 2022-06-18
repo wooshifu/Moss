@@ -1,0 +1,30 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "qemu-gdb-serer",
+      "type": "shell",
+      "command": "qemu-system-aarch64",
+      "args": [
+        "-M",
+        "raspi3b",
+        "-kernel",
+        "${workspaceFolder}/cmake-build-debug/bin/kernel.elf",
+        "-semihosting",
+        "-serial",
+        "null",
+        "-serial",
+        "mon:stdio",
+        "-nographic",
+        "-d",
+        "in_asm",
+        "-s",
+        "-S"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "none"
+    }
+  ]
+}
