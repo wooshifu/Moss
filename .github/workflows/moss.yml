@@ -19,6 +19,14 @@ jobs:
       with:
         submodules: 'recursive'
 
+    - uses: actions/checkout@v2
+    - name: Run clang-format style check for C/C++ programs.
+      uses: jidicula/clang-format-action@v4.6.2
+      with:
+        clang-format-version: '14'
+        check-path: 'SourceCode'
+        fallback-style: 'LLVM' # optional
+
     - name: Build In Docker
       shell: bash
       working-directory: ${{runner.workspace}}/${{github.event.repository.name}}/Docker
@@ -42,6 +50,14 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
+
+      - uses: actions/checkout@v2
+      - name: Run clang-format style check for C/C++ programs.
+        uses: jidicula/clang-format-action@v4.6.2
+        with:
+          clang-format-version: '14'
+          check-path: 'SourceCode'
+          fallback-style: 'LLVM' # optional
 
       - name: Install Dependencies
         shell: bash
