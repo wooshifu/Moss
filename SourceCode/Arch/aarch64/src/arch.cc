@@ -1,4 +1,5 @@
 #include "aarch64/mp.hh"      // for CONF_SMP_MAX_CPUS
+#include "libcxx/attr.hh"     // for attr_used
 #include "libcxx/compiler.hh" // for offsetof
 #include "libcxx/macros.hh"   // for extern_C
 #include "libcxx/types.hh"    // for uintptr_t, u64
@@ -21,6 +22,6 @@ static_assert(offsetof(arm64_sp_info_t, sp) == 8, "check arm64_get_secondary_sp 
 static_assert(offsetof(arm64_sp_info_t, mpid) == 0, "check arm64_get_secondary_sp assembly");
 
 // one for each CPU
-arm64_sp_info_t arm64_secondary_sp_list[CONF_SMP_MAX_CPUS];
+attr_used arm64_sp_info_t arm64_secondary_sp_list[CONF_SMP_MAX_CPUS];
 
-extern_C void arm64_secondary_entry() {}
+extern_C attr_used void arm64_secondary_entry() {}

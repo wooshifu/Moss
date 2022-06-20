@@ -11,7 +11,7 @@ attr_used paddr_t boot_alloc_end;
 
 // called from arch start.S
 // run in physical space without the mmu set up, so stick to basic, relocatable code
-attr_no_safestack paddr_t boot_alloc_page_phys() {
+paddr_t boot_alloc_page_phys() {
   paddr_t ptr    = ALIGN(boot_alloc_end, PAGE_SIZE);
   boot_alloc_end = ptr + PAGE_SIZE;
 

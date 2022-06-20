@@ -153,6 +153,8 @@ FUNCTION _start
     mov     x3, %[ARCH_PHYSMAP_SIZE] // 1<<39=512G
     movlit  x4, %[MMU_PTE_KERNEL_DATA_FLAGS] // 0x60'0000'0000'0708
     bl      arm64_boot_map
+    cmp     x0, #0
+    bne     .
 
     /* map the kernel to a fixed address */
     /* note: mapping the kernel here with full rwx, this will get locked down later in vm initialization; */
@@ -164,6 +166,8 @@ FUNCTION _start
     sub     x3, x3, x2
     movlit  x4, %[MMU_PTE_KERNEL_RWX_FLAGS] // 0x40'0000'0000'0708
     bl      arm64_boot_map
+    cmp     x0, #0
+    bne     .
 
     /* Prepare tt_trampoline page table.
      * this will identity map the 1GB page holding the physical address of this code.

@@ -2,7 +2,7 @@
 #include "libcxx/macros.hh"
 #include "libcxx/types.hh"
 
-attr_noreturn extern_C void kernel_main(attr_maybe_unused paddr_t handoff_paddr) {
+extern_C attr_noreturn attr_used void kernel_main(attr_maybe_unused paddr_t handoff_paddr) {
   while (true) {
     asm("wfe");
   }
