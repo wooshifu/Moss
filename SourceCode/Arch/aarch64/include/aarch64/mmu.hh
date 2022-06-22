@@ -58,7 +58,7 @@ consteval auto NBITS16(auto n) { return IFTE(n >> 8, 8 + NBITS08(n >> 8), NBITS0
 consteval auto NBITS32(auto n) { return IFTE(n >> 16, 16 + NBITS16(n >> 16), NBITS16(n)); }
 consteval auto NBITS(auto n) { return IFTE(n >> 32, 32 + NBITS32(n >> 32), NBITS32(n)); }
 
-constexpr auto KERNEL_ASPACE_BITS = NBITS(0xffffffffffffffff - KERNEL_ASPACE_BASE);
+constexpr auto KERNEL_ASPACE_BITS = NBITS(0xffffffffffffffff - KERNEL_SPACE_BASE);
 static_assert(KERNEL_ASPACE_BITS == 48);
 
 constexpr auto MMU_KERNEL_SIZE_SHIFT = KERNEL_ASPACE_BITS;

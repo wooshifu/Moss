@@ -89,7 +89,7 @@ FUNCTION _start
     orr     tmp, tmp, #(1<<2)  /* Enable dcache/ucache */
     msr     sctlr_el1, tmp
 
-    // This can be any arbitrary (page-aligned) address >= KERNEL_ASPACE_BASE.
+    // This can be any arbitrary (page-aligned) address >= KERNEL_SPACE_BASE.
     adr_g   tmp, kernel_relocated_base
     ldr     kernel_vaddr, [tmp]
 
@@ -148,7 +148,7 @@ FUNCTION _start
     /* map a large run of physical memory at the base of the kernel's address space
     /* from 0xffff'0000'0000'0000 to 0xffff'0080'0000'0000 */
     mov     x0, page_table1
-    mov     x1, %[KERNEL_ASPACE_BASE] // 0xffff'0000'0000'0000
+    mov     x1, %[KERNEL_SPACE_BASE] // 0xffff'0000'0000'0000
     mov     x2, 0
     mov     x3, %[ARCH_PHYSMAP_SIZE] // 1<<39=512G
     movlit  x4, %[MMU_PTE_KERNEL_DATA_FLAGS] // 0x60'0000'0000'0708
@@ -347,7 +347,7 @@ END_DATA tt_trampoline
 )"
       :
       : [MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP] "i"(MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP),           // 512
-        [KERNEL_ASPACE_BASE] "i"(KERNEL_ASPACE_BASE),                                         // 0xffff'0000'0000'0000UL
+        [KERNEL_SPACE_BASE] "i"(KERNEL_SPACE_BASE),                                           // 0xffff'0000'0000'0000UL
         [MMU_PTE_KERNEL_RWX_FLAGS] "i"(MMU_PTE_KERNEL_RWX_FLAGS),                             // 0x40'0000'0000'0708
         [MMU_PTE_KERNEL_DATA_FLAGS] "i"(MMU_PTE_KERNEL_DATA_FLAGS),                           // 0x60'0000'0000'0708
         [ARCH_PHYSMAP_SIZE] "i"(ARCH_PHYSMAP_SIZE),                                           // 0x80'0000'0000=512G
