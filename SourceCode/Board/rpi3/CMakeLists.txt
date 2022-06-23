@@ -26,7 +26,7 @@ set(COMMON_KERNEL_OBJECTS
 add_executable(${KernelName}
         $<TARGET_OBJECTS:ObjArch>
         ${COMMON_KERNEL_OBJECTS})
-target_link_options(${KernelName} PRIVATE "LINKER:-T,${ObjArch_SOURCE_DIR}/src/kernel.ld,--Map=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/KernelArm64.map")
+target_link_options(${KernelName} PRIVATE "LINKER:-L${MOSS_SOURCE_CODE_DIR}/Kernel,-T,${ObjArch_SOURCE_DIR}/src/kernel.lds,--Map=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/KernelArm64.map")
 
 add_custom_command(TARGET ${KernelName} POST_BUILD
         COMMENT "making kernel8.img, wait a moment"

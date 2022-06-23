@@ -60,7 +60,7 @@ add_executable(${KernelUnitTestsElf}
         $<TARGET_OBJECTS:ObjArchUnitTests>
         $<TARGET_OBJECTS:ObjUnitTests>
         ${COMMON_KERNEL_OBJECTS})
-target_link_options(${KernelUnitTestsElf} PRIVATE "LINKER:-T,${ObjArch_SOURCE_DIR}/src/kernel.ld,--Map=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/KernelUnitTestsArm64.map")
+target_link_options(${KernelUnitTestsElf} PRIVATE "LINKER:-L${MOSS_SOURCE_CODE_DIR}/Kernel,-T,${ObjArch_SOURCE_DIR}/src/kernel.lds,--Map=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/KernelUnitTestsArm64.map")
 
 add_custom_target(test
         COMMENT "run tests"
