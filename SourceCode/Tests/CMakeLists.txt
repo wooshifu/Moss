@@ -52,8 +52,11 @@ target_enable_iwyu(${PROJECT_NAME})
 set(COMMON_KERNEL_OBJECTS
         $<TARGET_OBJECTS:ObjKernel>
         $<TARGET_OBJECTS:ObjLibCXX>
+        $<TARGET_OBJECTS:ObjLibStd>
+        $<TARGET_OBJECTS:ObjLibIO>
         $<TARGET_OBJECTS:ObjHAL>
         $<TARGET_OBJECTS:ObjBoardRaspberryPi3>
+        $<TARGET_OBJECTS:ObjPlatBCM28xx>
         )
 set(KernelUnitTestsElf KernelUnitTests.elf)
 add_executable(${KernelUnitTestsElf}

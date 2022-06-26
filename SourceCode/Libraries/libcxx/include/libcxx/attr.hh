@@ -16,6 +16,10 @@
 #define attr_used [[gnu::used]]
 #endif
 
+#ifndef attr_unused
+#define attr_unused [[gnu::unused]]
+#endif
+
 #ifndef attr_maybe_unused
 #define attr_maybe_unused [[maybe_unused]]
 #endif
@@ -46,4 +50,12 @@
 
 #ifndef attr_unlikely
 #define attr_unlikely [[unlikely]]
+#endif
+
+#ifndef attr_printf
+#define attr_printf(fmt, varargs) [[gnu::format(__printf__, fmt, varargs)]]
+#endif
+
+#ifndef attr_noinline
+#define attr_noinline [[gnu::noinline]]
 #endif

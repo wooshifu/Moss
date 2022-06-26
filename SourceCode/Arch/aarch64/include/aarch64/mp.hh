@@ -1,18 +1,18 @@
 #pragma once
 
 #include "feature.hh"      // for arm64_microarch
+#include "hal/cpu.hh"      // for cpu_num_t
 #include "kconfig.hh"      // for CONFIG_SMP_MAX_CPUS
 #include "libcxx/attr.hh"  // for attr_aligned
 #include "libcxx/types.hh" // for u32
 
 using cpu_mask_t = u32;
-using cpu_num_t  = u32;
+// using cpu_num_t  = u32;
 
 struct percpu {};
 
 // Per cpu structure, pointed to by a fixed register while in kernel mode.
-// Aligned on the maximum architectural cache line to avoid cache
-// line sharing between cpus.
+// Aligned on the maximum architectural cache line to avoid cache line sharing between cpus.
 constexpr auto MAX_CACHE_LINE = 64;
 struct attr_aligned(MAX_CACHE_LINE) arm64_percpu {
   // cpu number

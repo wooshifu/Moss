@@ -13,5 +13,3 @@ AlignConsecutiveBitFields: AcrossEmptyLinesAndComments
 AlignConsecutiveAssignments: AcrossEmptyLinesAndComments
 PointerAlignment: Left
 NamespaceIndentation: All
-AllowShortBlocksOnASingleLine: Always
-AllowShortIfStatementsOnASingleLine: Always

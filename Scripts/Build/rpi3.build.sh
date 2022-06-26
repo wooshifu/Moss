@@ -59,7 +59,7 @@ echo "${cmake_build_command}"
 ${cmake_build_command}
 
 if [ ${opt_run_qemu} == "1" ]; then
-  rpi3_qemu_command="qemu-system-aarch64 -M raspi3b -kernel bin/kernel.elf -nographic -serial mon:stdio $opt_qemu_args"
+  rpi3_qemu_command="qemu-system-aarch64 -M raspi3b -kernel bin/kernel.elf -semihosting -serial mon:null -serial mon:stdio -nographic $opt_qemu_args"
   echo "${rpi3_qemu_command}"
   ${rpi3_qemu_command}
 fi

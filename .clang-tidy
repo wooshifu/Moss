@@ -13,6 +13,7 @@ Checks: >
   cert-*,
   -cert-dcl37-c,
   -cert-dcl51-cpp,
+  -cert-dcl50-cpp,
 
   clang-diagnostic-*,
 
@@ -24,6 +25,10 @@ Checks: >
   -cppcoreguidelines-avoid-c-arrays,
   -cppcoreguidelines-pro-type-reinterpret-cast,
   -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-pro-type-vararg,
+  -cppcoreguidelines-macro-usage,
+  -cppcoreguidelines-avoid-goto,
+  -cppcoreguidelines-pro-bounds-constant-array-index,
 
   -fuchsia-*,
   
@@ -44,7 +49,8 @@ Checks: >
 
   readability-*,
   -readability-magic-numbers,
-  
+  -readability-implicit-bool-conversion,
+
   -zircon-*,
 
 WarningsAsErrors: '*'

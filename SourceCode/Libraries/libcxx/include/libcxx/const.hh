@@ -21,10 +21,14 @@ static_test(last_nbits(0x0000'ffff'ffff'ffff) == 48);
 
 // from left to right, starting with 0
 consteval auto first_bit_index(auto n) {
-  if (n == 0) { trigger_consteval_failure("n should not be 0"); }
+  if (n == 0) {
+    trigger_consteval_failure("n should not be 0");
+  }
 
   for (int i = (sizeof(n) << 3) - 1; i >= 0; --i) {
-    if (n & (0x1ULL << i)) { return i; }
+    if (n & (0x1ULL << i)) {
+      return i;
+    }
   }
 
   trigger_consteval_failure("first bit index not found");
@@ -38,7 +42,9 @@ static_test(first_bit_index(0x0800'0000'0000) == 43);
 static_test(first_bit_index(0x8000'0000'0000'0000) == 63);
 
 consteval auto first_nbits(auto n) {
-  if (n == 0) { return 0; }
+  if (n == 0) {
+    return 0;
+  }
 
   int first_bit_index = 0;
   for (int i = (sizeof(n) << 3) - 1; i >= 0; --i) {
@@ -69,7 +75,9 @@ static_test(first_nbits(0xffff'0000'0000'0000) == 16);
 consteval auto count_bit(auto n) {
   int count = 0;
   for (int i = 0; i < sizeof(n) << 3; ++i) {
-    if (n & (0x1UL << i)) { count++; }
+    if (n & (0x1UL << i)) {
+      count++;
+    }
   }
   return count;
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-enum arm64_microarch {
+enum class arm64_microarch {
   UNKNOWN,
 
   ARM_CORTEX_A32,

@@ -169,6 +169,9 @@ FUNCTION _start
     cmp     x0, #0
     bne     .
 
+    // todo: map platform peripherals
+    // bl map_platform_peripherals_mmu
+
     /* Prepare tt_trampoline page table.
      * this will identity map the 1GB page holding the physical address of this code.
      * Used to temporarily help us get switched to the upper virtual address. */
