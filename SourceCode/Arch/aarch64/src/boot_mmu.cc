@@ -19,19 +19,24 @@ constexpr uintptr_t l1_large_page_size_mask = l1_large_page_size - 1;
 constexpr uintptr_t l2_large_page_size      = 1UL << MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 2);
 constexpr uintptr_t l2_large_page_size_mask = l2_large_page_size - 2;
 
+static_assert(MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP == 512);
 static size_t vaddr_to_l0_index(uintptr_t addr) {
+  static_assert(MMU_KERNEL_TOP_SHIFT() == 39);
   return (addr >> MMU_KERNEL_TOP_SHIFT()) & (MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP - 1);
 }
 
 static size_t vaddr_to_l1_index(uintptr_t addr) {
+  static_assert(MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 1) == 30);
   return (addr >> MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 1)) & (MMU_KERNEL_PAGE_TABLE_ENTRIES - 1);
 }
 
 static size_t vaddr_to_l2_index(uintptr_t addr) {
+  static_assert(MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 2) == 21);
   return (addr >> MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 2)) & (MMU_KERNEL_PAGE_TABLE_ENTRIES - 1);
 }
 
 static size_t vaddr_to_l3_index(uintptr_t addr) {
+  static_assert(MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 3) == 12);
   return (addr >> MMU_LX_X(MMU_KERNEL_PAGE_SIZE_SHIFT, 3)) & (MMU_KERNEL_PAGE_TABLE_ENTRIES - 1);
 }
 
@@ -39,7 +44,7 @@ static size_t vaddr_to_l3_index(uintptr_t addr) {
 static inline i32 _arm64_boot_map(pte_t* kernel_table0, const vaddr_t vaddr, const paddr_t paddr, const size_t len,
                                   const pte_t flags, paddr_t (*alloc_func)(), pte_t* (*phys_to_virt)(paddr_t)) {
   // loop through the virtual range and map each physical page, using the largest
-  // page size supported. Allocates necessar page tables along the way.
+  // page size supported. Allocates necessary page tables along the way.
   size_t off = 0;
   while (off < len) {
     // make sure the level 1 pointer is valid
@@ -132,12 +137,11 @@ extern_C attr_used i64 arm64_boot_map(pte_t* kernel_table0, const vaddr_t vaddr,
                                       const pte_t flags) {
   // the following helper routines assume that code is running in physical addressing mode (mmu
   // off). any physical addresses calculated are assumed to be the same as virtual
-  auto alloc = []() /*attr_no_safestack*/ -> paddr_t {
+  auto alloc = []() -> paddr_t {
     // allocate a page out of the boot allocator, asking for a physical address
     paddr_t pa          = boot_alloc_page_phys();
 
-    // avoid using memset, since this relies on dc zva instruction, which isn't set up at
-    // this point in the boot process
+    // avoid using memset, since this relies on dc zva instruction, which isn't set up at this point in the boot process
     // use a volatile pointer to make sure the compiler doesn't emit a memset call
     volatile auto* vptr = reinterpret_cast<volatile pte_t*>(pa);
     for (auto i = 0; i < MMU_KERNEL_PAGE_TABLE_ENTRIES; i++) {
@@ -147,7 +151,7 @@ extern_C attr_used i64 arm64_boot_map(pte_t* kernel_table0, const vaddr_t vaddr,
     return pa;
   };
 
-  auto phys_to_virt = [](paddr_t pa) /*attr_no_safestack*/ -> pte_t* { return reinterpret_cast<pte_t*>(pa); };
+  auto phys_to_virt = [](paddr_t pa) -> pte_t* { return reinterpret_cast<pte_t*>(pa); };
 
   return _arm64_boot_map(kernel_table0, vaddr, paddr, len, flags, alloc, phys_to_virt);
 }

@@ -167,7 +167,7 @@ constexpr auto MMU_PTE_ATTR_STRONGLY_ORDERED = MMU_PTE_ATTR_ATTR_INDEX(0);
 
 // Device-nGnRE memory
 constexpr auto MMU_MAIR_ATTR1                = MMU_MAIR_ATTR(1, 0x04);
-static_assert(MMU_MAIR_ATTR1 == 0x400);
+static_assert(MMU_MAIR_ATTR1 == 0x0400);
 constexpr auto MMU_PTE_ATTR_DEVICE = MMU_PTE_ATTR_ATTR_INDEX(1);
 
 // Normal Memory, Outer Write-back non-transient Read/Write allocate,
