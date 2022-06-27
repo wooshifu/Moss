@@ -1,4 +1,4 @@
-#include "libcxx/attr.hh"
+#include "libcxx/attr.hh" // for attr_naked, attr_noreturn, attr_optnone
 
 constexpr auto CURRENTEL_EL1        = 0b01 << 2;
 constexpr auto CURRENTEL_EL2        = 0b10 << 2;

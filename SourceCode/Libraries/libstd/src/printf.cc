@@ -1,11 +1,11 @@
 #include "libstd/printf.hh"
 
-#include "libcxx/attr.hh"
-#include "libcxx/limits.hh"
-#include "libcxx/types.hh"
-#include "libstd/stdarg.hh"
-#include "libstd/stdio.hh"
-#include "libstd/string.hh"
+#include "libcxx/attr.hh"   // for attr_noinline, attr_unused
+#include "libcxx/limits.hh" // for INT_MAX
+#include "libcxx/types.hh"  // for size_t, uint, uint32_t, uint64_t, ptrdiff_t
+#include "libstd/stdarg.hh" // for va_arg, va_list, va_end, va_start
+#include "libstd/stdio.hh"  // for snprintf, sprintf, vsnprintf, vsprintf
+#include "libstd/string.hh" // for strlen
 
 #define FLOAT_PRINTF_SUPPORT 1
 

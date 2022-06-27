@@ -1,4 +1,4 @@
-#include "hal/uart.hh"
+#include "hal/uart.hh" // for uart_putc
 
 constexpr auto DEBUG_UART = 1;
 

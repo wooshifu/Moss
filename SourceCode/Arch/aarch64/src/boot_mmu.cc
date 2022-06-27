@@ -1,8 +1,8 @@
-#include "aarch64/boot_alloc.hh"
-#include "aarch64/mmu.hh"
-#include "libcxx/attr.hh"
-#include "libcxx/macros.hh"
-#include "libcxx/types.hh"
+#include "aarch64/boot_alloc.hh" // for boot_alloc_page_phys
+#include "aarch64/mmu.hh"        // for MMU_LX_X, MMU_KERNEL_PAGE_SIZE_SHIFT
+#include "libcxx/attr.hh"        // for attr_fallthrough, attr_used
+#include "libcxx/macros.hh"      // for extern_C
+#include "libcxx/types.hh"       // for pte_t, paddr_t, size_t, uintptr_t
 
 // Early boot time page table creation code, called from start.S while running in physical address
 // space with the mmu disabled. This code should be position independent as long as it sticks to basic code.

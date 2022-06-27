@@ -1,7 +1,7 @@
 #pragma once
 
-#include "libcxx/types.hh"
-#include "stdarg.hh"
+#include "libcxx/types.hh" // for size_t
+#include "stdarg.hh"       // for va_list
 
 /* printf engine that parses the format string and generates output */
 /* function pointer to pass the printf engine, called back during the formatting.

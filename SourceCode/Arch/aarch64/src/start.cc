@@ -1,7 +1,7 @@
-#include "aarch64/arch.hh"
-#include "aarch64/mmu.hh"
-#include "kernel/space.hh"
-#include "libcxx/attr.hh"
+#include "aarch64/arch.hh" // for ARCH_DEFAULT_STACK_SIZE, ARCH_PHYSMAP_SIZE
+#include "aarch64/mmu.hh"  // for MMU_IDENT_PAGE_TABLE_ENTRIES_TOP, MMU_IDE...
+#include "kernel/space.hh" // for KERNEL_SPACE_BASE
+#include "libcxx/attr.hh"  // for attr_maybe_unused, attr_naked, attr_noreturn
 
 attr_optnone attr_naked attr_noreturn attr_maybe_unused void __start() {
   // all asm code must be position independent code(pic) code

@@ -1,6 +1,6 @@
 #include "libio/io.hh"
 
-#include "libstd/error.hh"
+#include "libstd/error.hh" // for ERR_NOT_SUPPORTED
 
 ssize_t io_write(io_handle_t* io, const char* buf, size_t len) {
   //  DEBUG_ASSERT(io->magic == IO_HANDLE_MAGIC);

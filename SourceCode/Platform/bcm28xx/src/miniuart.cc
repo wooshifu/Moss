@@ -1,7 +1,7 @@
 #include "bcm28xx/bcm28xx.hh" // for MINIUART_BASE
 #include "hal/uart.hh"        // for uart_putc
 #include "libcxx/attr.hh"     // for attr_unused
-#include "libcxx/types.hh"    // for uint32_t, uintptr_t
+#include "libcxx/types.hh"    // for u32, uintptr_t
 
 struct bcm283x_mu_regs {
   u32 io;

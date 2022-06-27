@@ -1,7 +1,7 @@
-#include "libcxx/attr.hh"
-#include "libcxx/macros.hh"
-#include "libcxx/types.hh"
-#include "libstd/stdio.hh"
+#include "libcxx/attr.hh"   // for attr_maybe_unused, attr_noreturn, attr_used
+#include "libcxx/macros.hh" // for extern_C
+#include "libcxx/types.hh"  // for paddr_t
+#include "libstd/stdio.hh"  // for printf
 
 static void print_test() {
   int xx = 0;

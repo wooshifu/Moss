@@ -2,7 +2,7 @@
 
 #include "aarch64/mmu.hh"  // for PAGE_SIZE
 #include "kernel/aligh.hh" // for ALIGN
-#include "libcxx/attr.hh"  // for attr_no_safestack
+#include "libcxx/attr.hh"  // for attr_used
 #include "libcxx/types.hh" // for paddr_t
 
 // store the start and current pointer to the boot allocator in physical address

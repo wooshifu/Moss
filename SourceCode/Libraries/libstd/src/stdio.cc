@@ -1,7 +1,10 @@
-#include "libstd/stdio.hh"
+#include "libstd/stdio.hh" // for stdout, _fprintf_output_func, printf
 
-#include "libstd/printf.hh"
-#include "libstd/stdarg.hh"
+#include "libcxx/attr.hh"   // for attr_printf
+#include "libcxx/types.hh"  // for size_t
+#include "libio/io.hh"      // for console_io, FILE, io_write
+#include "libstd/printf.hh" // for printf_engine
+#include "libstd/stdarg.hh" // for va_list, va_end, va_start
 
 // NOLINTNEXTLINE(cppcoreguidelines-interfaces-global-init)
 FILE stdio_FILEs[3] = {

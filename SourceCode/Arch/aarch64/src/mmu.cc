@@ -1,5 +1,5 @@
-#include "libcxx/attr.hh"
-#include "libcxx/types.hh"
+#include "libcxx/attr.hh"  // for attr_used, attr_aligned
+#include "libcxx/types.hh" // for paddr_t, pte_t, u64
 
 // used at early boot and by gdb script to know the target relocated address.
 attr_used u64 kernel_relocated_base              = 0xffff'ffff'0000'0000;

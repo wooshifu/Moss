@@ -1,9 +1,9 @@
 #pragma once
 
-#include "libcxx/attr.hh"
-#include "libcxx/types.hh"
-#include "libio/io.hh"
-#include "stdarg.hh"
+#include "libcxx/attr.hh"  // for attr_printf
+#include "libcxx/types.hh" // for size_t
+#include "libio/io.hh"     // for FILE
+#include "stdarg.hh"       // for va_list
 
 attr_printf(1, 2) int printf(const char* fmt, ...);
 

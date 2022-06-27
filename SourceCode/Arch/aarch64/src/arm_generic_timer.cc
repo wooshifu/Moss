@@ -1,7 +1,7 @@
-#include "aarch64/intrin.hh"
-#include "libcxx/attr.hh"
-#include "libcxx/macros.hh"
-#include "libcxx/types.hh"
+#include "aarch64/intrin.hh" // for __arm_rsr64
+#include "libcxx/attr.hh"    // for attr_always_inline
+#include "libcxx/macros.hh"  // for extern_C
+#include "libcxx/types.hh"   // for u64
 
 namespace arch {
 
