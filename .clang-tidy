@@ -50,6 +50,7 @@ Checks: >
   readability-*,
   -readability-magic-numbers,
   -readability-implicit-bool-conversion,
+  -readability-identifier-length,
 
   -zircon-*,
 
@@ -58,9 +59,9 @@ HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
 FormatStyle: none
 User: moss
-CheckOptions:
-  # see https://clang.llvm.org/extra/clang-tidy/checks/readability/identifier-length.html#cmdoption-arg-minimumvariablenamelength
-  - key: readability-identifier-length.MinimumVariableNameLength
-    value: 2
-  - key: readability-identifier-length.MinimumParameterNameLength
-    value: 2
+#CheckOptions:
+#  # see https://clang.llvm.org/extra/clang-tidy/checks/readability/identifier-length.html#cmdoption-arg-minimumvariablenamelength
+#  - key: readability-identifier-length.MinimumVariableNameLength
+#    value: 2
+#  - key: readability-identifier-length.MinimumParameterNameLength
+#    value: 2
