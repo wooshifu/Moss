@@ -56,12 +56,12 @@ function(setup_compiler_flags IN_board IN_arch)
     read_compiler_flags_from_flags_cmake_file(${board_flag_file} board_compiler_flags)
     message(STATUS "[board] board_compiler_flags is: ${board_compiler_flags}")
 
-    set(ignore_specific_warnings "-Wno-gnu-statement-expression")
+    set(ignore_specific_warnings "")
 
     get_debug_flag(debug_flag)
-    message(STATUS "debug_flag :${debug_flag}")
+    message(STATUS "debug_flag: ${debug_flag}")
     get_optimization_level(optimization_level)
-    message(STATUS "OPTIMIZATION_LEVEL :${optimization_level}")
+    message(STATUS "optimization_level: ${optimization_level}")
 
     set(macro_flags "")
 
