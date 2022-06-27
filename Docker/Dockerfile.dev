@@ -1,4 +1,5 @@
-FROM ubuntu:22.04
+# there are bugs related to global variable initializion with pointer using ubuntu22.04, so use ubuntu21.10
+FROM ubuntu:21.10
 
 # uncomment following line to speedup docker image build
 COPY sshd_config /etc/ssh/sshd_config
@@ -23,6 +24,7 @@ RUN apt update && \
         gcc-aarch64-linux-gnu \
         g++-aarch64-linux-gnu \
         gdb-multiarch \
+        lldb \
         file \
         ninja-build \
         make \
