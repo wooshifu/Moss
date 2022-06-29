@@ -6,3 +6,12 @@ config SMP_MAX_CPUS
     int "smp max cpus"
     range 1 32
     default 16
+
+config LOG_LEVEL
+    int "log level, trace=1, verbose=2, debug=3, info=4, warning=5, error=6, fatal_error=7, panic=8"
+    range 1 8
+    default 1
+
+config LOG_COLORFUL
+    bool "print colorful log"
+    default y

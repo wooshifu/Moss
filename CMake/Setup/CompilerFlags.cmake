@@ -56,7 +56,7 @@ function(setup_compiler_flags IN_project IN_arch)
     read_compiler_flags_from_flags_cmake_file(${project_flag_file} project_compiler_flags)
     message(STATUS "[project] project_compiler_flags is: ${project_compiler_flags}")
 
-    set(ignore_specific_warnings "")
+    set(ignore_specific_warnings "-Wno-gnu-zero-variadic-macro-arguments")
 
     get_debug_flag(debug_flag)
     message(STATUS "debug_flag: ${debug_flag}")
