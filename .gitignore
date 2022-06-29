@@ -1,9 +1,6 @@
-.idea/
-build/
+.idea
+build
 !Scripts/Build
-cmake-build-*/
-/.config
-/.config.old
-/SourceCode/Config/KConfigEnvList.txt
-/SourceCode/Config/KConfigFileList.txt
-/SourceCode/Config/include/kconfig.hh
+cmake-build-*
+.config
+.config.old
