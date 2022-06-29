@@ -169,8 +169,10 @@ FUNCTION _start
     cmp     x0, #0
     bne     .
 
-    // todo: map platform peripherals
-    // bl map_platform_peripherals_mmu
+    /* map platform peripherals */
+    bl amr64_boot_map_platform_peripherals
+    cmp     x0, #0
+    bne     .
 
     /* Prepare tt_trampoline page table.
      * this will identity map the 1GB page holding the physical address of this code.

@@ -133,8 +133,7 @@ static inline i32 _arm64_boot_map(pte_t* kernel_table0, const vaddr_t vaddr, con
 
 // called from start.S to configure level 1-3 page tables to map the kernel wherever it is located
 // physically to KERNEL_BASE
-extern_C attr_used i64 arm64_boot_map(pte_t* kernel_table0, const vaddr_t vaddr, const paddr_t paddr, const size_t len,
-                                      const pte_t flags) {
+extern_C attr_used i64 arm64_boot_map(pte_t* kernel_table0, vaddr_t vaddr, paddr_t paddr, size_t len, pte_t flags) {
   // the following helper routines assume that code is running in physical addressing mode (mmu
   // off). any physical addresses calculated are assumed to be the same as virtual
   auto alloc = []() -> paddr_t {

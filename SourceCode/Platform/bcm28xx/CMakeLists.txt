@@ -5,6 +5,7 @@ add_library(${PROJECT_NAME}
         OBJECT
         ${ObjPlatBCM28xxSrc})
 
+target_include_specific_arch_header_files(${PROJECT_NAME} aarch64)
 target_include_libcxx_header_files(${PROJECT_NAME})
 target_include_libstd_header_files(${PROJECT_NAME})
 target_include_hal_header_files(${PROJECT_NAME})
