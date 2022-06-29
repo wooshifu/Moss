@@ -1,7 +1,6 @@
 #pragma once
 
 #include "kernel/space.hh" // for KERNEL_SPACE_BASE
-#include "libcxx/types.hh" // for paddr_t, pte_t, u64
 
 consteval auto BM(auto base, auto count, auto val) { return (val & ((1UL << count) - 1)) << base; }
 
@@ -280,7 +279,4 @@ constexpr auto MMU_INITIAL_MAP_STRONGLY_ORDERED =
 
 constexpr auto MMU_INITIAL_MAP_DEVICE =
     MMU_PTE_ATTR_UXN | MMU_PTE_ATTR_PXN | MMU_PTE_ATTR_AF | MMU_PTE_ATTR_DEVICE | MMU_PTE_ATTR_AP_P_RW_U_NA;
-
-extern pte_t arm64_kernel_translation_table[MMU_KERNEL_PAGE_TABLE_ENTRIES_TOP];
-extern paddr_t arm64_kernel_translation_table_phys;
-extern u64 kernel_relocated_base;
+static_assert(MMU_INITIAL_MAP_DEVICE == 0x60'0000'0000'0404);

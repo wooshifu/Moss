@@ -170,7 +170,8 @@ FUNCTION _start
     bne     .
 
     /* map platform peripherals */
-    bl amr64_boot_map_platform_peripherals
+    mov     x0, page_table1
+    bl      arm64_boot_map_platform_peripherals
     cmp     x0, #0
     bne     .
 
