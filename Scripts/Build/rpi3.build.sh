@@ -54,7 +54,7 @@ if [ ${opt_reset_cmake} == "1" ]; then
   rm -rf "${BUILD_DIR:?}"/*
 fi
 
-cmake_config_command="cmake -DCMAKE_BUILD_TYPE=${opt_build_type} -DCMAKE_TOOLCHAIN_FILE=${THIS_DIR}/../../CMake/Toolchain/ToolchainClang.cmake -DCONFIG_BOARD=rpi3 -GNinja ${THIS_DIR}/../.."
+cmake_config_command="cmake -DCMAKE_BUILD_TYPE=${opt_build_type} -DCMAKE_TOOLCHAIN_FILE=${THIS_DIR}/../../CMake/Toolchain/ToolchainClang.cmake -DCONFIG_PROJECT=rpi3 -GNinja ${THIS_DIR}/../.."
 echo "${cmake_config_command}"
 ${cmake_config_command}
 cmake_build_command="cmake --build . -j$(nproc)"

@@ -2,7 +2,7 @@
     "cmake.configureOnOpen": true,
     "cmake.configureArgs": [
         "-DCMAKE_TOOLCHAIN_FILE=${workspaceFolder}/CMake/Toolchain/ToolchainClang.cmake",
-        "-DCONFIG_BOARD=rpi3"
+        "-DCONFIG_PROJECT=rpi3"
     ],
     "files.associations": {
         "**/SourceCode/Libraries/lib_std/include/*": "cpp"

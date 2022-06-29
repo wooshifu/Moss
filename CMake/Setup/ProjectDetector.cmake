@@ -1,0 +1,33 @@
+function(list_subdirs OUT_result IN_current_dir)
+    file(GLOB children RELATIVE ${IN_current_dir} ${IN_current_dir}/*)
+    set(temp_dirlist "")
+    foreach (child ${children})
+        if (IS_DIRECTORY ${IN_current_dir}/${child})
+            list(APPEND temp_dirlist ${child})
+        endif ()
+    endforeach ()
+    set(${OUT_result} ${temp_dirlist} PARENT_SCOPE)
+endfunction()
+
+function(setup_project OUT_project)
+    list_subdirs(supported_projects ${MOSS_SOURCE_CODE_DIR}/Project)
+    foreach (supported_project ${supported_projects})
+        message(STATUS "detected supported  list: ${supported_project}")
+    endforeach ()
+
+    # check variable CONFIG_PROJECT is defined via cmake command line as parameter, use it if it's defined
+    if (DEFINED ${OUT_project})
+        message(STATUS "DEFINED PROJECT: ${OUT_project}")
+    else ()
+        message(FATAL_ERROR "project not specified, please add -D${OUT_project}={the_project} to cmake command line parameter")
+    endif ()
+
+    list(FIND supported_projects ${${OUT_project}} index)
+    if (NOT index EQUAL -1)
+        message(STATUS "finally, found project \"${${OUT_project}}\"")
+    else ()
+        message(FATAL_ERROR "not supported project: ${${OUT_project}}. this is all the supported projects: ${supported_projects}.")
+    endif ()
+
+    set(${OUT_project} ${${OUT_project}} PARENT_SCOPE)
+endfunction()

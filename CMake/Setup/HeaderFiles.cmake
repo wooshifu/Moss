@@ -31,7 +31,7 @@ endfunction()
 #endfunction()
 
 function(target_include_rpi3_header_files IN_target)
-    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Board/rpi3/include)
+    target_include_directories(${IN_target} PRIVATE ${MOSS_SOURCE_CODE_DIR}/Project/rpi3/include)
 endfunction()
 
 function(target_include_tests_header_files IN_target)

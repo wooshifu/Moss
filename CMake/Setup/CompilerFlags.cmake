@@ -45,16 +45,16 @@ function(get_debug_flag OUT_debug_flag)
     endif ()
 endfunction()
 
-function(setup_compiler_flags IN_board IN_arch)
+function(setup_compiler_flags IN_project IN_arch)
     set(arch_flag_file ${MOSS_SOURCE_CODE_DIR}/Arch/${ARCH}/flags.cmake)
     message(STATUS "[arch] flags.cmake file: ${arch_flag_file}")
     read_compiler_flags_from_flags_cmake_file(${arch_flag_file} arch_compiler_flags)
     message(STATUS "[arch] arch_compiler_flags is: ${arch_compiler_flags}")
 
-    set(board_flag_file ${MOSS_SOURCE_CODE_DIR}/Board/${IN_board}/flags.cmake)
-    message(STATUS "[board] flags.cmake file: ${board_flag_file}")
-    read_compiler_flags_from_flags_cmake_file(${board_flag_file} board_compiler_flags)
-    message(STATUS "[board] board_compiler_flags is: ${board_compiler_flags}")
+    set(project_flag_file ${MOSS_SOURCE_CODE_DIR}/Project/${IN_project}/flags.cmake)
+    message(STATUS "[project] flags.cmake file: ${project_flag_file}")
+    read_compiler_flags_from_flags_cmake_file(${project_flag_file} project_compiler_flags)
+    message(STATUS "[project] project_compiler_flags is: ${project_compiler_flags}")
 
     set(ignore_specific_warnings "")
 
@@ -73,7 +73,7 @@ function(setup_compiler_flags IN_board IN_arch)
     string(JOIN " " common_compiler_flags
             ${kconfig_flags}
             ${arch_compiler_flags}
-            ${board_compiler_flags}
+            ${project_compiler_flags}
             "-ffixed-x20" # x20 is reserved so we can use it to point at the per-CPU structure.
             # "-v"
             "-O${optimization_level}"

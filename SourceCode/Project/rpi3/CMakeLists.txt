@@ -1,9 +1,9 @@
-project(ObjBoardRaspberryPi3 CXX ASM)
+project(ObjProjectRpi3 CXX ASM)
 
-aux_source_directory(${ObjBoardRaspberryPi3_SOURCE_DIR}/src ObjBoardRaspberryPi3Src)
+aux_source_directory(${ObjProjectRpi3_SOURCE_DIR}/src ObjProjectRpi3Src)
 add_library(${PROJECT_NAME}
         OBJECT
-        ${ObjBoardRaspberryPi3Src})
+        ${ObjProjectRpi3Src})
 
 target_include_rpi3_header_files(${PROJECT_NAME})
 target_include_libcxx_header_files(${PROJECT_NAME})
@@ -22,7 +22,7 @@ set(COMMON_KERNEL_OBJECTS
         $<TARGET_OBJECTS:ObjLibStd>
         $<TARGET_OBJECTS:ObjLibIO>
         $<TARGET_OBJECTS:ObjHAL>
-        $<TARGET_OBJECTS:ObjBoardRaspberryPi3>
+        $<TARGET_OBJECTS:ObjProjectRpi3>
         $<TARGET_OBJECTS:ObjPlatBCM28xx>
         )
 
