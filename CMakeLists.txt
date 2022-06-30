@@ -29,4 +29,5 @@ include(${Moss_SOURCE_DIR}/CMake/Setup.cmake)
 
 # make config.h to be available globally
 include_directories(${MOSS_SOURCE_CODE_DIR}/Config/include)
+include_directories(${MOSS_SOURCE_CODE_DIR}/Libraries/libtest/include)
 add_subdirectory(${MOSS_SOURCE_CODE_DIR})
