@@ -41,7 +41,7 @@ add_custom_command(TARGET ${KernelName} POST_BUILD
 add_custom_target(run
         COMMENT "run kernel"
         USES_TERMINAL
-        COMMAND qemu-system-aarch64 -M raspi3b -kernel kernel.elf -semihosting -serial null -serial mon:stdio -nographic
+        COMMAND qemu-system-aarch64 -M raspi3b -kernel kernel.elf -serial null -serial mon:stdio -nographic
         WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 add_dependencies(run ${KernelName})
 ############ end link kernel ############
