@@ -70,7 +70,7 @@ if [ ${opt_smoke_test} == "1" ]; then
 
   for command in "${commands[@]}"; do
     smoke_test_command="timeout -s KILL 1 ${command} | tee output.log || true"
-    echo "running smote test: ${smoke_test_command}"
+    echo "running smoke test: ${smoke_test_command}"
     echo "${smoke_test_command}" | eval "$(cat -)" 2>/dev/null
     grep "${msg}" output.log >/dev/null
     rm -f output.log
