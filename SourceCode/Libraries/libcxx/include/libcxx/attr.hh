@@ -59,3 +59,7 @@
 #ifndef attr_noinline
 #define attr_noinline [[gnu::noinline]]
 #endif
+
+#ifndef attr_packed
+#define attr_packed [[gnu::packed]]
+#endif
