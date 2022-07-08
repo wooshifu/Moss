@@ -39,6 +39,9 @@
 #define LOG_LEVEL_PANIC 8
 #endif
 
+#ifndef __FILE_NAME__
+#define __FILE_NAME__ __FILE__
+#endif
 #if CONFIG_LOG_COLORFUL
 #define __LOG_COLORFUL_NOCOLOR
 #define __LOG_COLORFUL_RED               "\033[0;31m"
