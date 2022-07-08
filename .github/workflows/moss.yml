@@ -47,7 +47,10 @@ jobs:
     - name: Build In Docker
       shell: bash
       working-directory: ${{runner.workspace}}/${{github.event.repository.name}}/Docker
-      run: docker-compose run moss-build -c -t
+      run: |
+        docker-compose run moss-build-alpine -c -t
+        docker-compose run moss-build -c -t
+        docker-compose run moss-dev -c -t
 
     - uses: actions/upload-artifact@v2
       with:

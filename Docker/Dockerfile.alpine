@@ -1,0 +1,17 @@
+FROM alpine
+
+USER root
+
+WORKDIR /root/Moss
+
+RUN apk add \
+        qemu-system-aarch64 \
+        clang \
+        clang-extra-tools \
+        lld \
+        llvm \
+        ninja \
+        make \
+        cmake \
+        bash \
+        include-what-you-use
