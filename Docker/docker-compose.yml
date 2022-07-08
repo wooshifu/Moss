@@ -1,7 +1,7 @@
 version: "3.7"
 
 services:
-  moss:
+  moss-dev:
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -24,7 +24,6 @@ services:
     image: moss-build
     volumes:
       - ../:/root/Moss
-    privileged: true
     entrypoint:
       - /root/Moss/Scripts/Build/rpi3.build.sh
 
@@ -33,14 +32,8 @@ services:
       context: .
       dockerfile: Dockerfile.alpine
     image: moss-build-alpine
-    ports:
-      - "1234:1234"
-      - "2222:2222"
-    networks:
-      - os_share_network
     volumes:
       - ../:/root/Moss
-    privileged: true
     entrypoint:
       - /root/Moss/Scripts/Build/rpi3.build.sh
 
