@@ -29,7 +29,7 @@ function(get_optimization_level OUT_optimization_level)
     if (NOT DEFINED OPTIMIZATION_LEVEL)
         if (CMAKE_BUILD_TYPE MATCHES "Rel")
             set(${OUT_optimization_level} 3 PARENT_SCOPE)
-        elseif (CMAKE_BUILD_TYPE MATCHES "Debug")
+        elseif (CMAKE_BUILD_TYPE MATCHES "Deb") # RelWithDebInfo mode
             set(${OUT_optimization_level} 0 PARENT_SCOPE)
         else ()
             set(${OUT_optimization_level} 0 PARENT_SCOPE)
@@ -38,10 +38,10 @@ function(get_optimization_level OUT_optimization_level)
 endfunction()
 
 function(get_debug_flag OUT_debug_flag)
-    if (CMAKE_BUILD_TYPE MATCHES "Rel")
-        set(${OUT_debug_flag} "" PARENT_SCOPE)
-    else ()
+    if (CMAKE_BUILD_TYPE MATCHES "Deb") # RelWithDebInfo mode
         set(${OUT_debug_flag} "-g3" PARENT_SCOPE)
+    else ()
+        set(${OUT_debug_flag} "-g0" PARENT_SCOPE)
     endif ()
 endfunction()
 
