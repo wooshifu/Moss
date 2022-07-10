@@ -1,5 +1,6 @@
 #include "aarch64/arch.hh" // for ARCH_DEFAULT_STACK_SIZE, ARCH_PHYSMAP_SIZE
 #include "aarch64/mmu.hh"  // for MMU_IDENT_PAGE_TABLE_ENTRIES_TOP, MMU_IDE...
+#include "aarch64/mp.hh"   // for CONF_SMP_MAX_CPUS
 #include "kernel/space.hh" // for KERNEL_SPACE_BASE
 #include "libcxx/attr.hh"  // for attr_maybe_unused, attr_naked, attr_noreturn
 
@@ -30,54 +31,25 @@ kernel_vaddr            .req x24
 handoff_paddr           .req x25
 
 // Collect timestamp in tmp, tmp2.  Also clobbers tmp3-5.
-.macro sample_ticks
-    mrs     tmp, cntpct_el0
-    mrs     tmp2, cntvct_el0
-
-    // Workaround for Cortex-A73 erratum 858921.
-    mrs     tmp3, cntpct_el0
-    mrs     tmp4, cntvct_el0
-    eor     tmp5, tmp, tmp3
-    tst     tmp5, #(1 << 32)
-    csel    tmp, tmp, tmp3, eq
-    eor     tmp5, tmp2, tmp4
-    tst     tmp5, #(1 << 32)
-    csel    tmp2, tmp2, tmp4, eq
-.endm
-
-// Store sample_ticks results in a uint64_t[2] location. Clobbers tmp3.
-.macro store_ticks symbol
-    // There is no reloc like :lo12: that works for stp's scaled immediate,
-    // so the add after the adrp can't be folded into the store like with str.
-    adr_g   tmp3, \symbol
-    stp     tmp, tmp2, [tmp3]
+.macro set_cpu_sp
+    adr_g   tmp, boot_cpu_kstack_end
+    mov     tmp2, %[ARCH_DEFAULT_STACK_SIZE]
+    mul     tmp2, cpuid, tmp2
+    sub     tmp, tmp, tmp2
+    mov     sp, tmp
 .endm
 
 
 /* This code is purely position-independent */
 .section .text.boot
 FUNCTION _start
-    // As early as possible collect the time stamp.
-    sample_ticks
-
     /* Save the Boot info for the primary CPU only */
     mrs     cpuid, mpidr_el1
     ubfx    cpuid, cpuid, #0, #15 /* mask Aff0 and Aff1 fields */
     cbnz    cpuid, .Lno_save_bootinfo
 
-    // Record the entry time stamp.
-    store_ticks kernel_entry_ticks
-
     // Save the x0 argument in a register that won't be clobbered.
     mov     handoff_paddr, x0
-
-    /* save entry point physical address in kernel_entry_paddr */
-    adrp    tmp, kernel_entry_paddr
-    adr     tmp2, _start
-    str     tmp2, [tmp, #:lo12:kernel_entry_paddr]
-    adrp    tmp2, arch_boot_el
-    mrs     x2, CurrentEL
-    str     x2, [tmp2, #:lo12:arch_boot_el]
 
 .Lno_save_bootinfo:
     /* if we entered at a higher EL than 1, drop to EL1 */
@@ -114,8 +86,7 @@ FUNCTION _start
 .Lbss_loop_done:
 
     /* set up a functional stack pointer */
-    adr_g   tmp, boot_cpu_kstack_end
-    mov     sp, tmp
+    set_cpu_sp
 
     /* make sure the boot allocator is given a chance to figure out where we are loaded in physical memory. */
     adr_g   tmp, boot_alloc_start
@@ -272,40 +243,18 @@ FUNCTION _start
     cbnz    cpuid, .Lsecondary_boot
 
     // set up the boot stack for real
-    adr_g   tmp, boot_cpu_kstack_end
-    mov     sp, tmp
-
-    // Set the thread pointer early so compiler-generated references
-    // to the stack-guard and unsafe-sp slots work.  This is not a
-    // real 'struct thread' yet, just a pointer to (past, actually)
-    // the two slots used by the ABI known to the compiler.  This avoids
-    // having to compile-time disable safe-stack and stack-protector
-    // code generation features for all the C code in the bootstrap
-    // path, which (unlike on x86, e.g.) is enough to get annoying.
-    adr_g   tmp, boot_cpu_fake_thread_pointer_location
-    msr     tpidr_el1, tmp
-
-    // set the per cpu pointer for cpu 0
-    adr_g   percpu_ptr, arm64_percpu_array
-
-    // Collect the time stamp of entering "normal" C++ code in virtual space.
-    sample_ticks
-    store_ticks kernel_virtual_entry_ticks
+    set_cpu_sp
 
     mov x0, handoff_paddr
     bl  kernel_main
-    b   .
+    b   .Lunsupported_cpu_trap
 
 .Lsecondary_boot:
-    bl      arm64_get_secondary_sp // todo: arm64_get_secondary_sp currently not processed, arm64_get_secondary_sp currently will always return 0
-    cbz     x0, .Lunsupported_cpu_trap
-    mov     sp, x0
-    msr     tpidr_el1, x1
-
-    bl      arm64_secondary_entry
+    set_cpu_sp
+    bl      secondary_entry
 
 .Lunsupported_cpu_trap:
-    wfe
+    wfi
     b       .Lunsupported_cpu_trap
 
 END_FUNCTION _start
@@ -317,29 +266,14 @@ END_FUNCTION _start
 // clearing the .bss, so put them in .data so they don't get zeroed.
 .data
     .balign 64
-DATA arch_boot_el
-    .quad 0xdeadbeef00ff00ff
-END_DATA arch_boot_el
-DATA kernel_entry_paddr
-    .quad -1
-END_DATA kernel_entry_paddr
-DATA kernel_entry_ticks
-    .quad -1, -1
-END_DATA kernel_entry_ticks
 DATA page_tables_not_ready
     .long       1
 END_DATA page_tables_not_ready
 
-    .balign 8
-LOCAL_DATA boot_cpu_fake_arch_thread
-    .quad 0xdeadbeef1ee2d00d // stack_guard
-    .quad 0
-LOCAL_DATA boot_cpu_fake_thread_pointer_location
-END_DATA boot_cpu_fake_arch_thread
-
 .bss
 LOCAL_DATA boot_cpu_kstack
-    .skip %[ARCH_DEFAULT_STACK_SIZE] // 8192
+    // sp for per cpu: boot_cpu_kstack_end-(cpuid*ARCH_DEFAULT_STACK_SIZE)
+    .skip %[ARCH_DEFAULT_STACK_SIZE] * %[CONF_SMP_MAX_CPUS] // ARCH_DEFAULT_STACK_SIZE=8192
     .balign 16
 LOCAL_DATA boot_cpu_kstack_end
 END_DATA boot_cpu_kstack
@@ -364,7 +298,8 @@ END_DATA tt_trampoline
         [MMU_MAIR_VAL] "i"(MMU_MAIR_VAL),                                                     // 0x44ff'0400
         [MMU_TCR_FLAGS_IDENT] "i"(MMU_TCR_FLAGS_IDENT),                                       // 0x12'b550'3519
         [MMU_TCR_FLAGS_KERNEL] "i"(MMU_TCR_FLAGS_KERNEL),                                     // 0x12'b550'3590
-        [ARCH_DEFAULT_STACK_SIZE] "i"(ARCH_DEFAULT_STACK_SIZE)                                // 8192
+        [ARCH_DEFAULT_STACK_SIZE] "i"(ARCH_DEFAULT_STACK_SIZE),                               // 8192
+        [CONF_SMP_MAX_CPUS] "I"(CONF_SMP_MAX_CPUS)                                            // max cpu count
 
       : "cc", "memory");
 }
