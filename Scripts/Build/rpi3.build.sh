@@ -62,19 +62,15 @@ echo "${cmake_build_command}"
 eval "${cmake_build_command}"
 
 rpi3_qemu_command="qemu-system-aarch64 -M raspi3b -kernel bin/kernel.elf -serial null -serial mon:stdio -nographic $opt_qemu_args"
-rpi3_qemu_command2="qemu-system-aarch64 -M raspi3b -kernel bin/kernel8.img -serial null -serial mon:stdio -nographic $opt_qemu_args"
 
 if [ ${opt_smoke_test} == "1" ]; then
-  commands=("$rpi3_qemu_command" "$rpi3_qemu_command2")
   msg="moss operating system"
-
-  for command in "${commands[@]}"; do
-    smoke_test_command="timeout -s KILL 1 ${command} | tee output.log || true"
-    echo "running smoke test: ${smoke_test_command}"
-    echo "${smoke_test_command}" | eval "$(cat -)" 2>/dev/null
-    grep "${msg}" output.log >/dev/null
-    rm -f output.log
-  done
+  smoke_test_command="timeout -s KILL 1 ${rpi3_qemu_command} | tee output.log || true"
+  echo 'running smoke test'
+  echo "${smoke_test_command}"
+  echo "${smoke_test_command}" | eval "$(cat -)" 2>/dev/null
+  grep "${msg}" output.log > /dev/null
+  rm -f output.log
 fi
 
 if [ ${opt_run_qemu} == "1" ]; then
