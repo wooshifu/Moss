@@ -1,6 +1,6 @@
 #pragma once
 
-#include "libcxx/macros.hh"
+#include "libcxx/macros.hh" // for noncopyable, nonmovable
 
 void arch_spin_lock(void* lock);
 void arch_spin_unlock(void* lock);

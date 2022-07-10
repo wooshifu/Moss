@@ -1,4 +1,4 @@
-#include "libcxx/types.hh"
+#include "libcxx/types.hh" // for u64
 
 void arch_spin_lock(void* lock) {
   u64 tmp{};

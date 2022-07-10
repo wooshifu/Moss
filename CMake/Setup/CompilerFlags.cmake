@@ -74,7 +74,6 @@ function(setup_compiler_flags IN_project IN_arch)
             ${kconfig_flags}
             ${arch_compiler_flags}
             ${project_compiler_flags}
-            "-ffixed-x20" # x20 is reserved so we can use it to point at the per-CPU structure.
             # "-v"
             "-O${optimization_level}"
             ${debug_flag}

@@ -9,7 +9,6 @@ project_dir = pathlib.Path(os.path.dirname(os.path.realpath(__file__))).parent
 
 asm_files = [
     'SourceCode/Arch/aarch64/src/start.cc',
-    'SourceCode/Arch/aarch64/src/secondary.cc',
     'SourceCode/Arch/aarch64/src/el.cc',
 ]
 asm_files = [os.path.join(project_dir, f) for f in asm_files]

@@ -69,7 +69,7 @@ if [ ${opt_smoke_test} == "1" ]; then
   echo 'running smoke test'
   echo "${smoke_test_command}"
   echo "${smoke_test_command}" | eval "$(cat -)" 2>/dev/null
-  grep "${msg}" output.log > /dev/null
+  grep "${msg}" output.log >/dev/null
   rm -f output.log
 fi
 

@@ -6,6 +6,7 @@
 #include "stdarg.hh"       // for va_list
 
 attr_printf(1, 2) int printf(const char* fmt, ...);
+int vprintf(const char* fmt, va_list ap);
 
 extern FILE stdio_FILEs[];
 

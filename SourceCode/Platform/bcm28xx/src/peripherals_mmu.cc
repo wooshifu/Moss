@@ -1,5 +1,5 @@
 #include "aarch64/boot_mmu.hh" // for arm64_boot_map
-#include "aarch64/mmu.hh"      // for MMU_INITIAL_MAP_DEVICE, arm64_kernel_...
+#include "aarch64/mmu.hh"      // for MMU_INITIAL_MAP_DEVICE
 #include "bcm28xx/bcm28xx.hh"  // for BCM_PERIPH_BASE_PHYS, BCM_PERIPH_BASE...
 #include "libcxx/attr.hh"      // for attr_used
 #include "libcxx/macros.hh"    // for extern_C

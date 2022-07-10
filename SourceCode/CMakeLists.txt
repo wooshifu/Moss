@@ -1,6 +1,5 @@
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Arch)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Config)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/HAL)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Project)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Kernel)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Libraries)

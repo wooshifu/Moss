@@ -1,13 +1,11 @@
-project(ObjKernel CXX ASM)
+project(ObjLibHAL CXX)
 
-aux_source_directory(${ObjKernel_SOURCE_DIR}/src ObjKernelSrc)
+aux_source_directory(${ObjLibHAL_SOURCE_DIR}/src LibHALSrc)
 
 add_library(${PROJECT_NAME}
         OBJECT
-        ${ObjKernelSrc})
-target_include_kernel_header_files(${PROJECT_NAME})
+        ${LibHALSrc})
 target_include_libcxx_header_files(${PROJECT_NAME})
-target_include_libio_header_files(${PROJECT_NAME})
 target_include_libstd_header_files(${PROJECT_NAME})
 target_include_libhal_header_files(${PROJECT_NAME})
 

@@ -1,11 +1,12 @@
 #pragma once
 
-#include "libcxx/attr.hh"  // for attr_always_inline, attr_maybe_unused
-#include "libcxx/types.hh" // for u64, u8
+#include "libcxx/attr.hh"  // for attr_always_inline, attr_packed
+#include "libcxx/types.hh" // for u8, u64, u32
 
 // IWYU pragma: no_forward_declare reg_currentel
 // IWYU pragma: no_forward_declare reg_sctlr_el1
 // IWYU pragma: no_forward_declare reg_sctlr_el1_t
+// IWYU pragma: no_forward_declare reg_mpidr_el1
 
 template <typename R, typename V> struct reg_t {
   static_assert(sizeof(R) == sizeof(V), "sizeof R and V must be same");
@@ -22,8 +23,8 @@ template <typename R, typename V> struct reg_t {
 };
 
 template <typename R> struct reg64_t : public reg_t<R, u64> { using reg_t<R, u64>::reg_t; };
-template <typename R> attr_always_inline R sys_read();
-template <typename R> attr_always_inline void sys_write(const R& r);
+template <typename R> attr_always_inline inline R sys_read();
+template <typename R> attr_always_inline inline void sys_write(const R& r);
 
 #ifndef define_reg_ro
 #define define_reg_ro(reg_name, reg_struct)                                                                            \
@@ -31,13 +32,13 @@ template <typename R> attr_always_inline void sys_write(const R& r);
   struct reg_##reg_name##_t : public reg64_t<reg_##reg_name> {                                                         \
     using reg64_t<reg_##reg_name>::reg64_t;                                                                            \
   };                                                                                                                   \
-  template <> attr_always_inline reg_##reg_name sys_read<reg_##reg_name>() {                                           \
+  template <> attr_always_inline inline reg_##reg_name sys_read<reg_##reg_name>() {                                    \
     reg_##reg_name reg{};                                                                                              \
     asm("mrs %[reg], " #reg_name : [reg] "=r"(reg));                                                                   \
     return reg;                                                                                                        \
   }                                                                                                                    \
                                                                                                                        \
-  template <> attr_always_inline reg_##reg_name##_t sys_read<reg_##reg_name##_t>() {                                   \
+  template <> attr_always_inline inline reg_##reg_name##_t sys_read<reg_##reg_name##_t>() {                            \
     reg_##reg_name##_t reg{};                                                                                          \
     asm("mrs %[reg], " #reg_name : [reg] "=r"(reg));                                                                   \
     return reg;                                                                                                        \
@@ -48,18 +49,18 @@ template <typename R> attr_always_inline void sys_write(const R& r);
 #define define_reg_rw(reg_name, reg_struct)                                                                            \
   define_reg_ro(reg_name, reg_struct);                                                                                 \
                                                                                                                        \
-  template <> attr_always_inline void sys_write(const reg_##reg_name& reg) {                                           \
+  template <> attr_always_inline inline void sys_write(const reg_##reg_name& reg) {                                    \
     asm("msr " #reg_name ", %[reg]" : : [reg] "r"(reg));                                                               \
   }                                                                                                                    \
-  template <> attr_always_inline void sys_write(const reg_##reg_name##_t& reg) {                                       \
+  template <> attr_always_inline inline void sys_write(const reg_##reg_name##_t& reg) {                                \
     asm("msr " #reg_name ", %[reg]" : : [reg] "r"(reg.val));                                                           \
   }
 #endif
 
 define_reg_ro(currentel, {
-  u8 res0_0  : 2 = 0;
-  u8 el      : 2;
-  u64 res0_1 : 60 = 0;
+  u8 RES0_0  : 2 = 0;  // bits[0:1]
+  u8 EL      : 2;      // bits[2:3]
+  u64 RES0_1 : 60 = 0; // bits[4:63]
 });
 
 define_reg_rw(sctlr_el1, {
@@ -112,4 +113,16 @@ define_reg_rw(sctlr_el1, {
   u8 EnALS   : 1;     // bit [56]
   u8 EPAN    : 1;     // bit [57]
   u8 RES0_2  : 6 = 0; // bits [63:58]
+});
+
+define_reg_ro(mpidr_el1, {
+  u8 Aff0    : 8;      // bits [7:0]
+  u8 Aff1    : 8;      // bits [15:8]
+  u8 Aff2    : 8;      // bits [23:16]
+  u8 MT      : 1;      // bit [24]
+  u8 RES0_0  : 5 = 0;  // bits [29:25]
+  u8 U       : 1;      // bit [30]
+  u8 RES1    : 1 = 1;  // bit [31]
+  u8 Aff3    : 8;      // bits [39:32]
+  u32 RES0_1 : 24 = 0; // bits [63:40]
 });

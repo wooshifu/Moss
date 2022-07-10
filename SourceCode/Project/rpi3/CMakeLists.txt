@@ -8,7 +8,7 @@ add_library(${PROJECT_NAME}
 target_include_rpi3_header_files(${PROJECT_NAME})
 target_include_libcxx_header_files(${PROJECT_NAME})
 target_include_libstd_header_files(${PROJECT_NAME})
-target_include_hal_header_files(${PROJECT_NAME})
+target_include_libhal_header_files(${PROJECT_NAME})
 target_include_kernel_header_files(${PROJECT_NAME})
 target_include_specific_arch_header_files(${PROJECT_NAME} aarch64)
 target_enable_iwyu(${PROJECT_NAME})
@@ -21,7 +21,7 @@ set(COMMON_KERNEL_OBJECTS
         $<TARGET_OBJECTS:ObjLibCXX>
         $<TARGET_OBJECTS:ObjLibStd>
         $<TARGET_OBJECTS:ObjLibIO>
-        $<TARGET_OBJECTS:ObjHAL>
+        $<TARGET_OBJECTS:ObjLibHAL>
         $<TARGET_OBJECTS:ObjProjectRpi3>
         $<TARGET_OBJECTS:ObjPlatBCM28xx>
         )
