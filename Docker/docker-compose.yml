@@ -27,15 +27,5 @@ services:
     entrypoint:
       - /root/Moss/Scripts/Build/rpi3.build.sh
 
-  moss-build-alpine:
-    build:
-      context: .
-      dockerfile: Dockerfile.alpine
-    image: moss-build-alpine
-    volumes:
-      - ../:/root/Moss
-    entrypoint:
-      - /root/Moss/Scripts/Build/rpi3.build.sh
-
 networks:
   os_share_network:

@@ -42,10 +42,8 @@ jobs:
     strategy:
       matrix:
         docker_run_args: [
-          "moss-build-alpine -c -t",
           "moss-build -c -t",
           "moss-dev -c -t",
-          "moss-build-alpine -d -c -t",
           "moss-build -d -c -t",
           "moss-dev -d -c -t"
         ]

@@ -1,5 +1,4 @@
-# there are bugs related to global variable initializion with pointer using ubuntu22.04, so use ubuntu21.10
-FROM ubuntu:21.10
+FROM ubuntu:22.04
 
 USER root
 

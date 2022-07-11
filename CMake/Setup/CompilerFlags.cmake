@@ -1,4 +1,4 @@
-set(CLANG_MIN_VERSION_REQUIRED 13.0.0)
+set(CLANG_MIN_VERSION_REQUIRED 14.0.0)
 if (USING_CLANG_COMPILER)
     if (CMAKE_C_COMPILER_ID AND CMAKE_C_COMPILER_VERSION VERSION_LESS ${CLANG_MIN_VERSION_REQUIRED} OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${CLANG_MIN_VERSION_REQUIRED})
         message(FATAL_ERROR "clang version must be greater than ${CLANG_MIN_VERSION_REQUIRED}")
@@ -65,8 +65,6 @@ function(setup_compiler_flags IN_project IN_arch)
 
     set(macro_flags "")
 
-    set(cxx_specific_flags "-nostdinc++")
-
     include_kconfig_header_file_globally(kconfig_flags)
     message(STATUS kconfig_flags: "${kconfig_flags}")
 
@@ -90,14 +88,13 @@ function(setup_compiler_flags IN_project IN_arch)
             "-fno-builtin"
             "-fno-exceptions"
             "-fno-common"
-            "-nostdinc"
             # "-save-temps" # this flag will cause inline assembly code inclusion failed, run `Script/fix_asm_includes.py` to change the include path to absolute path
             )
 
-    set(CMAKE_C_FLAGS "-std=c11 ${common_compiler_flags}" PARENT_SCOPE)
-    set(CMAKE_CXX_FLAGS "-std=c++20 ${cxx_specific_flags} ${common_compiler_flags}" PARENT_SCOPE)
-    set(CMAKE_ASM_FLAGS "-std=c11 -DASSEMBLY ${common_compiler_flags}" PARENT_SCOPE)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wno-unused-command-line-argument -fuse-ld=lld -nostartfiles -nostdlib" PARENT_SCOPE)
+    set(CMAKE_C_FLAGS "-std=c11 -nostdinc -nostdlibinc -nostdinc++ -nostdlib++ ${common_compiler_flags}" CACHE INTERNAL "" FORCE)
+    set(CMAKE_CXX_FLAGS "-std=c++20 -nostdlib++ ${common_compiler_flags}" CACHE INTERNAL "" FORCE)
+    set(CMAKE_ASM_FLAGS "-std=c11 -DASSEMBLY ${common_compiler_flags}" CACHE INTERNAL "" FORCE)
+    set(CMAKE_EXE_LINKER_FLAGS "${common_compiler_flags} -fuse-ld=lld -nostdlib" CACHE INTERNAL "" FORCE)
 endfunction()
 
 macro(print_compiler_flags)
