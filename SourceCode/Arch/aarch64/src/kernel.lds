@@ -6,7 +6,7 @@ SECTIONS
 {
     /* kernel_relocated_base=0xffffffff00000000 */
     /* the load address is kernel.elf entrypoint */
-    /* because all code is (position independent code)pic, os the address is mainly for gdb debugging */
+    /* all code is (position independent code)pic, so the address is mainly for gdb debugging */
     . = 0xffffffff00000000;
 
     /* text/read-only data */
@@ -14,7 +14,7 @@ SECTIONS
     .text : AT(0x80000) {
         __code_start = .;
         KEEP(*(.text.boot))
-        *(.text* .gnu.linkonce.t.*)
+        *(.text*)
     }
 
     INCLUDE "lds/common.lds"
@@ -23,11 +23,7 @@ SECTIONS
 	    __code_end = .;
     }
 
-    INCLUDE "lds/rodata.lds"
-
     INCLUDE "lds/data.lds"
-
-    INCLUDE "lds/bss.lds"
 
     /* Align the end to ensure anything after the kernel ends up on its own pages */
     . = ALIGN(4096);
