@@ -28,13 +28,15 @@ opt_run_qemu=0
 opt_reset_cmake=0
 opt_qemu_args=
 opt_build_type="Release"
+opt_disable_iwyu="ON"
 
-while getopts 'hdrtcq:' OPT; do
+while getopts 'hdrtciq:' OPT; do
   case $OPT in
   d) opt_build_type="Debug" ;;
   r) opt_run_qemu=1 ;;
   t) opt_smoke_test=1 ;;
   c) opt_reset_cmake=1 ;;
+  i) opt_disable_iwyu="OFF" ;;
   q) opt_qemu_args=$OPTARG ;;
   h)
     print_help
@@ -47,26 +49,24 @@ while getopts 'hdrtcq:' OPT; do
   esac
 done
 
-pushd "${BUILD_DIR}" >/dev/null
 
 if [ ${opt_reset_cmake} == "1" ]; then
   echo "delete ${BUILD_DIR}"
   rm -rf "${BUILD_DIR:?}"/*
 fi
 
-# todo: disable iwyu due to iwyu bug, turn it on after iwyu bug fixed
-cmake_config_command="cmake -DOPTION_DISABLE_IWYU=ON -DCMAKE_BUILD_TYPE=${opt_build_type} -DCMAKE_TOOLCHAIN_FILE=${THIS_DIR}/../../CMake/Toolchain/ToolchainClang.cmake -DCONFIG_PROJECT=rpi3 -GNinja ${THIS_DIR}/../.."
+cmake_config_command="cmake -S ${THIS_DIR}/../.. -B ${BUILD_DIR} -DOPTION_DISABLE_IWYU=${opt_disable_iwyu} -DCMAKE_BUILD_TYPE=${opt_build_type} -DCMAKE_TOOLCHAIN_FILE=${THIS_DIR}/../../CMake/Toolchain/ToolchainClang.cmake -DCONFIG_PROJECT=rpi3 -GNinja"
 echo "${cmake_config_command}"
 ${cmake_config_command}
-cmake_build_command="cmake --build . -j$(nproc)"
+cmake_build_command="cmake --build ${BUILD_DIR} -j$(nproc)"
 echo "${cmake_build_command}"
 eval "${cmake_build_command}"
 
-rpi3_qemu_command="qemu-system-aarch64 -M raspi3b -kernel bin/kernel.elf -serial null -serial mon:stdio -nographic $opt_qemu_args"
+rpi3_qemu_command="qemu-system-aarch64 -M raspi3b -kernel ${BUILD_DIR}/bin/kernel.elf -serial null -serial mon:stdio -nographic $opt_qemu_args"
 
 if [ ${opt_smoke_test} == "1" ]; then
   msg="moss operating system"
-  smoke_test_command="timeout -s KILL 1 ${rpi3_qemu_command} | tee output.log || true"
+  smoke_test_command="timeout -s KILL 3 ${rpi3_qemu_command} | tee output.log || true"
   echo 'running smoke test'
   echo "${smoke_test_command}"
   echo "${smoke_test_command}" | eval "$(cat -)" 2>/dev/null
@@ -78,5 +78,3 @@ if [ ${opt_run_qemu} == "1" ]; then
   echo "${rpi3_qemu_command}"
   eval "${rpi3_qemu_command}"
 fi
-
-popd >/dev/null

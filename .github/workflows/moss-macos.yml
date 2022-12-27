@@ -1,6 +1,8 @@
-name: Moss Linux Build
+name: Moss MacOS Build
 
-on: [ push, pull_request ]
+on:
+  schedule:
+    - cron:  '* 12 * * 1' # every Monday 12:00AM UTC
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -34,31 +36,25 @@ jobs:
           check-path: 'SourceCode'
           fallback-style: 'LLVM' # optional
 
-  build-on-linux:
-    runs-on: ubuntu-22.04
+  build-on-mac:
+    runs-on: macos-12
     needs:
       - pre-checks
 
-    strategy:
-      matrix:
-        docker_run_args: [
-          "moss-build -c -t",
-          "moss-dev -c -t",
-          "moss-build -d -c -t",
-          "moss-dev -d -c -t",
-          "moss-build-alpine -d -c -t -i",
-        ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
 
-      - name: Build In Docker
+      - name: Install Dependencies
         shell: bash
-        working-directory: ${{runner.workspace}}/${{github.event.repository.name}}/Docker
-        run: docker compose run ${{ matrix.docker_run_args }}
+        run: brew install coreutils ninja qemu iwyu llvm
+
+      - name: Build
+        shell: bash
+        run: export PATH="/usr/local/opt/llvm/bin:$PATH" && $GITHUB_WORKSPACE/Scripts/Build/rpi3.build.sh -c -t
 
       - uses: actions/upload-artifact@v3
         with:
-          name: build-on-linux-${{env.BUILD_TYPE}}
+          name: build-on-mac-${{env.BUILD_TYPE}}
           path: ${{runner.workspace}}/

@@ -1,0 +1,7 @@
+FROM alpine
+
+USER root
+
+WORKDIR /root/Moss
+
+RUN apk add bash clang clang-extra-tools cmake make ninja python3 lld llvm qemu-system-aarch64 include-what-you-use
