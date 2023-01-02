@@ -64,11 +64,15 @@ eval "${cmake_build_command}"
 
 rpi3_qemu_command="qemu-system-aarch64 -M raspi3b -kernel ${BUILD_DIR}/bin/kernel.elf -serial null -serial mon:stdio -nographic $opt_qemu_args"
 
+kill_timeout=3
+if [ "$(uname)" == "Darwin" ]; then
+  kill_timeout=5
+fi
+
 if [ ${opt_smoke_test} == "1" ]; then
   msg="moss operating system"
-  smoke_test_command="timeout -s KILL 3 ${rpi3_qemu_command} | tee output.log || true"
-  echo 'running smoke test'
-  echo "${smoke_test_command}"
+  smoke_test_command="timeout -s KILL ${kill_timeout} ${rpi3_qemu_command} | tee output.log || true"
+  echo "running smoke test: \"${smoke_test_command}\""
   echo "${smoke_test_command}" | eval "$(cat -)" 2>/dev/null
   grep "${msg}" output.log >/dev/null
   rm -f output.log
