@@ -16,6 +16,7 @@ Checks: >
   -cert-dcl50-cpp,
 
   clang-diagnostic-*,
+  -clang-diagnostic-unused-command-line-argument,
 
   clang-analyzer-*,
 
